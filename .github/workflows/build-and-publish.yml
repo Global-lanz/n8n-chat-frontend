@@ -9,6 +9,11 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: maiconlanzendorf/chat-n8n-frontend
+      GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+      GITHUB_ACTOR: ${{ github.actor }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
