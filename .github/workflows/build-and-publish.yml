@@ -35,16 +35,39 @@ jobs:
           echo "Version from package.json: $VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
+      #############################################
+      # 🚀 Só gera RC se o PR tiver a label RC
+      #############################################
+      - name: Generate RC Version
+        id: rc_version
+        if: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'RC') }}
+        run: |
+          DATE=$(date +'%Y%m%d') 
+          EXISTING_TAGS=$(git ls-remote --tags origin "refs/tags/RC.${DATE}.*" | wc -l) 
+          COUNT=$(printf "%03d" $((EXISTING_TAGS + 1))) 
+          RC_VERSION="RC.${DATE}.${COUNT}" 
+          echo "RC Version: $RC_VERSION"
+          echo "rc_version=$RC_VERSION" >> $GITHUB_OUTPUT
+
       - name: Login to Docker Hub
-        if: github.event_name != 'pull_request'
+        if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'RC')) }}
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
+      - name: Set Docker tags
+        id: set_tags
+        run: |
+          if [ "${{ github.event_name }}" == "push" ]; then
+            echo "tags=${{ env.IMAGE_NAME }}:${{ env.VERSION }},${{ env.IMAGE_NAME }}:latest" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" == "pull_request" ] && [ "${{ contains(github.event.pull_request.labels.*.name, 'RC') }}" == "true" ]; then
+            echo "tags=${{ env.IMAGE_NAME }}:${{ steps.rc_version.outputs.rc_version }}" >> $GITHUB_OUTPUT
+          fi
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.IMAGE_NAME }}:${{ env.VERSION }}, ${{ env.IMAGE_NAME }}:latest
+          push: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'RC')) }}
+          tags: ${{ steps.set_tags.outputs.tags }}
