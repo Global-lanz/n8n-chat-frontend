@@ -1,0 +1,23 @@
+{
+  "name": "n8n-chat-frontend",
+  "version": "0.0.2",
+  "description": "Frontend para aplicação de chat integrada com N8N",
+  "main": "index.html",
+  "scripts": {
+    "start": "echo 'Para desenvolvimento, sirva os arquivos estáticos com um servidor como nginx ou live-server'",
+    "build": "echo 'Este é um projeto estático, sem build necessário. Copie os arquivos para o servidor.'",
+    "test": "echo 'Nenhum teste configurado'",
+    "lint": "echo 'Nenhum linter configurado'"
+  },
+  "keywords": ["chat", "frontend", "n8n", "websocket"],
+  "author": "Global-lanz",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Global-lanz/n8n-chat-frontend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Global-lanz/n8n-chat-frontend/issues"
+  },
+  "homepage": "https://github.com/Global-lanz/n8n-chat-frontend#readme"
+}
