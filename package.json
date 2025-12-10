@@ -1,6 +1,6 @@
 {
   "name": "n8n-chat-frontend",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Frontend para aplicação de chat integrada com N8N",
   "main": "index.html",
   "scripts": {
