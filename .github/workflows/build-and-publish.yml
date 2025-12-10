@@ -72,3 +72,12 @@ jobs:
           context: .
           push: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'RC')) }}
           tags: ${{ steps.set_tags.outputs.tags }}
+
+      - name: Comment RC Version on PR
+        if: ${{ contains(github.event.pull_request.labels.*.name, 'RC') }}
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            🚀 New Release Candidate Version generated: `${{ env.IMAGE_NAME }}:${{ steps.rc_version.outputs.rc_version }}`
+            📦 Docker image published:
+            `${{ env.IMAGE_NAME }}:${{ steps.rc_version.outputs.rc_version }}`
