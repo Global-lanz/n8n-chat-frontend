@@ -1,8 +1,6 @@
-const API_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:3000/api'
-    : `${window.location.protocol}//${window.location.hostname}:3000/api`;
+const API_URL = window.API_BASE_URL + '/api';
 
-const VERSION = '0.0.2';
+const VERSION = '0.0.3';
 
 let socket;
 let token = localStorage.getItem('token');
@@ -210,9 +208,7 @@ async function initializeChat() {
     await loadConfig();
     
     // Conectar WebSocket
-    const socketUrl = window.location.hostname === 'localhost'
-        ? 'http://localhost:3000'
-        : `${window.location.protocol}//${window.location.hostname}:3000`;
+    const socketUrl = window.API_BASE_URL;
     
     socket = io(socketUrl);
     
