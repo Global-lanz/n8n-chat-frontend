@@ -1,6 +1,6 @@
 const API_URL = window.API_BASE_URL + '/api';
 
-const VERSION = '0.0.3';
+const VERSION = window.VERSION;
 
 let socket;
 let token = localStorage.getItem('token');

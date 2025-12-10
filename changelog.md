@@ -1,10 +1,14 @@
 # Changelog
 
+## [0.0.4] - 2025-12-10
+
+### Corrigido
+- Corrigido versionamento
+
 ## [0.0.3] - 2025-12-10
 
 ### Adicionado
 - Suporte para variável de ambiente para apontar para o backend
-
 
 ## [0.0.2] - 2025-12-08
 
