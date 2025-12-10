@@ -1,6 +1,12 @@
 # Changelog
 
-## [1.0.0] - 2025-12-08
+## [0.0.3] - 2025-12-10
+
+### Adicionado
+- Suporte para variável de ambiente para apontar para o backend
+
+
+## [0.0.2] - 2025-12-08
 
 ### Adicionado
 - Suporte a renderização de Markdown nas respostas do bot
@@ -18,3 +24,8 @@
 - Visual dos balões de fala para parecer mais com WhatsApp
 - Espaçamento interno reduzido para layout mais compacto
 - Remoção de margens extras em elementos Markdown
+
+
+## [0.0.1] - 2025-12-08
+
+### Initial version
