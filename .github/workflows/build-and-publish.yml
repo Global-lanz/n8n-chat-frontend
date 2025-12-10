@@ -67,6 +67,7 @@ jobs:
           fi
 
       - name: Build and push Docker image
+        if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'RC')) }}
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -74,7 +75,7 @@ jobs:
           tags: ${{ steps.set_tags.outputs.tags }}
 
       - name: Comment RC Version on PR
-        if: ${{ contains(github.event.pull_request.labels.*.name, 'RC') }}
+        if: ${{ (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'RC')) }}
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           message: |
