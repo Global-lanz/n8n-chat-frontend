@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.0.5] - 2025-12-11
+
+### Corrigido
+- Corrigido carregamento dos dados do usuário ao atualizar a página - agora o nome aparece corretamente nas configurações
+
 ## [0.0.4] - 2025-12-10
 
 ### Corrigido
