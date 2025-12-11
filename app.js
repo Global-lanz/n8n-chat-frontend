@@ -110,11 +110,13 @@ async function register() {
 
 async function validateToken() {
     try {
-        const response = await fetch(`${API_URL}/messages`, {
+        const response = await fetch(`${API_URL}/user/me`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         
         if (response.ok) {
+            const data = await response.json();
+            currentUser = data.user;
             showChatScreen();
         } else {
             localStorage.removeItem('token');
@@ -185,6 +187,23 @@ function showAuthScreen() {
     document.getElementById('chat-screen').style.display = 'none';
 }
 
+// Função para carregar dados do usuário
+async function loadUserData() {
+    try {
+        const response = await fetch(`${API_URL}/user/me`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            currentUser = data.user;
+            document.getElementById('name-input').value = currentUser.username;
+        }
+    } catch (error) {
+        console.error('Erro ao carregar dados do usuário:', error);
+    }
+}
+
 function showChatScreen() {
     document.getElementById('auth-screen').style.display = 'none';
     document.getElementById('chat-screen').style.display = 'flex';
@@ -194,10 +213,8 @@ function showChatScreen() {
     document.body.classList.toggle('light-mode', savedTheme === 'light');
     document.getElementById('theme-toggle').value = savedTheme;
     
-    // Preencher nome atual
-    if (currentUser) {
-        document.getElementById('name-input').value = currentUser.username;
-    }
+    // Carregar dados do usuário
+    loadUserData();
     
     initializeChat();
 }
