@@ -213,6 +213,11 @@ function showChatScreen() {
     document.body.classList.toggle('light-mode', savedTheme === 'light');
     document.getElementById('theme-toggle').value = savedTheme;
     
+    // Mostrar botão admin se usuário for administrador
+    if (currentUser && currentUser.is_admin) {
+        document.getElementById('admin-btn').style.display = 'block';
+    }
+    
     // Carregar dados do usuário
     loadUserData();
     
@@ -465,3 +470,236 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+// ===== FUNÇÕES DE ADMINISTRAÇÃO =====
+
+function toggleAdminPanel() {
+    const panel = document.getElementById('admin-panel');
+    const isVisible = panel.style.display === 'block';
+    panel.style.display = isVisible ? 'none' : 'block';
+    
+    if (!isVisible) {
+        loadUsers();
+    }
+}
+
+async function loadUsers() {
+    try {
+        const response = await fetch(`${API_URL}/admin/users`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (!response.ok) {
+            alert('Erro ao carregar usuários');
+            return;
+        }
+        
+        const data = await response.json();
+        displayUsers(data.users);
+    } catch (error) {
+        console.error('Erro ao carregar usuários:', error);
+        alert('Erro de conexão');
+    }
+}
+
+function displayUsers(users) {
+    const table = document.getElementById('users-table');
+    
+    if (users.length === 0) {
+        table.innerHTML = '<p class="no-users">Nenhum usuário cadastrado</p>';
+        return;
+    }
+    
+    let html = `
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Usuário</th>
+                    <th>Email</th>
+                    <th>Admin</th>
+                    <th>Licença Expira</th>
+                    <th>Criado Em</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    users.forEach(user => {
+        const expiresAt = user.license_expires_at 
+            ? new Date(user.license_expires_at).toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })
+            : 'Sem limite';
+            
+        const createdAt = new Date(user.created_at).toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+        
+        const isExpired = user.license_expires_at && new Date(user.license_expires_at) < new Date();
+        const licenseClass = isExpired ? 'expired' : '';
+        
+        html += `
+            <tr>
+                <td>${user.id}</td>
+                <td>${user.username}</td>
+                <td>${user.email}</td>
+                <td>${user.is_admin ? '✅' : '❌'}</td>
+                <td class="${licenseClass}">${expiresAt}</td>
+                <td>${createdAt}</td>
+                <td class="actions">
+                    <button onclick="editUser(${user.id})" class="btn-edit" title="Editar">✏️</button>
+                    <button onclick="deleteUser(${user.id})" class="btn-delete" title="Deletar">🗑️</button>
+                </td>
+            </tr>
+        `;
+    });
+    
+    html += '</tbody></table>';
+    table.innerHTML = html;
+}
+
+function showCreateUserForm() {
+    document.getElementById('form-title').textContent = 'Criar Novo Usuário';
+    document.getElementById('edit-user-id').value = '';
+    document.getElementById('form-username').value = '';
+    document.getElementById('form-email').value = '';
+    document.getElementById('form-password').value = '';
+    document.getElementById('form-license-expires').value = '';
+    document.getElementById('form-is-admin').checked = false;
+    document.getElementById('password-group').style.display = 'block';
+    document.getElementById('user-form').style.display = 'block';
+}
+
+async function editUser(userId) {
+    try {
+        const response = await fetch(`${API_URL}/admin/users`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (!response.ok) return;
+        
+        const data = await response.json();
+        const user = data.users.find(u => u.id === userId);
+        
+        if (!user) return;
+        
+        document.getElementById('form-title').textContent = 'Editar Usuário';
+        document.getElementById('edit-user-id').value = user.id;
+        document.getElementById('form-username').value = user.username;
+        document.getElementById('form-email').value = user.email;
+        document.getElementById('password-group').style.display = 'none';
+        
+        if (user.license_expires_at) {
+            const date = new Date(user.license_expires_at);
+            const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+            document.getElementById('form-license-expires').value = localDate.toISOString().slice(0, 16);
+        } else {
+            document.getElementById('form-license-expires').value = '';
+        }
+        
+        document.getElementById('form-is-admin').checked = user.is_admin || false;
+        document.getElementById('user-form').style.display = 'block';
+    } catch (error) {
+        console.error('Erro ao carregar usuário:', error);
+        alert('Erro ao carregar usuário');
+    }
+}
+
+async function saveUser() {
+    const userId = document.getElementById('edit-user-id').value;
+    const username = document.getElementById('form-username').value.trim();
+    const email = document.getElementById('form-email').value.trim();
+    const password = document.getElementById('form-password').value;
+    const licenseExpires = document.getElementById('form-license-expires').value;
+    const isAdmin = document.getElementById('form-is-admin').checked;
+    
+    if (!username || !email) {
+        alert('Nome de usuário e email são obrigatórios');
+        return;
+    }
+    
+    if (!userId && !password) {
+        alert('Senha é obrigatória para novos usuários');
+        return;
+    }
+    
+    try {
+        const body = {
+            username,
+            email,
+            license_expires_at: licenseExpires || null,
+            is_admin: isAdmin
+        };
+        
+        if (!userId) {
+            body.password = password;
+        }
+        
+        const url = userId 
+            ? `${API_URL}/admin/users/${userId}`
+            : `${API_URL}/admin/users`;
+            
+        const method = userId ? 'PUT' : 'POST';
+        
+        const response = await fetch(url, {
+            method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(body)
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            alert(data.error || 'Erro ao salvar usuário');
+            return;
+        }
+        
+        alert(data.message || 'Usuário salvo com sucesso!');
+        cancelUserForm();
+        loadUsers();
+    } catch (error) {
+        console.error('Erro ao salvar usuário:', error);
+        alert('Erro de conexão');
+    }
+}
+
+async function deleteUser(userId) {
+    if (!confirm('Tem certeza que deseja deletar este usuário?')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_URL}/admin/users/${userId}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            alert(data.error || 'Erro ao deletar usuário');
+            return;
+        }
+        
+        alert(data.message || 'Usuário deletado com sucesso!');
+        loadUsers();
+    } catch (error) {
+        console.error('Erro ao deletar usuário:', error);
+        alert('Erro de conexão');
+    }
+}
+
+function cancelUserForm() {
+    document.getElementById('user-form').style.display = 'none';
+}
