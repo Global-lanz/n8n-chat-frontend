@@ -58,8 +58,67 @@
                 </div>
             </div>
             <div class="header-actions">
+                <button class="admin-btn" id="admin-btn" onclick="toggleAdminPanel()" title="Painel Admin" style="display: none;">👤</button>
                 <button class="settings-btn" onclick="toggleSettings()" title="Configurações">⚙️</button>
                 <button class="logout-btn" onclick="logout()">Sair</button>
+            </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="admin-panel" class="admin-panel" style="display: none;">
+            <div class="admin-header">
+                <h2>🔐 Painel de Administração</h2>
+                <button class="close-admin" onclick="toggleAdminPanel()">✕</button>
+            </div>
+            <div class="admin-content">
+                <div class="admin-actions">
+                    <button onclick="showCreateUserForm()">➕ Criar Usuário</button>
+                    <button onclick="loadUsers()">🔄 Atualizar Lista</button>
+                </div>
+
+                <!-- Formulário de Criar/Editar Usuário -->
+                <div id="user-form" class="user-form" style="display: none;">
+                    <h3 id="form-title">Criar Novo Usuário</h3>
+                    <input type="hidden" id="edit-user-id">
+                    <div class="form-group">
+                        <label>Nome de Usuário:</label>
+                        <input type="text" id="form-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="form-email" required>
+                    </div>
+                    <div class="form-group" id="password-group">
+                        <label>Senha:</label>
+                        <input type="password" id="form-password">
+                    </div>
+                    <div class="form-group">
+                        <label>Data de Expiração da Licença:</label>
+                        <input type="datetime-local" id="form-license-expires">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="form-is-admin">
+                            Administrador
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="form-is-active" checked>
+                            Usuário Ativo
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button onclick="saveUser()" class="btn-primary">💾 Salvar</button>
+                        <button onclick="cancelUserForm()" class="btn-secondary">❌ Cancelar</button>
+                    </div>
+                </div>
+
+                <!-- Lista de Usuários -->
+                <div class="users-list">
+                    <h3>Usuários Cadastrados</h3>
+                    <div id="users-table"></div>
+                </div>
             </div>
         </div>
 
