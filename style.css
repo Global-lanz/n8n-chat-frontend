@@ -649,6 +649,16 @@ body.light-mode .messages-container {
     background: var(--bg-input);
 }
 
+.users-list tbody tr.disabled-user {
+    opacity: 0.6;
+    background: rgba(255, 107, 107, 0.1);
+}
+
+.users-list tbody tr.disabled-user td {
+    color: #999;
+    text-decoration: line-through;
+}
+
 .users-list tbody tr:last-child td {
     border-bottom: none;
 }

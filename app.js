@@ -518,6 +518,7 @@ function displayUsers(users) {
                     <th>Usuário</th>
                     <th>Email</th>
                     <th>Admin</th>
+                    <th>Status</th>
                     <th>Licença Expira</th>
                     <th>Criado Em</th>
                     <th>Ações</th>
@@ -545,13 +546,17 @@ function displayUsers(users) {
         
         const isExpired = user.license_expires_at && new Date(user.license_expires_at) < new Date();
         const licenseClass = isExpired ? 'expired' : '';
+        const isActive = user.is_active !== false;
+        const statusEmoji = isActive ? '✅' : '🔴';
+        const statusText = isActive ? 'Ativo' : 'Desabilitado';
         
         html += `
-            <tr>
+            <tr class="${!isActive ? 'disabled-user' : ''}">
                 <td>${user.id}</td>
                 <td>${user.username}</td>
                 <td>${user.email}</td>
                 <td>${user.is_admin ? '✅' : '❌'}</td>
+                <td title="${statusText}">${statusEmoji}</td>
                 <td class="${licenseClass}">${expiresAt}</td>
                 <td>${createdAt}</td>
                 <td class="actions">
@@ -574,6 +579,7 @@ function showCreateUserForm() {
     document.getElementById('form-password').value = '';
     document.getElementById('form-license-expires').value = '';
     document.getElementById('form-is-admin').checked = false;
+    document.getElementById('form-is-active').checked = true;
     document.getElementById('password-group').style.display = 'block';
     document.getElementById('user-form').style.display = 'block';
 }
@@ -606,6 +612,7 @@ async function editUser(userId) {
         }
         
         document.getElementById('form-is-admin').checked = user.is_admin || false;
+        document.getElementById('form-is-active').checked = user.is_active !== false;
         document.getElementById('user-form').style.display = 'block';
     } catch (error) {
         console.error('Erro ao carregar usuário:', error);
@@ -620,6 +627,7 @@ async function saveUser() {
     const password = document.getElementById('form-password').value;
     const licenseExpires = document.getElementById('form-license-expires').value;
     const isAdmin = document.getElementById('form-is-admin').checked;
+    const isActive = document.getElementById('form-is-active').checked;
     
     if (!username || !email) {
         alert('Nome de usuário e email são obrigatórios');
@@ -636,7 +644,8 @@ async function saveUser() {
             username,
             email,
             license_expires_at: licenseExpires || null,
-            is_admin: isAdmin
+            is_admin: isAdmin,
+            is_active: isActive
         };
         
         if (!userId) {
