@@ -121,7 +121,6 @@ export class AppEffects {
       switchMap((action) =>
         this.apiService.createUser(action).pipe(
           map(() => AppActions.createUserSuccess()),
-          tap(() => this.actions$.pipe(ofType(AppActions.loadUsers))),
           catchError(error => of(AppActions.createUserFailure({ error: error.error?.error || 'Failed to create user' })))
         )
       )
