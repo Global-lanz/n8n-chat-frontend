@@ -10,8 +10,4 @@ import { CommonModule } from '@angular/common';
 })
 export class ChatHeaderComponent {
   @Input() botName: string | null = 'NorteIA';
-  @Input() isAdmin: boolean | null = false;
-  @Output() toggleAdmin = new EventEmitter<void>();
-  @Output() toggleSettings = new EventEmitter<void>();
-  @Output() logout = new EventEmitter<void>();
 }

@@ -1,12 +1,12 @@
 <div class="chat-screen">
-  <!-- Header -->
-  <app-chat-header
-    [botName]="botName$ | async"
-    [isAdmin]="isAdmin$ | async"
-    (toggleAdmin)="onToggleAdmin()"
-    (toggleSettings)="onToggleSettings()"
-    (logout)="onLogout()"
-  ></app-chat-header>
+  <!-- Chat Info -->
+  <div class="chat-info">
+    <div class="bot-avatar">🤖</div>
+    <div class="bot-details">
+      <div class="bot-name">{{ botName$ | async }}</div>
+      <div class="bot-status">🟢 Online</div>
+    </div>
+  </div>
 
   <!-- Settings Menu -->
   @if (showSettings) {

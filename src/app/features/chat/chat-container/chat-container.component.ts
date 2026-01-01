@@ -8,7 +8,6 @@ import * as AppActions from '@store/actions/app.actions';
 import * as AppSelectors from '@store/selectors/app.selectors';
 import { Message, User } from '@core/models';
 import { WebSocketService } from '@core/services';
-import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { MessageListComponent } from '../message-list/message-list.component';
 import { MessageInputComponent } from '../message-input/message-input.component';
 import { SettingsMenuComponent } from '../settings-menu/settings-menu.component';
@@ -18,7 +17,6 @@ import { SettingsMenuComponent } from '../settings-menu/settings-menu.component'
   standalone: true,
   imports: [
     CommonModule,
-    ChatHeaderComponent,
     MessageListComponent,
     MessageInputComponent,
     SettingsMenuComponent
@@ -30,7 +28,6 @@ export class ChatContainerComponent implements OnInit, OnDestroy {
   messages$: Observable<Message[]>;
   currentUser$: Observable<User | null>;
   botName$: Observable<string>;
-  isAdmin$: Observable<boolean>;
   
   showSettings = false;
   
@@ -44,7 +41,6 @@ export class ChatContainerComponent implements OnInit, OnDestroy {
     this.messages$ = this.store.select(AppSelectors.selectMessages);
     this.currentUser$ = this.store.select(AppSelectors.selectCurrentUser);
     this.botName$ = this.store.select(AppSelectors.selectBotName);
-    this.isAdmin$ = this.store.select(AppSelectors.selectIsAdmin);
   }
 
   ngOnInit(): void {
@@ -74,18 +70,5 @@ export class ChatContainerComponent implements OnInit, OnDestroy {
     };
     this.store.dispatch(AppActions.addMessage({ message }));
     this.store.dispatch(AppActions.sendMessage({ content }));
-  }
-
-  onToggleAdmin(): void {
-    this.router.navigate(['/admin/users']);
-  }
-
-  onToggleSettings(): void {
-    this.showSettings = !this.showSettings;
-  }
-
-  onLogout(): void {
-    this.store.dispatch(AppActions.logout());
-    this.router.navigate(['/login']);
   }
 }

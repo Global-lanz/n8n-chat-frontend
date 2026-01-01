@@ -17,6 +17,7 @@ import { User } from '@core/models';
 export class NavbarComponent {
   currentUser$: Observable<User | null>;
   isAdmin$: Observable<boolean>;
+  botName$: Observable<string>;
 
   constructor(
     private store: Store,
@@ -24,6 +25,7 @@ export class NavbarComponent {
   ) {
     this.currentUser$ = this.store.select(AppSelectors.selectCurrentUser);
     this.isAdmin$ = this.store.select(AppSelectors.selectIsAdmin);
+    this.botName$ = this.store.select(AppSelectors.selectBotName);
   }
 
   onLogout(): void {

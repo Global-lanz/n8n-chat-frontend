@@ -18,11 +18,15 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 })
 export class AppComponent implements OnInit {
   title = 'Chat N8N';
-  showNavbar = false;
+  showNavbar = true;
 
   constructor(private router: Router) {}
 
   ngOnInit(): void {
+    // Set initial state
+    const currentUrl = this.router.url;
+    this.showNavbar = !['/login', '/register'].includes(currentUrl);
+    
     // Hide navbar on login/register pages
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
