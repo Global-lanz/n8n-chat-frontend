@@ -1,6 +1,13 @@
-<div class="settings-menu">
+<div class="settings-menu" [class.standalone]="standalone">
   <div class="settings-content">
-    <h3>Configurações</h3>
+    @if (!standalone) {
+      <div class="settings-header">
+        <h3>Configurações</h3>
+        <button class="close-btn" (click)="close.emit()">✕</button>
+      </div>
+    } @else {
+      <h3>Suas Preferências</h3>
+    }
     <div class="setting-item">
       <label for="theme-toggle">Modo:</label>
       <select id="theme-toggle" [(ngModel)]="selectedTheme" (change)="onThemeChange()">
@@ -16,7 +23,11 @@
         [(ngModel)]="username" 
         placeholder="Seu nome"
       >
-      <button (click)="onUpdateName()">Salvar</button>
+      <button (click)="onUpdateName()">Salvar Nome</button>
     </div>
+    
+    @if (!standalone) {
+      <button class="close-settings-btn" (click)="close.emit()">Fechar</button>
+    }
   </div>
 </div>

@@ -15,6 +15,7 @@ import { User } from '@core/models';
 })
 export class SettingsMenuComponent implements OnInit {
   @Input() currentUser: User | null = null;
+  @Input() standalone: boolean = false; // If true, don't show close button
   @Output() close = new EventEmitter<void>();
   
   selectedTheme: Theme = 'dark';

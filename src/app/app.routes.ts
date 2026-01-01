@@ -11,6 +11,11 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'chat', component: ChatContainerComponent, canActivate: [AuthGuard] },
   {
+    path: 'settings',
+    loadComponent: () => import('./features/settings/settings-page/settings-page.component').then(m => m.SettingsPageComponent),
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'admin',
     canActivate: [AuthGuard, AdminGuard],
     children: [

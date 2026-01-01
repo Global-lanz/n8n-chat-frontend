@@ -14,7 +14,7 @@
             <th>Usuário</th>
             <th>Email</th>
             <th>Admin</th>
-            <th>Status</th>
+            <th>Ativo</th>
             <th>Licença Expira</th>
             <th>Criado Em</th>
             <th>Ações</th>
@@ -26,9 +26,15 @@
               <td>{{ user.id }}</td>
               <td>{{ user.username }}</td>
               <td>{{ user.email }}</td>
-              <td>{{ user.isAdmin ? '✅' : '❌' }}</td>
-              <td [title]="user.isActive ? 'Ativo' : 'Desabilitado'">
-                {{ user.isActive ? '✅' : '🔴' }}
+              <td>
+                <span class="badge" [class.badge-success]="user.isAdmin" [class.badge-secondary]="!user.isAdmin">
+                  {{ user.isAdmin ? '✅ Admin' : '❌ Usuário' }}
+                </span>
+              </td>
+              <td>
+                <span class="badge" [class.badge-success]="user.isActive" [class.badge-danger]="!user.isActive">
+                  {{ user.isActive ? '✅ Ativo' : '🔴 Inativo' }}
+                </span>
               </td>
               <td [class.expired]="isExpired(user.licenseExpiresAt)">
                 {{ formatLicenseExpires(user.licenseExpiresAt) }}
