@@ -19,7 +19,7 @@ RUN npm run build:prod
 FROM nginx:alpine
 
 # Copy built files
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/dist/chat-n8n-angular/browser /usr/share/nginx/html
 
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
