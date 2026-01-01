@@ -1,0 +1,45 @@
+<div class="user-form">
+  <h3>{{ editingUser ? 'Editar Usuário' : 'Criar Novo Usuário' }}</h3>
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label>Nome de Usuário:</label>
+      <input type="text" formControlName="username" required>
+    </div>
+    
+    <div class="form-group">
+      <label>Email:</label>
+      <input type="email" formControlName="email" required>
+    </div>
+    
+    @if (!editingUser) {
+      <div class="form-group">
+        <label>Senha:</label>
+        <input type="password" formControlName="password" required>
+      </div>
+    }
+    
+    <div class="form-group">
+      <label>Data de Expiração da Licença:</label>
+      <input type="datetime-local" formControlName="licenseExpiresAt">
+    </div>
+    
+    <div class="form-group">
+      <label>
+        <input type="checkbox" formControlName="isAdmin">
+        Administrador
+      </label>
+    </div>
+    
+    <div class="form-group">
+      <label>
+        <input type="checkbox" formControlName="isActive">
+        Usuário Ativo
+      </label>
+    </div>
+    
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">💾 Salvar</button>
+      <button type="button" class="btn-secondary" (click)="cancel.emit()">❌ Cancelar</button>
+    </div>
+  </form>
+</div>
