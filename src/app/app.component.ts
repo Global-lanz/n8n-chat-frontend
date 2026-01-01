@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { NavbarComponent } from './shared/navbar/navbar.component';
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -18,20 +19,28 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 })
 export class AppComponent implements OnInit {
   title = 'Chat N8N';
-  showNavbar = true;
+  showNavbar = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-    // Set initial state
-    const currentUrl = this.router.url;
-    this.showNavbar = !['/login', '/register'].includes(currentUrl);
+    // Set initial state based on authentication
+    this.updateNavbarVisibility(this.router.url);
     
-    // Hide navbar on login/register pages
+    // Update navbar visibility on route changes
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: any) => {
-        this.showNavbar = !['/login', '/register'].includes(event.url);
+        this.updateNavbarVisibility(event.url);
       });
+  }
+
+  private updateNavbarVisibility(url: string): void {
+    const isAuthPage = ['/login', '/register'].includes(url);
+    const isAuthenticated = this.authService.isAuthenticated();
+    this.showNavbar = !isAuthPage && isAuthenticated;
   }
 }
