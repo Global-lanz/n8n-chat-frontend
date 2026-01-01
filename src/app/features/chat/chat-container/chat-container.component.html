@@ -8,11 +8,6 @@
     (logout)="onLogout()"
   ></app-chat-header>
 
-  <!-- Admin Panel -->
-  @if (showAdminPanel && (isAdmin$ | async)) {
-    <app-admin-panel (close)="onToggleAdmin()"></app-admin-panel>
-  }
-
   <!-- Settings Menu -->
   @if (showSettings) {
     <app-settings-menu

@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -11,7 +12,6 @@ import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { MessageListComponent } from '../message-list/message-list.component';
 import { MessageInputComponent } from '../message-input/message-input.component';
 import { SettingsMenuComponent } from '../settings-menu/settings-menu.component';
-import { AdminPanelComponent } from '../../admin/admin-panel/admin-panel.component';
 
 @Component({
   selector: 'app-chat-container',
@@ -21,8 +21,7 @@ import { AdminPanelComponent } from '../../admin/admin-panel/admin-panel.compone
     ChatHeaderComponent,
     MessageListComponent,
     MessageInputComponent,
-    SettingsMenuComponent,
-    AdminPanelComponent
+    SettingsMenuComponent
   ],
   templateUrl: './chat-container.component.html',
   styleUrls: ['./chat-container.component.css']
@@ -33,14 +32,14 @@ export class ChatContainerComponent implements OnInit, OnDestroy {
   botName$: Observable<string>;
   isAdmin$: Observable<boolean>;
   
-  showAdminPanel = false;
   showSettings = false;
   
   private destroy$ = new Subject<void>();
 
   constructor(
     private store: Store,
-    private webSocketService: WebSocketService
+    private webSocketService: WebSocketService,
+    private router: Router
   ) {
     this.messages$ = this.store.select(AppSelectors.selectMessages);
     this.currentUser$ = this.store.select(AppSelectors.selectCurrentUser);
@@ -78,7 +77,7 @@ export class ChatContainerComponent implements OnInit, OnDestroy {
   }
 
   onToggleAdmin(): void {
-    this.showAdminPanel = !this.showAdminPanel;
+    this.router.navigate(['/admin/users']);
   }
 
   onToggleSettings(): void {
@@ -87,5 +86,6 @@ export class ChatContainerComponent implements OnInit, OnDestroy {
 
   onLogout(): void {
     this.store.dispatch(AppActions.logout());
+    this.router.navigate(['/login']);
   }
 }
