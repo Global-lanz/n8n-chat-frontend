@@ -22,18 +22,18 @@
         </thead>
         <tbody>
           @for (user of users; track user.id) {
-            <tr [class.disabled-user]="!user.is_active">
+            <tr [class.disabled-user]="!user.isActive">
               <td>{{ user.id }}</td>
               <td>{{ user.username }}</td>
               <td>{{ user.email }}</td>
-              <td>{{ user.is_admin ? '✅' : '❌' }}</td>
-              <td [title]="user.is_active ? 'Ativo' : 'Desabilitado'">
-                {{ user.is_active ? '✅' : '🔴' }}
+              <td>{{ user.isAdmin ? '✅' : '❌' }}</td>
+              <td [title]="user.isActive ? 'Ativo' : 'Desabilitado'">
+                {{ user.isActive ? '✅' : '🔴' }}
               </td>
-              <td [class.expired]="isExpired(user.license_expires_at)">
-                {{ formatLicenseExpires(user.license_expires_at) }}
+              <td [class.expired]="isExpired(user.licenseExpiresAt)">
+                {{ formatLicenseExpires(user.licenseExpiresAt) }}
               </td>
-              <td>{{ formatDate(user.created_at) }}</td>
+              <td>{{ formatDate(user.createdAt) }}</td>
               <td class="actions">
                 <button 
                   (click)="edit.emit(user)" 
