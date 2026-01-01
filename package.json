@@ -1,23 +1,40 @@
 {
-  "name": "n8n-chat-frontend",
-  "version": "0.0.5",
-  "description": "Frontend para aplicação de chat integrada com N8N",
-  "main": "index.html",
+  "name": "chat-n8n-angular",
+  "version": "0.1.0",
   "scripts": {
-    "start": "echo 'Para desenvolvimento, sirva os arquivos estáticos com um servidor como nginx ou live-server'",
-    "build": "echo 'Este é um projeto estático, sem build necessário. Copie os arquivos para o servidor.'",
-    "test": "echo 'Nenhum teste configurado'",
-    "lint": "echo 'Nenhum linter configurado'"
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "build:prod": "ng build --configuration production",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "lint": "ng lint"
   },
-  "keywords": ["chat", "frontend", "n8n", "websocket"],
-  "author": "Global-lanz",
-  "license": "ISC",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Global-lanz/n8n-chat-frontend.git"
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^19.0.0",
+    "@angular/common": "^19.0.0",
+    "@angular/compiler": "^19.0.0",
+    "@angular/core": "^19.0.0",
+    "@angular/forms": "^19.0.0",
+    "@angular/platform-browser": "^19.0.0",
+    "@angular/platform-browser-dynamic": "^19.0.0",
+    "@angular/router": "^19.0.0",
+    "@ngrx/effects": "^19.0.0",
+    "@ngrx/store": "^19.0.0",
+    "@ngrx/store-devtools": "^19.0.0",
+    "marked": "^14.0.0",
+    "rxjs": "^7.8.1",
+    "socket.io-client": "^4.8.0",
+    "tslib": "^2.8.0",
+    "zone.js": "^0.15.0"
   },
-  "bugs": {
-    "url": "https://github.com/Global-lanz/n8n-chat-frontend/issues"
-  },
-  "homepage": "https://github.com/Global-lanz/n8n-chat-frontend#readme"
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^19.0.0",
+    "@angular/cli": "^19.0.0",
+    "@angular/compiler-cli": "^19.0.0",
+    "@types/marked": "^6.0.0",
+    "@types/node": "^22.0.0",
+    "typescript": "~5.6.0"
+  }
 }
