@@ -1,0 +1,16 @@
+<div class="chat-header">
+  <div class="header-info">
+    <div class="avatar">🤖</div>
+    <div>
+      <div class="header-title">{{ botName || 'NorteIA' }}</div>
+      <div class="header-status">Online</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    @if (isAdmin) {
+      <button class="admin-btn" (click)="toggleAdmin.emit()" title="Painel Admin">👤</button>
+    }
+    <button class="settings-btn" (click)="toggleSettings.emit()" title="Configurações">⚙️</button>
+    <button class="logout-btn" (click)="logout.emit()">Sair</button>
+  </div>
+</div>

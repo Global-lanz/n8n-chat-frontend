@@ -1,0 +1,61 @@
+<div class="users-list">
+  <h3>Usuários Cadastrados</h3>
+  
+  @if (loading) {
+    <p class="no-users">Carregando...</p>
+  } @else if (!users || users.length === 0) {
+    <p class="no-users">Nenhum usuário cadastrado</p>
+  } @else {
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Usuário</th>
+            <th>Email</th>
+            <th>Admin</th>
+            <th>Ativo</th>
+            <th>Licença Expira</th>
+            <th>Criado Em</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users; track user.id) {
+            <tr [class.disabled-user]="!user.isActive">
+              <td>{{ user.id }}</td>
+              <td>{{ user.username }}</td>
+              <td>{{ user.email }}</td>
+              <td>
+                <span class="badge" [class.badge-success]="user.isAdmin" [class.badge-secondary]="!user.isAdmin">
+                  {{ user.isAdmin ? '✅ Admin' : '❌ Usuário' }}
+                </span>
+              </td>
+              <td>
+                <span class="badge" [class.badge-success]="user.isActive" [class.badge-danger]="!user.isActive">
+                  {{ user.isActive ? '✅ Ativo' : '🔴 Inativo' }}
+                </span>
+              </td>
+              <td [class.expired]="isExpired(user.licenseExpiresAt)">
+                {{ formatLicenseExpires(user.licenseExpiresAt) }}
+              </td>
+              <td>{{ formatDate(user.createdAt) }}</td>
+              <td class="actions">
+                <button 
+                  (click)="edit.emit(user)" 
+                  class="btn-edit" 
+                  title="Editar"
+                >✏️</button>
+                <button 
+                  (click)="delete.emit(user)" 
+                  class="btn-delete" 
+                  title="Deletar"
+                >🗑️</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

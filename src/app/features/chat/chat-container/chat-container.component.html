@@ -1,0 +1,28 @@
+<div class="chat-screen">
+  <!-- Header -->
+  <app-chat-header
+    [botName]="botName$ | async"
+    [isAdmin]="isAdmin$ | async"
+    (toggleAdmin)="onToggleAdmin()"
+    (toggleSettings)="onToggleSettings()"
+    (logout)="onLogout()"
+  ></app-chat-header>
+
+  <!-- Settings Menu -->
+  @if (showSettings) {
+    <app-settings-menu
+      [currentUser]="currentUser$ | async"
+      (close)="onToggleSettings()"
+    ></app-settings-menu>
+  }
+
+  <!-- Messages -->
+  <app-message-list
+    [messages]="messages$ | async"
+  ></app-message-list>
+
+  <!-- Input -->
+  <app-message-input
+    (sendMessage)="onSendMessage($event)"
+  ></app-message-input>
+</div>
