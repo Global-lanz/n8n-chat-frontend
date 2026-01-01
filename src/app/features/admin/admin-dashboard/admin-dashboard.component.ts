@@ -36,7 +36,11 @@ export class AdminDashboardComponent implements OnInit {
     this.selectedConversation = conversation;
   }
 
-  formatDate(date: Date): string {
+  formatDate(date: Date | string): string {
     return new Date(date).toLocaleString('pt-BR');
+  }
+
+  formatTimestamp(timestamp: string): string {
+    return new Date(timestamp).toLocaleString('pt-BR');
   }
 }

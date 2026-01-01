@@ -18,7 +18,7 @@
           @for (conv of conversations; track conv.user.id) {
             <div 
               class="conversation-item"
-              [class.active]="selectedConversation?.user.id === conv.user.id"
+              [class.active]="selectedConversation && selectedConversation.user.id === conv.user.id"
               (click)="selectConversation(conv)"
             >
               <div class="conv-header">
@@ -53,7 +53,7 @@
                 <strong>{{ message.sender === 'user' ? '👤 Usuário' : '🤖 Bot' }}:</strong>
                 <p>{{ message.content }}</p>
               </div>
-              <small class="message-time">{{ formatDate(new Date(message.timestamp)) }}</small>
+              <small class="message-time">{{ formatTimestamp(message.timestamp) }}</small>
             </div>
           }
         </div>
