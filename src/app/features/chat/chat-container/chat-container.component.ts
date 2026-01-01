@@ -10,7 +10,6 @@ import { Message, User } from '@core/models';
 import { WebSocketService } from '@core/services';
 import { MessageListComponent } from '../message-list/message-list.component';
 import { MessageInputComponent } from '../message-input/message-input.component';
-import { SettingsMenuComponent } from '../settings-menu/settings-menu.component';
 
 @Component({
   selector: 'app-chat-container',
@@ -18,8 +17,7 @@ import { SettingsMenuComponent } from '../settings-menu/settings-menu.component'
   imports: [
     CommonModule,
     MessageListComponent,
-    MessageInputComponent,
-    SettingsMenuComponent
+    MessageInputComponent
   ],
   templateUrl: './chat-container.component.html',
   styleUrls: ['./chat-container.component.css']
@@ -28,8 +26,6 @@ export class ChatContainerComponent implements OnInit, OnDestroy {
   messages$: Observable<Message[]>;
   currentUser$: Observable<User | null>;
   botName$: Observable<string>;
-  
-  showSettings = false;
   
   private destroy$ = new Subject<void>();
 
