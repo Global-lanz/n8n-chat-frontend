@@ -1,0 +1,5 @@
+/* Users table styles are inherited from global styles */
+
+.table-container {
+  overflow-x: auto;
+}
