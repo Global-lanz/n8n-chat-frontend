@@ -27,7 +27,34 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
+
+      - name: Build application
+        run: npm run build -- --configuration production
+
+      - name: Verify and prepare dist folder
+        run: |
+          echo "Checking dist folder structure..."
+          ls -la dist/ || true
+          if [ -d "dist/chat-n8n-angular/browser" ]; then
+            echo "Moving files from dist/chat-n8n-angular/browser to dist/"
+            mkdir -p dist/temp
+            mv dist/chat-n8n-angular/browser/* dist/temp/ || true
+            rm -rf dist/chat-n8n-angular
+            mv dist/temp/* dist/
+            rm -rf dist/temp
+          fi
+          echo "Final dist structure:"
+          ls -la dist/
+
+      - name: Verify files before Docker build
+        run: |
+          echo "Current directory contents:"
+          ls -la
+          echo "Dist folder contents:"
+          ls -la dist/
+          echo "Checking .dockerignore:"
+          cat .dockerignore || echo "No .dockerignore file"
 
       - name: Get version from package.json
         id: get_version
@@ -36,16 +63,6 @@ jobs:
           echo "Version from package.json: $VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Validate Angular Build
-        run: |
-          echo "🔨 Testing Angular build..."
-          npm run build:prod
-          echo "✅ Build successful!"
-          ls -la dist/chat-n8n-angular/browser/
-
-      #############################################
-      # 🚀 Só gera RC se o PR tiver a label RC
-      #############################################
       - name: Generate RC Version
         id: rc_version
         if: ${{ contains(github.event.pull_request.labels.*.name, 'RC') }}
@@ -67,10 +84,19 @@ jobs:
       - name: Set Docker tags
         id: set_tags
         run: |
-          if [ "${{ github.event_name }}" == "push" ]; then
+          if [[ "${{ github.ref }}" == refs/tags/RC.* ]]; then
+            # Tag RC manual
+            TAG_NAME="${GITHUB_REF#refs/tags/}"
+            echo "tags=${{ env.IMAGE_NAME }}:$TAG_NAME" >> $GITHUB_OUTPUT
+            echo "app_version=$TAG_NAME" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" == "push" ] && [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            # Push para main (merge)
             echo "tags=${{ env.IMAGE_NAME }}:${{ env.VERSION }},${{ env.IMAGE_NAME }}:latest" >> $GITHUB_OUTPUT
+            echo "app_version=${{ env.VERSION }}" >> $GITHUB_OUTPUT
           elif [ "${{ github.event_name }}" == "pull_request" ] && [ "${{ contains(github.event.pull_request.labels.*.name, 'RC') }}" == "true" ]; then
+            # PR com label RC
             echo "tags=${{ env.IMAGE_NAME }}:${{ steps.rc_version.outputs.rc_version }}" >> $GITHUB_OUTPUT
+            echo "app_version=${{ steps.rc_version.outputs.rc_version }}" >> $GITHUB_OUTPUT
           fi
 
       - name: Build and push Docker image
@@ -81,10 +107,10 @@ jobs:
           push: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'RC')) }}
           tags: ${{ steps.set_tags.outputs.tags }}
           build-args: |
-            VERSION=${{ env.VERSION }}
+            APP_VERSION=${{ steps.set_tags.outputs.app_version }}
 
       - name: Create Git Tag
-        if: ${{ contains(github.event.pull_request.labels.*.name, 'RC') }}
+        if: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'RC') }}
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com" 
@@ -96,24 +122,4 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           message: |
-            ## 🚀 Release Candidate Generated
-            
-            **Image**: `${{ env.IMAGE_NAME }}:${{ steps.rc_version.outputs.rc_version }}`
-            **Base Version**: `${{ env.VERSION }}` (from package.json)
-            **Framework**: Angular 19 + NgRx 19
-            
-            ### 📦 How to use:
-            ```bash
-            docker pull ${{ env.IMAGE_NAME }}:${{ steps.rc_version.outputs.rc_version }}
-            docker run -p 80:80 \
-              -e API_BASE_URL=http://localhost:3000 \
-              -e VERSION=${{ env.VERSION }} \
-              ${{ env.IMAGE_NAME }}:${{ steps.rc_version.outputs.rc_version }}
-            ```
-            
-            ### ✨ What's included:
-            - Angular 19 with standalone components
-            - NgRx 19 state management
-            - Real-time chat with WebSocket
-            - Admin panel
-            - Responsive design with theme support
+            🚀 New Release Candidate Version generated: `${{ env.IMAGE_NAME }}:${{ steps.rc_version.outputs.rc_version }}`
