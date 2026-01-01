@@ -109,7 +109,7 @@ export const loadUsersFailure = createAction(
 
 export const createUser = createAction(
   '[Admin] Create User',
-  props<{ username: string; email: string; password: string; license_expires_at?: string | null; is_admin?: boolean; is_active?: boolean }>()
+  props<{ username: string; email: string; password: string; licenseExpiresAt?: string | null; isAdmin?: boolean; isActive?: boolean }>()
 );
 
 export const createUserSuccess = createAction('[Admin] Create User Success');

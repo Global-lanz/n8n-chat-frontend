@@ -3,10 +3,10 @@ export interface User {
   id: number;
   username: string;
   email: string;
-  is_admin: boolean;
-  is_active: boolean;
-  license_expires_at: string | null;
-  created_at: string;
+  isAdmin: boolean;
+  isActive: boolean;
+  licenseExpiresAt: string | null;
+  createdAt: string;
 }
 
 // Auth Models
@@ -44,17 +44,17 @@ export interface CreateUserRequest {
   username: string;
   email: string;
   password: string;
-  license_expires_at?: string | null;
-  is_admin?: boolean;
-  is_active?: boolean;
+  licenseExpiresAt?: string | null;
+  isAdmin?: boolean;
+  isActive?: boolean;
 }
 
 export interface UpdateUserRequest {
   username?: string;
   email?: string;
-  license_expires_at?: string | null;
-  is_admin?: boolean;
-  is_active?: boolean;
+  licenseExpiresAt?: string | null;
+  isAdmin?: boolean;
+  isActive?: boolean;
 }
 
 // Config Models

@@ -83,7 +83,7 @@ export class AuthService {
 
   isAdmin(): boolean {
     const user = this.getCurrentUser();
-    return user?.is_admin ?? false;
+    return user?.isAdmin ?? false;
   }
 
   updateCurrentUser(user: User): void {

@@ -34,32 +34,32 @@ export class UserFormComponent implements OnInit, OnChanges {
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: [''],
-      license_expires_at: [''],
-      is_admin: [false],
-      is_active: [true]
+      licenseExpiresAt: [''],
+      isAdmin: [false],
+      isActive: [true]
     });
   }
 
   private updateForm(): void {
     if (this.editingUser) {
-      const licenseExpires = this.editingUser.license_expires_at 
-        ? this.formatDateTimeLocal(this.editingUser.license_expires_at)
+      const licenseExpires = this.editingUser.licenseExpiresAt 
+        ? this.formatDateTimeLocal(this.editingUser.licenseExpiresAt)
         : '';
       
       this.userForm.patchValue({
         username: this.editingUser.username,
         email: this.editingUser.email,
-        license_expires_at: licenseExpires,
-        is_admin: this.editingUser.is_admin,
-        is_active: this.editingUser.is_active
+        licenseExpiresAt: licenseExpires,
+        isAdmin: this.editingUser.isAdmin,
+        isActive: this.editingUser.isActive
       });
       
       // Remove password requirement for editing
       this.userForm.get('password')?.clearValidators();
     } else {
       this.userForm.reset({
-        is_active: true,
-        is_admin: false
+        isActive: true,
+        isAdmin: false
       });
       
       // Add password requirement for creating
@@ -82,9 +82,9 @@ export class UserFormComponent implements OnInit, OnChanges {
       const data: any = {
         username: formValue.username,
         email: formValue.email,
-        license_expires_at: formValue.license_expires_at || null,
-        is_admin: formValue.is_admin,
-        is_active: formValue.is_active
+        licenseExpiresAt: formValue.licenseExpiresAt || null,
+        isAdmin: formValue.isAdmin,
+        isActive: formValue.isActive
       };
       
       if (!this.editingUser && formValue.password) {

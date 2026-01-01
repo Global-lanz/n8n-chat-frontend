@@ -20,7 +20,7 @@ export const selectIsAuthenticated = createSelector(
 
 export const selectIsAdmin = createSelector(
   selectCurrentUser,
-  (user) => user?.is_admin ?? false
+  (user) => user?.isAdmin ?? false
 );
 
 export const selectAuthLoading = createSelector(
