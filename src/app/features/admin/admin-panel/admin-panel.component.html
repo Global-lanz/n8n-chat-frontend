@@ -1,0 +1,29 @@
+<div class="admin-panel">
+  <div class="admin-header">
+    <h2>🔐 Painel de Administração</h2>
+    <button class="close-admin" (click)="close.emit()">✕</button>
+  </div>
+  
+  <div class="admin-content">
+    <div class="admin-actions">
+      <button (click)="onShowCreateForm()">➕ Criar Usuário</button>
+    </div>
+
+    <!-- User Form -->
+    @if (showUserForm) {
+      <app-user-form
+        [editingUser]="editingUser"
+        (save)="onSaveUser($event)"
+        (cancel)="onCancelForm()"
+      ></app-user-form>
+    }
+
+    <!-- Users List -->
+    <app-users-table
+      [users]="users$ | async"
+      [loading]="loading$ | async"
+      (edit)="onEditUser($event)"
+      (delete)="onDeleteUser($event)"
+    ></app-users-table>
+  </div>
+</div>
