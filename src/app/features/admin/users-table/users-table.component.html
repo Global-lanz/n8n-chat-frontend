@@ -1,0 +1,55 @@
+<div class="users-list">
+  <h3>Usuários Cadastrados</h3>
+  
+  @if (loading) {
+    <p class="no-users">Carregando...</p>
+  } @else if (!users || users.length === 0) {
+    <p class="no-users">Nenhum usuário cadastrado</p>
+  } @else {
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Usuário</th>
+            <th>Email</th>
+            <th>Admin</th>
+            <th>Status</th>
+            <th>Licença Expira</th>
+            <th>Criado Em</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users; track user.id) {
+            <tr [class.disabled-user]="!user.is_active">
+              <td>{{ user.id }}</td>
+              <td>{{ user.username }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.is_admin ? '✅' : '❌' }}</td>
+              <td [title]="user.is_active ? 'Ativo' : 'Desabilitado'">
+                {{ user.is_active ? '✅' : '🔴' }}
+              </td>
+              <td [class.expired]="isExpired(user.license_expires_at)">
+                {{ formatLicenseExpires(user.license_expires_at) }}
+              </td>
+              <td>{{ formatDate(user.created_at) }}</td>
+              <td class="actions">
+                <button 
+                  (click)="edit.emit(user)" 
+                  class="btn-edit" 
+                  title="Editar"
+                >✏️</button>
+                <button 
+                  (click)="delete.emit(user)" 
+                  class="btn-delete" 
+                  title="Deletar"
+                >🗑️</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

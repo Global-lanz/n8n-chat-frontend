@@ -24,10 +24,10 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Get version from package.json
         id: get_version
@@ -35,6 +35,13 @@ jobs:
           VERSION=$(node -p "require('./package.json').version")
           echo "Version from package.json: $VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Validate Angular Build
+        run: |
+          echo "🔨 Testing Angular build..."
+          npm run build:prod
+          echo "✅ Build successful!"
+          ls -la dist/chat-n8n-angular/browser/
 
       #############################################
       # 🚀 Só gera RC se o PR tiver a label RC
@@ -73,6 +80,8 @@ jobs:
           context: .
           push: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'RC')) }}
           tags: ${{ steps.set_tags.outputs.tags }}
+          build-args: |
+            VERSION=${{ env.VERSION }}
 
       - name: Create Git Tag
         if: ${{ contains(github.event.pull_request.labels.*.name, 'RC') }}
@@ -87,4 +96,24 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           message: |
-            🚀 New Release Candidate Version generated: `${{ env.IMAGE_NAME }}:${{ steps.rc_version.outputs.rc_version }}`
+            ## 🚀 Release Candidate Generated
+            
+            **Image**: `${{ env.IMAGE_NAME }}:${{ steps.rc_version.outputs.rc_version }}`
+            **Base Version**: `${{ env.VERSION }}` (from package.json)
+            **Framework**: Angular 19 + NgRx 19
+            
+            ### 📦 How to use:
+            ```bash
+            docker pull ${{ env.IMAGE_NAME }}:${{ steps.rc_version.outputs.rc_version }}
+            docker run -p 80:80 \
+              -e API_BASE_URL=http://localhost:3000 \
+              -e VERSION=${{ env.VERSION }} \
+              ${{ env.IMAGE_NAME }}:${{ steps.rc_version.outputs.rc_version }}
+            ```
+            
+            ### ✨ What's included:
+            - Angular 19 with standalone components
+            - NgRx 19 state management
+            - Real-time chat with WebSocket
+            - Admin panel
+            - Responsive design with theme support
