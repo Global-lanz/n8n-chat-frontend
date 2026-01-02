@@ -4,7 +4,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, catchError, switchMap, tap } from 'rxjs/operators';
 import * as AppActions from '../actions/app.actions';
-import { ApiService, AuthService, WebSocketService } from '@core/services';
+import { ApiService, AuthService, WebSocketService, NotificationService } from '@core/services';
 
 @Injectable()
 export class AppEffects {
@@ -14,7 +14,11 @@ export class AppEffects {
       switchMap(({ email, password }) =>
         this.authService.login({ email, password }).pipe(
           map(user => AppActions.loginSuccess({ user })),
-          catchError(error => of(AppActions.loginFailure({ error: error.error?.error || 'Login failed' })))
+          catchError(error => {
+            const errorMsg = error.error?.error || 'Erro ao fazer login';
+            this.notificationService.error(errorMsg);
+            return of(AppActions.loginFailure({ error: errorMsg }));
+          })
         )
       )
     )
@@ -26,7 +30,11 @@ export class AppEffects {
       switchMap(({ username, email, password }) =>
         this.authService.register({ username, email, password }).pipe(
           map(user => AppActions.registerSuccess({ user })),
-          catchError(error => of(AppActions.registerFailure({ error: error.error?.error || 'Registration failed' })))
+          catchError(error => {
+            const errorMsg = error.error?.error || 'Erro ao fazer registro';
+            this.notificationService.error(errorMsg);
+            return of(AppActions.registerFailure({ error: errorMsg }));
+          })
         )
       )
     )
@@ -134,8 +142,15 @@ export class AppEffects {
       ofType(AppActions.createUser),
       switchMap((action) =>
         this.apiService.createUser(action).pipe(
-          map(() => AppActions.createUserSuccess()),
-          catchError(error => of(AppActions.createUserFailure({ error: error.error?.error || 'Failed to create user' })))
+          map(() => {
+            this.notificationService.success('Usuário criado com sucesso!');
+            return AppActions.createUserSuccess();
+          }),
+          catchError(error => {
+            const errorMsg = error.error?.error || 'Erro ao criar usuário';
+            this.notificationService.error(errorMsg);
+            return of(AppActions.createUserFailure({ error: errorMsg }));
+          })
         )
       )
     )
@@ -146,8 +161,15 @@ export class AppEffects {
       ofType(AppActions.updateUser),
       switchMap(({ userId, data }) =>
         this.apiService.updateUser(userId, data).pipe(
-          map(() => AppActions.updateUserSuccess()),
-          catchError(error => of(AppActions.updateUserFailure({ error: error.error?.error || 'Failed to update user' })))
+          map(() => {
+            this.notificationService.success('Usuário atualizado com sucesso!');
+            return AppActions.updateUserSuccess();
+          }),
+          catchError(error => {
+            const errorMsg = error.error?.error || 'Erro ao atualizar usuário';
+            this.notificationService.error(errorMsg);
+            return of(AppActions.updateUserFailure({ error: errorMsg }));
+          })
         )
       )
     )
@@ -158,8 +180,15 @@ export class AppEffects {
       ofType(AppActions.deleteUser),
       switchMap(({ userId }) =>
         this.apiService.deleteUser(userId).pipe(
-          map(() => AppActions.deleteUserSuccess()),
-          catchError(error => of(AppActions.deleteUserFailure({ error: error.error?.error || 'Failed to delete user' })))
+          map(() => {
+            this.notificationService.success('Usuário deletado com sucesso!');
+            return AppActions.deleteUserSuccess();
+          }),
+          catchError(error => {
+            const errorMsg = error.error?.error || 'Erro ao deletar usuário';
+            this.notificationService.error(errorMsg);
+            return of(AppActions.deleteUserFailure({ error: errorMsg }));
+          })
         )
       )
     )
@@ -177,6 +206,7 @@ export class AppEffects {
     private apiService: ApiService,
     private authService: AuthService,
     private webSocketService: WebSocketService,
+    private notificationService: NotificationService,
     private router: Router
   ) {}
 }

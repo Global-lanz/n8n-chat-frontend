@@ -4,18 +4,20 @@ import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { NavbarComponent } from './shared/navbar/navbar.component';
+import { ToastNotificationComponent } from './shared/toast-notification/toast-notification.component';
 import { AuthService } from './core/services/auth.service';
 import * as AppActions from './store/actions/app.actions';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, NavbarComponent],
+  imports: [CommonModule, RouterOutlet, NavbarComponent, ToastNotificationComponent],
   template: `
     @if (showNavbar) {
       <app-navbar></app-navbar>
     }
     <router-outlet></router-outlet>
+    <app-toast-notification></app-toast-notification>
   `,
   styles: []
 })

@@ -77,10 +77,6 @@ export class UserFormComponent implements OnInit, OnChanges {
   }
 
   onSubmit(): void {
-    console.log('Form submitted! Valid:', this.userForm.valid);
-    console.log('Form value:', this.userForm.value);
-    console.log('Form errors:', this.userForm.errors);
-    
     if (this.userForm.valid) {
       const formValue = this.userForm.value;
       const data: any = {
@@ -95,16 +91,22 @@ export class UserFormComponent implements OnInit, OnChanges {
         data.password = formValue.password;
       }
       
-      console.log('Emitting data:', data);
       this.save.emit(data);
     } else {
-      console.log('Form is INVALID!');
+      // Mark all fields as touched to show validation errors
       Object.keys(this.userForm.controls).forEach(key => {
-        const control = this.userForm.get(key);
-        if (control?.invalid) {
-          console.log(`Field '${key}' is invalid:`, control.errors);
-        }
+        this.userForm.get(key)?.markAsTouched();
       });
     }
+  }
+
+  hasError(field: string, errorType: string): boolean {
+    const control = this.userForm.get(field);
+    return !!(control && control.hasError(errorType) && control.touched);
+  }
+
+  isFieldInvalid(field: string): boolean {
+    const control = this.userForm.get(field);
+    return !!(control && control.invalid && control.touched);
   }
 }

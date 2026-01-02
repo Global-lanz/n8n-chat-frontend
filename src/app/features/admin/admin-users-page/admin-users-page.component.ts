@@ -42,25 +42,20 @@ export class AdminUsersPageComponent implements OnInit {
   }
 
   onSaveUser(data: any): void {
-    console.log('onSaveUser called with data:', data);
-    console.log('editingUser:', this.editingUser);
-    
     if (this.editingUser) {
       this.store.dispatch(AppActions.updateUser({ 
         userId: this.editingUser.id, 
         data 
       }));
     } else {
-      const actionData = {
+      this.store.dispatch(AppActions.createUser({
         username: data.username,
         email: data.email,
         password: data.password,
         licenseExpiresAt: data.licenseExpiresAt,
         isAdmin: data.isAdmin,
         isActive: data.isActive
-      };
-      console.log('Dispatching createUser with:', actionData);
-      this.store.dispatch(AppActions.createUser(actionData));
+      }));
     }
     this.onCancelForm();
   }

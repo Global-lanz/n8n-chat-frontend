@@ -1,1 +1,27 @@
-/* User form styles are inherited from global styles */
+/* User form styles */
+.error-message {
+  display: block;
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.field-hint {
+  display: block;
+  color: #6b7280;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+input.error,
+textarea.error,
+select.error {
+  border-color: #ef4444 !important;
+}
+
+input.error:focus,
+textarea.error:focus,
+select.error:focus {
+  outline-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
