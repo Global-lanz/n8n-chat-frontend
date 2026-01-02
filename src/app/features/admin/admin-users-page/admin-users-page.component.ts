@@ -48,7 +48,14 @@ export class AdminUsersPageComponent implements OnInit {
         data 
       }));
     } else {
-      this.store.dispatch(AppActions.createUser(data));
+      this.store.dispatch(AppActions.createUser({
+        username: data.username,
+        email: data.email,
+        password: data.password,
+        licenseExpiresAt: data.licenseExpiresAt,
+        isAdmin: data.isAdmin,
+        isActive: data.isActive
+      }));
     }
     this.onCancelForm();
   }
