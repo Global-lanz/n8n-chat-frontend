@@ -57,7 +57,18 @@ export class AppEffects {
 
   loginSuccess$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(AppActions.loginSuccess, AppActions.registerSuccess, AppActions.validateTokenSuccess),
+      ofType(AppActions.loginSuccess, AppActions.registerSuccess),
+      tap(() => {
+        this.webSocketService.connect();
+        this.router.navigate(['/chat']);
+      })
+    ),
+    { dispatch: false }
+  );
+
+  validateTokenSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AppActions.validateTokenSuccess),
       tap(() => {
         this.webSocketService.connect();
       })

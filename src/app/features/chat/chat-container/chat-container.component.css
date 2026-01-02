@@ -1,3 +1,11 @@
+.chat-screen {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px); /* Subtract navbar height */
+  background: var(--bg-secondary);
+  overflow: hidden;
+}
+
 .chat-info {
   display: flex;
   align-items: center;
@@ -5,6 +13,7 @@
   padding: 16px 20px;
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
 }
 
 .bot-avatar {
@@ -28,4 +37,15 @@
   font-size: 13px;
   color: var(--text-secondary);
   font-weight: 500;
+}
+
+app-message-list {
+  flex: 1;
+  overflow-y: auto;
+  display: block;
+}
+
+app-message-input {
+  flex-shrink: 0;
+  display: block;
 }

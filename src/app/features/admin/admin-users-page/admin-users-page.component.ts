@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil, filter } from 'rxjs/operators';
+import { Actions, ofType } from '@ngrx/effects';
 import * as AppActions from '@store/actions/app.actions';
 import * as AppSelectors from '@store/selectors/app.selectors';
 import { User } from '@core/models';
@@ -15,20 +17,34 @@ import { UsersTableComponent } from '../users-table/users-table.component';
   templateUrl: './admin-users-page.component.html',
   styleUrls: ['./admin-users-page.component.css']
 })
-export class AdminUsersPageComponent implements OnInit {
+export class AdminUsersPageComponent implements OnInit, OnDestroy {
   users$: Observable<User[]>;
   loading$: Observable<boolean>;
   
   showUserForm = false;
   editingUser: User | null = null;
+  private destroy$ = new Subject<void>();
 
-  constructor(private store: Store) {
+  constructor(private store: Store, private actions$: Actions) {
     this.users$ = this.store.select(AppSelectors.selectUsers);
     this.loading$ = this.store.select(AppSelectors.selectAdminLoading);
   }
 
   ngOnInit(): void {
     this.store.dispatch(AppActions.loadUsers());
+    
+    // Close form only on success
+    this.actions$.pipe(
+      ofType(AppActions.createUserSuccess, AppActions.updateUserSuccess),
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.onCancelForm();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   onShowCreateForm(): void {
@@ -57,7 +73,6 @@ export class AdminUsersPageComponent implements OnInit {
         isActive: data.isActive
       }));
     }
-    this.onCancelForm();
   }
 
   onCancelForm(): void {

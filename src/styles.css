@@ -70,7 +70,12 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
   height: 100vh;
-  overflow: hidden;
+  overflow: auto;
+}
+
+router-outlet + * {
+  display: block;
+  height: 100%;
 }
 
 /* ===== AUTH SCREEN STYLES ===== */
