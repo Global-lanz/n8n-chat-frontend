@@ -48,13 +48,24 @@ export class AdminPanelComponent implements OnInit {
   }
 
   onSaveUser(data: any): void {
+    console.log('AdminPanel - onSaveUser called with data:', data);
+    
     if (this.editingUser) {
       this.store.dispatch(AppActions.updateUser({ 
         userId: this.editingUser.id, 
         data 
       }));
     } else {
-      this.store.dispatch(AppActions.createUser(data));
+      const actionData = {
+        username: data.username,
+        email: data.email,
+        password: data.password,
+        licenseExpiresAt: data.licenseExpiresAt,
+        isAdmin: data.isAdmin,
+        isActive: data.isActive
+      };
+      console.log('AdminPanel - Dispatching createUser with:', actionData);
+      this.store.dispatch(AppActions.createUser(actionData));
     }
     this.onCancelForm();
   }
