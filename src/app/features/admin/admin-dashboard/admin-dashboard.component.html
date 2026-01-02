@@ -1,0 +1,89 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>📊 Dashboard - Conversas dos Usuários</h1>
+    <p class="subtitle">Monitore as interações entre usuários e o agente</p>
+  </div>
+
+  <div class="dashboard-content">
+    <div class="conversations-sidebar">
+      <h3>💬 Conversas Ativas</h3>
+      
+      @if (conversations.length === 0) {
+        <div class="empty-state">
+          <p>📭 Nenhuma conversa no momento</p>
+          <small>As conversas dos usuários aparecerão aqui</small>
+        </div>
+      } @else {
+        <div class="conversation-list">
+          @for (conv of conversations; track conv.user.id) {
+            <div 
+              class="conversation-item"
+              [class.active]="selectedConversation && selectedConversation.user.id === conv.user.id"
+              (click)="selectConversation(conv)"
+            >
+              <div class="conv-header">
+                <span class="user-name">{{ conv.user.username }}</span>
+                <span class="message-count">{{ conv.messages.length }}</span>
+              </div>
+              <div class="conv-preview">
+                <small>Última mensagem: {{ formatDate(conv.lastMessageAt) }}</small>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="conversation-details">
+      @if (!selectedConversation) {
+        <div class="empty-state">
+          <h3>👈 Selecione uma conversa</h3>
+          <p>Escolha uma conversa na lista ao lado para ver os detalhes</p>
+        </div>
+      } @else {
+        <div class="conversation-header">
+          <h3>Conversa com: {{ selectedConversation.user.username }}</h3>
+          <p>Email: {{ selectedConversation.user.email }}</p>
+        </div>
+
+        <div class="messages-container">
+          @for (message of selectedConversation.messages; track message.id) {
+            <div class="message" [class.user-message]="message.sender === 'user'" [class.bot-message]="message.sender === 'bot'">
+              <div class="message-content">
+                <strong>{{ message.sender === 'user' ? '👤 Usuário' : '🤖 Bot' }}:</strong>
+                <p>{{ message.content }}</p>
+              </div>
+              <small class="message-time">{{ formatTimestamp(message.timestamp) }}</small>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="dashboard-stats">
+    <div class="stat-card">
+      <div class="stat-icon">💬</div>
+      <div class="stat-info">
+        <h4>Total de Conversas</h4>
+        <p class="stat-value">{{ conversations.length }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">📨</div>
+      <div class="stat-info">
+        <h4>Mensagens Hoje</h4>
+        <p class="stat-value">-</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">👥</div>
+      <div class="stat-info">
+        <h4>Usuários Ativos</h4>
+        <p class="stat-value">{{ (users$ | async)?.length || 0 }}</p>
+      </div>
+    </div>
+  </div>
+</div>
