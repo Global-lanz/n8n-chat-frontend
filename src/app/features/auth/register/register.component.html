@@ -1,0 +1,41 @@
+<div class="auth-screen">
+  <div class="auth-container">
+    <h1>💬 {{ botName$ | async }}</h1>
+    
+    <div class="auth-form">
+      <h2>Registrar</h2>
+      <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+        <input 
+          type="text" 
+          formControlName="username" 
+          placeholder="Nome" 
+          required
+        >
+        <small style="color: #8696a0; margin-bottom: 16px; display: block;">
+          O email será usado para fazer login
+        </small>
+        <input 
+          type="email" 
+          formControlName="email" 
+          placeholder="Email" 
+          required
+        >
+        <input 
+          type="password" 
+          formControlName="password" 
+          placeholder="Senha" 
+          required
+        >
+        <button type="submit" [disabled]="loading$ | async">
+          {{ (loading$ | async) ? 'Criando...' : 'Criar Conta' }}
+        </button>
+      </form>
+      <p>Já tem conta? <a routerLink="/login">Faça login</a></p>
+    </div>
+    
+    @if (error$ | async; as error) {
+      <div class="error-message">{{ error }}</div>
+    }
+  </div>
+  <div class="version-info">chat: {{ version }}</div>
+</div>
