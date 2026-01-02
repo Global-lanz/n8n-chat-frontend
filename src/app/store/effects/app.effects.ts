@@ -32,12 +32,26 @@ export class AppEffects {
     )
   );
 
+  validateToken$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AppActions.validateToken),
+      switchMap(() =>
+        this.authService.validateToken().pipe(
+          map(() => {
+            const user = this.authService.getCurrentUser();
+            return user ? AppActions.validateTokenSuccess({ user }) : AppActions.validateTokenFailure();
+          }),
+          catchError(() => of(AppActions.validateTokenFailure()))
+        )
+      )
+    )
+  );
+
   loginSuccess$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(AppActions.loginSuccess, AppActions.registerSuccess),
+      ofType(AppActions.loginSuccess, AppActions.registerSuccess, AppActions.validateTokenSuccess),
       tap(() => {
         this.webSocketService.connect();
-        this.router.navigate(['/chat']);
       })
     ),
     { dispatch: false }

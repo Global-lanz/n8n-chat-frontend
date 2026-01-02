@@ -36,6 +36,13 @@ export const logout = createAction('[Auth] Logout');
 
 export const validateToken = createAction('[Auth] Validate Token');
 
+export const validateTokenSuccess = createAction(
+  '[Auth] Validate Token Success',
+  props<{ user: User }>()
+);
+
+export const validateTokenFailure = createAction('[Auth] Validate Token Failure');
+
 export const updateUsername = createAction(
   '[Auth] Update Username',
   props<{ username: string }>()

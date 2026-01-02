@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { AuthService } from './core/services/auth.service';
+import * as AppActions from './store/actions/app.actions';
 
 @Component({
   selector: 'app-root',
@@ -23,10 +25,16 @@ export class AppComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private store: Store
   ) {}
 
   ngOnInit(): void {
+    // Validate token on app initialization to restore user state
+    if (this.authService.isAuthenticated()) {
+      this.store.dispatch(AppActions.validateToken());
+    }
+
     // Set initial state based on authentication
     this.updateNavbarVisibility(this.router.url);
     
