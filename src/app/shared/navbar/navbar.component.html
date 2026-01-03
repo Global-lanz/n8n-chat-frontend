@@ -1,0 +1,41 @@
+<nav class="navbar">
+  <div class="navbar-brand">
+    <a routerLink="/chat" class="logo">💬 {{ botName$ | async }}</a>
+  </div>
+
+  <div class="navbar-menu">
+    <a routerLink="/chat" routerLinkActive="active" class="nav-link">
+      💬 Chat
+    </a>
+    
+    @if (isAdmin$ | async) {
+      <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-link">
+        📊 Dashboard
+      </a>
+      <a routerLink="/admin/users" routerLinkActive="active" class="nav-link">
+        👥 Usuários
+      </a>
+      <a routerLink="/admin/settings" routerLinkActive="active" class="nav-link">
+        🔧 Config. Sistema
+      </a>
+    }
+
+    <a routerLink="/settings" routerLinkActive="active" class="nav-link">
+      ⚙️ Meu Perfil
+    </a>
+  </div>
+
+  <div class="navbar-user">
+    @if (currentUser$ | async; as user) {
+      <span class="user-info">
+        <span class="username">{{ user.username }}</span>
+        @if (user.isAdmin) {
+          <span class="admin-badge">ADMIN</span>
+        }
+      </span>
+    }
+    <button class="btn-logout" (click)="onLogout()" title="Sair">
+      🚪 Sair
+    </button>
+  </div>
+</nav>
