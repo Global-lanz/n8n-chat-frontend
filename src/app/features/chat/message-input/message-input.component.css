@@ -1,0 +1,57 @@
+.input-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 16px 20px;
+  background: var(--bg-tertiary);
+  border-top: 1px solid var(--border-color);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+}
+
+textarea {
+  flex: 1;
+  padding: 10px 16px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  color: var(--text-primary);
+  font-size: 15px;
+  resize: none;
+  max-height: 120px;
+  font-family: inherit;
+  line-height: 1.4;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.send-btn {
+  width: 48px;
+  height: 48px;
+  background: #ff0000;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.send-btn:hover {
+  background: #cc0000;
+}
+
+.send-btn:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+.send-btn svg {
+  width: 24px;
+  height: 24px;
+}

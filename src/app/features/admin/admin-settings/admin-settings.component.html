@@ -1,0 +1,201 @@
+<div class="settings-container">
+  <div class="settings-header">
+    <h1>⚙️ Configurações do Sistema</h1>
+    <p class="subtitle">Gerencie configurações administrativas e integrações</p>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <p>⏳ Carregando configurações...</p>
+    </div>
+  } @else {
+    <div class="settings-grid">
+      <!-- Duração da Licença -->
+      <div class="card">
+        <div class="card-header">
+          <h3>⏰ Duração Padrão da Licença</h3>
+          <p>Tempo em dias que novos usuários terão acesso ao sistema</p>
+        </div>
+        <div class="card-body">
+          <div class="input-group">
+            <input 
+              type="number" 
+              [(ngModel)]="licenseDuration" 
+              [value]="licenseDuration()"
+              (ngModelChange)="licenseDuration.set($event)"
+              min="1"
+              placeholder="365"
+              class="input-field"
+            >
+            <span class="input-suffix">dias</span>
+          </div>
+          <button 
+            (click)="saveLicenseDuration()" 
+            class="btn-primary"
+            [disabled]="saving()"
+          >
+            💾 Salvar Duração
+          </button>
+        </div>
+      </div>
+
+      <!-- Nome do Bot -->
+      <div class="card">
+        <div class="card-header">
+          <h3>🤖 Nome Padrão do Bot</h3>
+          <p>Nome exibido para o assistente virtual</p>
+        </div>
+        <div class="card-body">
+          <div class="input-group">
+            <input 
+              type="text" 
+              [(ngModel)]="defaultBotName"
+              [value]="defaultBotName()"
+              (ngModelChange)="defaultBotName.set($event)"
+              placeholder="Assistente Virtual"
+              class="input-field full-width"
+            >
+          </div>
+          <button 
+            (click)="saveBotName()" 
+            class="btn-primary"
+            [disabled]="saving()"
+          >
+            💾 Salvar Nome
+          </button>
+        </div>
+      </div>
+
+      <!-- Token de Webhook -->
+      <div class="card card-highlight">
+        <div class="card-header">
+          <h3>🔒 Token de Segurança do Webhook</h3>
+          <p>Token para autenticar requisições ao webhook</p>
+          <small class="code-hint">Header: <code>x-webhook-token</code></small>
+        </div>
+        <div class="card-body">
+          @if (!showGeneratedToken()) {
+            <div class="token-status">
+              <span 
+                class="badge" 
+                [class.success]="webhookToken()"
+                [class.warning]="!webhookToken()"
+              >
+                {{ webhookToken() ? '✓ Token configurado' : '⚠ Nenhum token configurado' }}
+              </span>
+            </div>
+            <button 
+              (click)="generateWebhookToken()" 
+              class="btn-secondary"
+            >
+              {{ webhookToken() ? '🔄 Gerar Novo Token' : '✨ Gerar Token' }}
+            </button>
+          } @else {
+            <div class="alert warning">
+              ⚠️ <strong>Atenção!</strong> Copie este token agora! Ele não será mostrado novamente.
+            </div>
+            <div class="token-display">
+              <code class="token-value">{{ generatedToken() }}</code>
+              <button 
+                (click)="copyTokenToClipboard()" 
+                class="btn-copy"
+                [class.copied]="tokenCopied()"
+              >
+                {{ tokenCopied() ? '✓ Copiado' : '📋 Copiar' }}
+              </button>
+            </div>
+            <div class="button-group">
+              <button 
+                (click)="saveWebhookToken()" 
+                class="btn-primary"
+                [disabled]="saving()"
+              >
+                💾 Salvar Token
+              </button>
+              <button 
+                (click)="cancelTokenGeneration()" 
+                class="btn-cancel"
+                [disabled]="saving()"
+              >
+                Cancelar
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- URL do Webhook -->
+      <div class="card card-info">
+        <div class="card-header">
+          <h3>🔗 URL do Webhook</h3>
+          <p>Configure esta URL no sistema externo (Hotmart, N8N, etc)</p>
+        </div>
+        <div class="card-body">
+          <div class="webhook-url">
+            <code class="url-display">{{ getWebhookUrl() }}</code>
+            <button 
+              (click)="copyWebhookUrl()" 
+              class="btn-copy"
+            >
+              📋 Copiar URL
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Instruções de Integração -->
+      <div class="card card-full">
+        <div class="card-header">
+          <h3>📚 Instruções de Integração</h3>
+        </div>
+        <div class="card-body instructions">
+          <ol>
+            <li>
+              <strong>1. Configure o Token:</strong>
+              <ul>
+                <li>Gere e salve o <strong>Token de Segurança</strong> acima</li>
+                <li>Copie o token gerado (não será mostrado novamente)</li>
+              </ul>
+            </li>
+            <li>
+              <strong>2. Copie a URL do Webhook</strong>
+            </li>
+            <li>
+              <strong>3. Configure no sistema externo:</strong>
+              <div class="integration-section">
+                <h4>🛒 Hotmart:</h4>
+                <ul>
+                  <li>Acesse: <strong>Ferramentas → Webhooks</strong></li>
+                  <li>Clique em <strong>Adicionar Webhook</strong></li>
+                  <li>Cole a URL do webhook</li>
+                  <li>Adicione header customizado: <code>x-webhook-token: SEU_TOKEN</code></li>
+                  <li>Selecione eventos: <code>PURCHASE_COMPLETE</code>, <code>PURCHASE_REFUNDED</code></li>
+                </ul>
+              </div>
+              <div class="integration-section">
+                <h4>🔄 N8N:</h4>
+                <ul>
+                  <li>Use nó <strong>HTTP Request</strong></li>
+                  <li>Método: <code>POST</code></li>
+                  <li>URL: Cole a URL do webhook</li>
+                  <li>Headers: <code>x-webhook-token: SEU_TOKEN</code></li>
+                  <li>Body (JSON):</li>
+                </ul>
+                <pre class="code-block">{{'{'}}"email": "usuario&#64;example.com","name": "Nome do Usuário","event": "PURCHASE_COMPLETE"{{'}'}}
+</pre>
+              </div>
+            </li>
+            <li>
+              <strong>4. Eventos suportados:</strong>
+              <ul>
+                <li><code>PURCHASE_COMPLETE</code> - Cria novo usuário ou renova licença</li>
+                <li><code>SUBSCRIPTION_CREATED</code> - Cria novo usuário ou renova licença</li>
+                <li><code>PURCHASE_REFUNDED</code> - Desativa usuário</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  }
+</div>
