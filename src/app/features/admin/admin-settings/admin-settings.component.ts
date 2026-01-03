@@ -1,13 +1,14 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { Store } from '@ngrx/store';
 import * as AppActions from '@store/actions/app.actions';
 import { SettingsAdminService, Setting } from '@core/services/settings-admin.service';
 import { ApiService } from '@core/services/api.service';
 import { NotificationService } from '@core/services/notification.service';
 import { environment } from '../../../../environments/environment';
-import packageInfo from '../../../../../package.json';
+import { catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-admin-settings',
@@ -37,7 +38,8 @@ export class AdminSettingsComponent implements OnInit {
     private settingsService: SettingsAdminService,
     private store: Store,
     private apiService: ApiService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private http: HttpClient
   ) {}
 
   ngOnInit() {
@@ -45,11 +47,7 @@ export class AdminSettingsComponent implements OnInit {
     this.loadVersions();
   }
 
-  loadVersions() {
-    // Versão do frontend (do package.json)
-    this.frontendVersion.set(packageInfo.version);
-    
-    // Versão do backend (da API /config)
+  loadVVersão do backend (via API /config)
     this.apiService.getConfig().subscribe({
       next: (config: any) => {
         this.backendVersion.set(config.version || '1.0.0');
@@ -59,6 +57,26 @@ export class AdminSettingsComponent implements OnInit {
       error: (err) => {
         console.error('Erro ao carregar versão do backend:', err);
         this.backendVersion.set('N/A');
+      }
+    });
+
+    // Versão do frontend (lê version.json local com fallback para package.json)
+    // GitHub Actions vai criar version.json na raiz do frontend para builds RC/produção
+    this.http.get<any>('/version.json').pipe(
+      catchError(() => {
+        // Fallback: ler package.json (desenvolvimento)
+        return this.http.get<any>('/package.json').pipe(
+          catchError(() => of({ version: '1.0.0' }))
+        );
+      })
+    ).subscribe({
+      next: (versionData) => {
+        this.frontendVersion.set(versionData.version || '1.0.0');
+      },
+      error: (err) => {
+        console.error('Erro ao carregar versão do frontend:', err);
+        this.frontendVersion.set('1.0.0);
+        this.frontendVersion.set('N/A');
       }
     });
   }
