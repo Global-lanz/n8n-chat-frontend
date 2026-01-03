@@ -1,8 +1,12 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import * as AppActions from '@store/actions/app.actions';
 import { SettingsAdminService, Setting } from '@core/services/settings-admin.service';
+import { ApiService } from '@core/services/api.service';
 import { environment } from '../../../../environments/environment';
+import packageInfo from '../../../../../package.json';
 
 @Component({
   selector: 'app-admin-settings',
@@ -16,6 +20,11 @@ export class AdminSettingsComponent implements OnInit {
   webhookToken = signal<string>('');
   defaultBotName = signal<string>('Assistente Virtual');
   
+  backendVersion = signal<string>('Carregando...');
+  frontendVersion = signal<string>(packageInfo.version);
+  buildDate = signal<string>('');
+  apiEnvironment = signal<string>('');
+  
   generatedToken = signal<string>('');
   showGeneratedToken = signal<boolean>(false);
   tokenCopied = signal<boolean>(false);
@@ -23,10 +32,67 @@ export class AdminSettingsComponent implements OnInit {
   loading = signal<boolean>(false);
   saving = signal<boolean>(false);
 
-  constructor(private settingsService: SettingsAdminService) {}
+  constructor(
+    private settingsService: SettingsAdminService,
+    private store: Store,
+    private apiService: ApiService
+  ) {}
 
   ngOnInit() {
     this.loadSettings();
+    this.loadVersions();
+  }
+
+  loadVersions() {
+    // Versão do frontend (do package.json)
+    this.frontendVersion.set(packageInfo.version);
+    
+    // Versão do backend (da API /config)
+    this.apiService.getConfig().subscribe({
+      next: (config: any) => {
+        this.backendVersion.set(config.version || '1.0.0');
+        this.buildDate.set(config.buildDate || '');
+        this.apiEnvironment.set(config.environment || 'production');
+      },
+      error: (err) => {
+        console.error('Erro ao carregar versão do backend:', err);
+        this.backendVersion.set('N/A');
+      }
+    });
+  }
+
+  // Helpers para badges de versão
+  getVersionBadgeClass(version: string): string {
+    if (version.toUpperCase().includes('RC')) return 'badge warning';
+    if (version.includes('beta') || version.includes('alpha')) return 'badge';
+    return 'badge success';
+  }
+
+  getVersionLabel(version: string): string {
+    if (version.toUpperCase().includes('RC')) return 'Release Candidate';
+    if (version.includes('beta')) return 'Beta';
+    if (version.includes('alpha')) return 'Alpha';
+    return 'Estável';
+  }
+
+  isReleaseCandidate(version: string): boolean {
+    return version.toUpperCase().includes('RC');
+  }
+
+  isStableVersion(version: string): boolean {
+    return !version.includes('-');
+  }
+
+  hasRCVersion(): boolean {
+    return this.isReleaseCandidate(this.frontendVersion()) || 
+           this.isReleaseCandidate(this.backendVersion());
+  }
+
+  allStable(): boolean {
+    return this.isStableVersion(this.frontendVersion()) && 
+           this.isStableVersion(this.backendVersion()) &&
+           this.backendVersion() !== 'N/A' &&
+           this.backendVersion() !== 'Carregando...';
   }
 
   loadSettings() {
@@ -93,6 +159,8 @@ export class AdminSettingsComponent implements OnInit {
       next: () => {
         alert('✅ Nome do bot salvo com sucesso!');
         this.saving.set(false);
+        // Recarrega a config global para atualizar o nome em toda aplicação
+        this.store.dispatch(AppActions.loadConfig());
       },
       error: (err) => {
         console.error('Error saving bot name:', err);

@@ -196,6 +196,89 @@
           </ol>
         </div>
       </div>
+
+      <!-- Versões do Sistema -->
+      <div class="card card-full">
+        <div class="card-header">
+          <h3>📦 Versões do Sistema</h3>
+          <p>Informações sobre as versões instaladas</p>
+        </div>
+        <div class="card-body">
+          <div class="version-grid">
+            <!-- Frontend Version -->
+            <div class="version-item frontend">
+              <div class="version-label">
+                <span class="version-icon">🎨</span>
+                <span>Frontend</span>
+              </div>
+              <div class="version-display">
+                <code class="version-code">v{{ frontendVersion() }}</code>
+                <span [class]="getVersionBadgeClass(frontendVersion())">
+                  {{ getVersionLabel(frontendVersion()) }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Backend Version -->
+            <div class="version-item backend">
+              <div class="version-label">
+                <span class="version-icon">⚙️</span>
+                <span>Backend</span>
+              </div>
+              <div class="version-display">
+                <code class="version-code">v{{ backendVersion() }}</code>
+                @if (backendVersion() !== 'N/A' && backendVersion() !== 'Carregando...') {
+                  <span [class]="getVersionBadgeClass(backendVersion())">
+                    {{ getVersionLabel(backendVersion()) }}
+                  </span>
+                }
+              </div>
+            </div>
+
+            <!-- Build Date -->
+            @if (buildDate()) {
+              <div class="version-item">
+                <div class="version-label">
+                  <span class="version-icon">📅</span>
+                  <span>Build</span>
+                </div>
+                <div class="version-value">
+                  {{ buildDate() | date: 'dd/MM/yyyy HH:mm' }}
+                </div>
+              </div>
+            }
+
+            <!-- Environment -->
+            <div class="version-item">
+              <div class="version-label">
+                <span class="version-icon">🌍</span>
+                <span>Ambiente</span>
+              </div>
+              <div class="version-value">
+                <span [class]="apiEnvironment() === 'production' ? 'badge warning' : 'badge'">
+                  {{ apiEnvironment() === 'production' ? 'Produção' : 'Desenvolvimento' }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alerta RC -->
+          @if (hasRCVersion()) {
+            <div class="alert alert-warning">
+              <strong>⚠️ Atenção:</strong> Você está usando uma versão Release Candidate (RC). 
+              Esta versão está em fase de testes finais e pode conter bugs. 
+              Não recomendado para ambientes de produção críticos.
+            </div>
+          }
+
+          <!-- Alerta Estável -->
+          @if (allStable()) {
+            <div class="alert alert-success">
+              <strong>✅ Sistema Estável:</strong> Todas as versões são estáveis e prontas para produção.
+            </div>
+          }
+        </div>
+      </div>
     </div>
   }
 </div>

@@ -13,6 +13,7 @@ import { Message } from '@core/models';
 })
 export class MessageListComponent implements AfterViewChecked, OnChanges {
   @Input() messages: Message[] | null = [];
+  @Input() botName: string | null = 'Bot';
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
   
   private shouldScroll = false;
