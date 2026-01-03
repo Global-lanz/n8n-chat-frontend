@@ -82,7 +82,7 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
   height: 100vh;
-  overflow: auto;
+  overflow: hidden;
 }
 
 router-outlet + * {
@@ -350,12 +350,14 @@ body.light-mode .setting-item input:focus {
 .messages-container {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: var(--spacing-xl);
   background: var(--bg-secondary);
+  scroll-behavior: smooth;
 }
 
 .messages-container::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 .messages-container::-webkit-scrollbar-track {
@@ -364,7 +366,12 @@ body.light-mode .setting-item input:focus {
 
 .messages-container::-webkit-scrollbar-thumb {
   background: var(--border);
-  border-radius: 3px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.messages-container::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
 }
 
 .welcome-message {

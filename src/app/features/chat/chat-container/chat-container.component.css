@@ -4,6 +4,7 @@
   height: calc(100vh - 60px); /* Subtract navbar height */
   background: var(--bg-secondary);
   overflow: hidden;
+  position: relative;
 }
 
 .chat-info {
@@ -14,8 +15,9 @@
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
-  position: relative;
-  z-index: 1;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .bot-avatar {
@@ -44,10 +46,16 @@
 app-message-list {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   display: block;
+  min-height: 0;
 }
 
 app-message-input {
   flex-shrink: 0;
   display: block;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  background: var(--bg-tertiary);
 }
