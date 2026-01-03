@@ -112,4 +112,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       minute: '2-digit'
     });
   }
+
+  getTotalMessages(): number {
+    return this.conversations.reduce((sum, c) => sum + c.messages.length, 0);
+  }
 }

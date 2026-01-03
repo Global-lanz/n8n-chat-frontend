@@ -86,7 +86,7 @@
       <div class="stat-icon">📨</div>
       <div class="stat-info">
         <h4>Total de Mensagens</h4>
-        <p class="stat-value">{{ conversations.reduce((sum, c) => sum + c.messages.length, 0) }}</p>
+        <p class="stat-value">{{ getTotalMessages() }}</p>
       </div>
     </div>
 
