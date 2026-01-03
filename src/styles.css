@@ -590,7 +590,7 @@ body.light-mode .send-btn:hover {
   height: 100vh;
   background: var(--bg-secondary);
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
-  z-index: 1000;
+  z-index: 999;
   overflow-y: auto;
 }
 
@@ -603,7 +603,7 @@ body.light-mode .send-btn:hover {
   align-items: center;
   position: sticky;
   top: 0;
-  z-index: 1001;
+  z-index: 1;
 }
 
 .admin-header h2 {

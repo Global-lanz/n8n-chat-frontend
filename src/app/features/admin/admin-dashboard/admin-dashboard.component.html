@@ -8,6 +8,17 @@
     <div class="conversations-sidebar">
       <h3>💬 Conversas Ativas</h3>
       
+      <!-- Filtro de Busca -->
+      <div class="search-filter">
+        <input 
+          type="text" 
+          [(ngModel)]="searchFilter" 
+          (input)="filterConversations()"
+          placeholder="🔍 Buscar por nome ou email..."
+          class="filter-input"
+        />
+      </div>
+      
       @if (loading) {
         <div class="empty-state">
           <p>⏳ Carregando conversas...</p>
@@ -17,9 +28,14 @@
           <p>📭 Nenhuma conversa no momento</p>
           <small>As conversas dos usuários aparecerão aqui</small>
         </div>
+      } @else if (filteredConversations.length === 0) {
+        <div class="empty-state">
+          <p>🔍 Nenhuma conversa encontrada</p>
+          <small>Tente outro termo de busca</small>
+        </div>
       } @else {
         <div class="conversation-list">
-          @for (conv of conversations; track conv.user.id) {
+          @for (conv of filteredConversations; track conv.user.id) {
             <div 
               class="conversation-item"
               [class.active]="selectedConversation && selectedConversation.user.id === conv.user.id"
@@ -56,7 +72,7 @@
           </div>
         </div>
 
-        <div class="messages-viewer">
+        <div class="messages-viewer" #messagesViewer>
           @for (message of selectedConversation.messages; track message.id) {
             <div class="admin-message {{ message.sender }}">
               <div class="message-sender">

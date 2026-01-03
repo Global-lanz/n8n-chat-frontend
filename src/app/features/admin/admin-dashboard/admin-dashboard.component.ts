@@ -1,5 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { takeUntil, map } from 'rxjs/operators';
@@ -17,15 +18,20 @@ interface UserConversation {
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']
 })
-export class AdminDashboardComponent implements OnInit, OnDestroy {
+export class AdminDashboardComponent implements OnInit, OnDestroy, AfterViewChecked {
+  @ViewChild('messagesViewer') private messagesViewer?: ElementRef;
+  
   users$: Observable<User[]>;
   conversations: UserConversation[] = [];
+  filteredConversations: UserConversation[] = [];
   selectedConversation: UserConversation | null = null;
   loading = false;
+  searchFilter = '';
+  private shouldScrollToBottom = false;
   
   private destroy$ = new Subject<void>();
 
@@ -47,6 +53,23 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  ngAfterViewChecked(): void {
+    if (this.shouldScrollToBottom) {
+      this.scrollToBottom();
+      this.shouldScrollToBottom = false;
+    }
+  }
+
+  private scrollToBottom(): void {
+    if (this.messagesViewer) {
+      try {
+        this.messagesViewer.nativeElement.scrollTop = this.messagesViewer.nativeElement.scrollHeight;
+      } catch (err) {
+        console.error('Erro ao fazer scroll:', err);
+      }
+    }
   }
 
   loadConversations(): void {
@@ -91,12 +114,34 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       })
     ).subscribe(conversations => {
       this.conversations = conversations;
+      this.filteredConversations = conversations;
       this.loading = false;
     });
   }
 
   selectConversation(conversation: UserConversation): void {
-    this.selectedConversation = conversation;
+    // Ordenar mensagens por timestamp (mais antigas primeiro, mais recentes embaixo)
+    const sortedConversation = {
+      ...conversation,
+      messages: [...conversation.messages].sort((a, b) => 
+        new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+      )
+    };
+    this.selectedConversation = sortedConversation;
+    this.shouldScrollToBottom = true;
+  }
+
+  filterConversations(): void {
+    const filter = this.searchFilter.toLowerCase().trim();
+    
+    if (!filter) {
+      this.filteredConversations = this.conversations;
+    } else {
+      this.filteredConversations = this.conversations.filter(conv => 
+        conv.user.username.toLowerCase().includes(filter) ||
+        conv.user.email.toLowerCase().includes(filter)
+      );
+    }
   }
 
   formatDate(date: Date | string): string {

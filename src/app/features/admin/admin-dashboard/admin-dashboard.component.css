@@ -1,10 +1,14 @@
-.dashboard-container{padding:2rem;max-width:1400px;margin:0 auto;min-height:calc(100vh - 80px)}
+.dashboard-container{padding:2rem;padding-top:3rem;max-width:1400px;margin:0 auto;min-height:calc(100vh - 80px)}
 .dashboard-header{margin-bottom:2rem;padding:2rem;background:var(--bg-secondary);border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
 .dashboard-header h1{margin:0 0 .5rem;color:var(--text-primary);font-weight:700;font-size:2rem}
 .subtitle{color:var(--text-secondary);margin:0}
 .dashboard-content{display:grid;grid-template-columns:320px 1fr;gap:1.5rem;margin-bottom:2rem;min-height:500px}
 .conversations-sidebar{background:var(--bg-secondary);border-radius:12px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.1)}
 .conversations-sidebar h3{margin:0 0 1rem;color:var(--text-primary)}
+.search-filter{margin-bottom:1rem}
+.filter-input{width:100%;padding:.75rem 1rem;background:var(--bg-primary);border:2px solid var(--border-color);border-radius:8px;color:var(--text-primary);font-size:.9rem;transition:all .2s;font-family:inherit}
+.filter-input:focus{outline:none;border-color:var(--accent-primary);box-shadow:0 0 0 3px rgba(102,126,234,.1)}
+.filter-input::placeholder{color:var(--text-secondary);opacity:.7}
 .conversation-list{display:flex;flex-direction:column;gap:.75rem}
 .conversation-item{padding:1rem;border:2px solid var(--border-color);border-radius:8px;cursor:pointer;transition:all .2s;background:var(--bg-primary)}
 .conversation-item:hover{border-color:var(--accent-primary);transform:translateX(4px)}
@@ -18,7 +22,7 @@
 .conversation-header{padding-bottom:1rem;border-bottom:2px solid var(--border-color);margin-bottom:1rem}
 .conversation-header h3{margin:0 0 .5rem;color:var(--text-primary)}
 .conversation-header p{margin:0;color:var(--text-secondary)}
-.messages-viewer{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:1rem;padding:.5rem;max-height:550px}
+.messages-viewer{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:1rem;padding:.5rem;max-height:550px;scroll-behavior:smooth}
 .admin-message{display:flex;flex-direction:column;gap:.25rem;padding:.75rem 1rem;border-radius:8px;max-width:75%}
 .admin-message.user{align-self:flex-end;background:linear-gradient(135deg,rgba(102,126,234,.12),rgba(118,75,162,.12));border-left:3px solid var(--accent-primary)}
 .admin-message.bot{align-self:flex-start;background:var(--bg-tertiary);border-left:3px solid var(--accent)}
