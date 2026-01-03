@@ -1,4 +1,4 @@
-.dashboard-container{padding:2rem;padding-top:3rem;max-width:1400px;margin:0 auto;min-height:calc(100vh - 80px)}
+.dashboard-container{padding:2rem;padding-top:3rem;max-width:1400px;margin:0 auto;height:calc(100vh - 60px);overflow-y:auto}
 .dashboard-header{margin-bottom:2rem;padding:2rem;background:var(--bg-secondary);border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
 .dashboard-header h1{margin:0 0 .5rem;color:var(--text-primary);font-weight:700;font-size:2rem}
 .subtitle{color:var(--text-secondary);margin:0}
