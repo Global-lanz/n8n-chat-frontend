@@ -6,9 +6,12 @@
     </div>
   } @else {
     @for (message of messages; track message.timestamp) {
-      <div class="message {{ message.sender }}">
-        <div class="message-content" [innerHTML]="renderMarkdown(message.content)"></div>
-        <div class="message-time">{{ formatTime(message.timestamp) }}</div>
+      <div class="chat-message {{ message.sender }}">
+        <div class="message-sender">
+          {{ message.sender === 'user' ? '👤 Você' : '🤖 Bot' }}
+        </div>
+        <div class="message-bubble" [innerHTML]="renderMarkdown(message.content)"></div>
+        <div class="message-timestamp">{{ formatTime(message.timestamp) }}</div>
       </div>
     }
   }
