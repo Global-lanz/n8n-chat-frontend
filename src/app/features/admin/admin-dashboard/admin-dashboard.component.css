@@ -101,6 +101,23 @@
   font-size: 0.85rem;
 }
 
+.conv-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.user-email {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.last-msg-time {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
 .conversation-details {
   background: var(--bg-secondary);
   border-radius: 12px;
@@ -125,6 +142,67 @@
 .conversation-header p {
   margin: 0;
   color: var(--text-secondary);
+}
+
+.user-details {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.messages-viewer {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.5rem;
+  max-height: 550px;
+}
+
+.admin-message {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  max-width: 75%;
+}
+
+.admin-message.user {
+  align-self: flex-end;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.12), rgba(118, 75, 162, 0.12));
+  border-left: 3px solid var(--accent-primary);
+}
+
+.admin-message.bot {
+  align-self: flex-start;
+  background: var(--bg-tertiary);
+  border-left: 3px solid var(--accent);
+}
+
+.message-sender {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+  margin-bottom: 0.25rem;
+}
+
+.admin-message.bot .message-sender {
+  color: var(--accent);
+}
+
+.message-bubble {
+  color: var(--text-primary);
+  line-height: 1.5;
+  font-size: 0.95rem;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.message-timestamp {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
 }
 
 .messages-container {

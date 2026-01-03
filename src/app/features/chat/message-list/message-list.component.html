@@ -1,22 +1,12 @@
 <div class="messages-container" #messagesContainer>
   @if (!messages || messages.length === 0) {
     <div class="welcome-message">
-      @if (isAdmin) {
-        <h3>📭 Nenhuma conversa no momento</h3>
-        <p>As conversas dos usuários aparecerão aqui</p>
-      } @else {
-        <h3>👋 Bem-vindo!</h3>
-        <p>Como posso ajudar você hoje?</p>
-      }
+      <h3>👋 Bem-vindo!</h3>
+      <p>Como posso ajudar você hoje?</p>
     </div>
   } @else {
     @for (message of messages; track message.timestamp) {
       <div class="message {{ message.sender }}">
-        @if (isAdmin && message.user && message.sender === 'user') {
-          <div class="message-user-info">
-            <strong>{{ message.user.username }}</strong> ({{ message.user.email }})
-          </div>
-        }
         <div class="message-content" [innerHTML]="renderMarkdown(message.content)"></div>
         <div class="message-time">{{ formatTime(message.timestamp) }}</div>
       </div>

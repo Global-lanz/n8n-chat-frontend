@@ -8,7 +8,11 @@
     <div class="conversations-sidebar">
       <h3>💬 Conversas Ativas</h3>
       
-      @if (conversations.length === 0) {
+      @if (loading) {
+        <div class="empty-state">
+          <p>⏳ Carregando conversas...</p>
+        </div>
+      } @else if (conversations.length === 0) {
         <div class="empty-state">
           <p>📭 Nenhuma conversa no momento</p>
           <small>As conversas dos usuários aparecerão aqui</small>
@@ -26,7 +30,8 @@
                 <span class="message-count">{{ conv.messages.length }}</span>
               </div>
               <div class="conv-preview">
-                <small>Última mensagem: {{ formatDate(conv.lastMessageAt) }}</small>
+                <small class="user-email">{{ conv.user.email }}</small>
+                <small class="last-msg-time">{{ formatDate(conv.lastMessageAt) }}</small>
               </div>
             </div>
           }
@@ -42,18 +47,25 @@
         </div>
       } @else {
         <div class="conversation-header">
-          <h3>Conversa com: {{ selectedConversation.user.username }}</h3>
-          <p>Email: {{ selectedConversation.user.email }}</p>
+          <div>
+            <h3>💬 {{ selectedConversation.user.username }}</h3>
+            <p class="user-details">
+              📧 {{ selectedConversation.user.email }} | 
+              📊 {{ selectedConversation.messages.length }} mensagens
+            </p>
+          </div>
         </div>
 
-        <div class="messages-container">
+        <div class="messages-viewer">
           @for (message of selectedConversation.messages; track message.id) {
-            <div class="message" [class.user-message]="message.sender === 'user'" [class.bot-message]="message.sender === 'bot'">
-              <div class="message-content">
-                <strong>{{ message.sender === 'user' ? '👤 Usuário' : '🤖 Bot' }}:</strong>
-                <p>{{ message.content }}</p>
+            <div class="admin-message {{ message.sender }}">
+              <div class="message-sender">
+                {{ message.sender === 'user' ? '👤 ' + selectedConversation.user.username : '🤖 Bot' }}
               </div>
-              <small class="message-time">{{ formatTimestamp(message.timestamp) }}</small>
+              <div class="message-bubble">
+                {{ message.content }}
+              </div>
+              <div class="message-timestamp">{{ formatTimestamp(message.timestamp) }}</div>
             </div>
           }
         </div>
@@ -73,8 +85,8 @@
     <div class="stat-card">
       <div class="stat-icon">📨</div>
       <div class="stat-info">
-        <h4>Mensagens Hoje</h4>
-        <p class="stat-value">-</p>
+        <h4>Total de Mensagens</h4>
+        <p class="stat-value">{{ conversations.reduce((sum, c) => sum + c.messages.length, 0) }}</p>
       </div>
     </div>
 
