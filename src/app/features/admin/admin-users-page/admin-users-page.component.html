@@ -1,0 +1,32 @@
+<div class="admin-users-container">
+  <div class="admin-header">
+    <div>
+      <h1>👥 Gerenciamento de Usuários</h1>
+      <p class="subtitle">Crie, edite e gerencie usuários do sistema</p>
+    </div>
+    <button class="btn-primary" (click)="onShowCreateForm()">
+      ➕ Criar Novo Usuário
+    </button>
+  </div>
+
+  <!-- User Form -->
+  @if (showUserForm) {
+    <div class="form-container">
+      <app-user-form
+        [editingUser]="editingUser"
+        (save)="onSaveUser($event)"
+        (cancel)="onCancelForm()"
+      ></app-user-form>
+    </div>
+  }
+
+  <!-- Users Table -->
+  <div class="table-container">
+    <app-users-table
+      [users]="users$ | async"
+      [loading]="loading$ | async"
+      (edit)="onEditUser($event)"
+      (delete)="onDeleteUser($event)"
+    ></app-users-table>
+  </div>
+</div>
