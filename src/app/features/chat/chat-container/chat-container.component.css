@@ -1,0 +1,53 @@
+.chat-screen {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px); /* Subtract navbar height */
+  background: var(--bg-secondary);
+  overflow: hidden;
+}
+
+.chat-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.bot-avatar {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.bot-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bot-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.bot-status {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+app-message-list {
+  flex: 1;
+  overflow-y: auto;
+  display: block;
+}
+
+app-message-input {
+  flex-shrink: 0;
+  display: block;
+}

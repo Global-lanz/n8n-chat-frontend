@@ -1,0 +1,21 @@
+<div class="chat-screen">
+  <!-- Chat Info -->
+  <div class="chat-info">
+    <div class="bot-avatar">🤖</div>
+    <div class="bot-details">
+      <div class="bot-name">{{ botName$ | async }}</div>
+      <div class="bot-status">🟢 Online</div>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <app-message-list
+    [messages]="messages$ | async"
+    [isAdmin]="(isAdmin$ | async) || false"
+  ></app-message-list>
+
+  <!-- Input -->
+  <app-message-input
+    (sendMessage)="onSendMessage($event)"
+  ></app-message-input>
+</div>
