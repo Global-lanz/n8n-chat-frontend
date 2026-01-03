@@ -23,7 +23,7 @@ export class AdminSettingsComponent implements OnInit {
   defaultBotName = signal<string>('Assistente Virtual');
   
   backendVersion = signal<string>('Carregando...');
-  frontendVersion = signal<string>(packageInfo.version);
+  frontendVersion = signal<string>('Carregando...');
   buildDate = signal<string>('');
   apiEnvironment = signal<string>('');
   
@@ -47,7 +47,8 @@ export class AdminSettingsComponent implements OnInit {
     this.loadVersions();
   }
 
-  loadVVersão do backend (via API /config)
+  loadVersions() {
+    // Versão do backend (via API /config)
     this.apiService.getConfig().subscribe({
       next: (config: any) => {
         this.backendVersion.set(config.version || '1.0.0');
@@ -75,7 +76,6 @@ export class AdminSettingsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao carregar versão do frontend:', err);
-        this.frontendVersion.set('1.0.0);
         this.frontendVersion.set('N/A');
       }
     });
