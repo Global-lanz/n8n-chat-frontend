@@ -176,6 +176,23 @@ router-outlet + * {
   font-size: 14px;
 }
 
+.info-message {
+  text-align: center;
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: rgba(0, 168, 132, 0.1);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-lg);
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+body.light-mode .info-message {
+  background: rgba(5, 150, 105, 0.1);
+  border-color: var(--accent);
+}
+
 .version-info {
   position: absolute;
   bottom: 10px;
