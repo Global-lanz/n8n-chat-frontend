@@ -164,6 +164,6 @@ export class AdminSettingsComponent implements OnInit {
   }
 
   getWebhookUrl(): string {
-    return `${environment.apiUrl}/webhook/create-client`;
+    return `${environment.apiBaseUrl}/api/webhook/create-client`;
   }
 }

@@ -21,7 +21,7 @@ export interface UpdateSettingDto {
   providedIn: 'root'
 })
 export class SettingsAdminService {
-  private apiUrl = `${environment.apiUrl}/admin/settings`;
+  private apiUrl = `${environment.apiBaseUrl}/api/admin/settings`;
 
   constructor(private http: HttpClient) {}
 
