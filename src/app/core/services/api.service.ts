@@ -77,4 +77,13 @@ export class ApiService {
   deleteUser(userId: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/admin/users/${userId}`);
   }
+
+  // Admin Messages Endpoints
+  getAllMessages(): Observable<Message[]> {
+    return this.http.get<Message[]>(`${this.baseUrl}/admin/messages`);
+  }
+
+  getUserMessages(userId: number): Observable<Message[]> {
+    return this.http.get<Message[]>(`${this.baseUrl}/admin/messages/${userId}`);
+  }
 }

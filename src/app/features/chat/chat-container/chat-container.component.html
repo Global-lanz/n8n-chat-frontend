@@ -11,6 +11,7 @@
   <!-- Messages -->
   <app-message-list
     [messages]="messages$ | async"
+    [isAdmin]="(isAdmin$ | async) || false"
   ></app-message-list>
 
   <!-- Input -->

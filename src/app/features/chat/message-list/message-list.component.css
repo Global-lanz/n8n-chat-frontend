@@ -1,1 +1,33 @@
 /* Message list styles are inherited from global styles */
+
+.message-user-info {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  padding: 0 4px;
+  font-weight: 500;
+}
+
+body.light-mode .message-user-info {
+  color: #6b7280;
+}
+
+.message-user-info strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.message-user-info {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.message-user-info strong {
+  color: var(--accent);
+  font-weight: 600;
+}

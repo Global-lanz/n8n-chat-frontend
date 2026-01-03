@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
-import { map, catchError, switchMap, tap } from 'rxjs/operators';
+import { map, catchError, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import * as AppActions from '../actions/app.actions';
+import * as AppSelectors from '../selectors/app.selectors';
 import { ApiService, AuthService, WebSocketService, NotificationService } from '@core/services';
 
 @Injectable()
@@ -103,12 +105,17 @@ export class AppEffects {
   loadMessages$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AppActions.loadMessages),
-      switchMap(() =>
-        this.apiService.getMessages().pipe(
+      withLatestFrom(this.store.select(AppSelectors.selectIsAdmin)),
+      switchMap(([_, isAdmin]) => {
+        const messagesObservable = isAdmin 
+          ? this.apiService.getAllMessages() 
+          : this.apiService.getMessages();
+        
+        return messagesObservable.pipe(
           map(messages => AppActions.loadMessagesSuccess({ messages })),
           catchError(error => of(AppActions.loadMessagesFailure({ error: error.message })))
-        )
-      )
+        );
+      })
     )
   );
 
@@ -218,6 +225,7 @@ export class AppEffects {
     private authService: AuthService,
     private webSocketService: WebSocketService,
     private notificationService: NotificationService,
-    private router: Router
+    private router: Router,
+    private store: Store
   ) {}
 }

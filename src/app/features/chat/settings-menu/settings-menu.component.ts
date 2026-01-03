@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { ThemeService, Theme } from '@core/services/theme.service';
+import { NotificationService } from '@core/services/notification.service';
 import * as AppActions from '@store/actions/app.actions';
 import { User } from '@core/models';
 
@@ -23,7 +24,8 @@ export class SettingsMenuComponent implements OnInit {
 
   constructor(
     private themeService: ThemeService,
-    private store: Store
+    private store: Store,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -38,11 +40,11 @@ export class SettingsMenuComponent implements OnInit {
   onUpdateName(): void {
     const newName = this.username.trim();
     if (!newName) {
-      alert('Nome não pode estar vazio');
+      this.notificationService.error('Nome não pode estar vazio');
       return;
     }
     
     this.store.dispatch(AppActions.updateUsername({ username: newName }));
-    alert('Nome atualizado com sucesso!');
+    this.notificationService.success('Nome atualizado com sucesso!');
   }
 }

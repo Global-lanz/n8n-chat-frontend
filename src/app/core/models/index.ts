@@ -30,9 +30,15 @@ export interface AuthResponse {
 export interface Message {
   id?: number;
   user_id?: number;
+  userId?: number;
   sender: 'user' | 'bot';
   content: string;
   timestamp: string;
+  user?: {
+    id: number;
+    username: string;
+    email: string;
+  };
 }
 
 export interface SendMessageRequest {
