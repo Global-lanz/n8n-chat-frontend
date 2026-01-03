@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import * as AppActions from '@store/actions/app.actions';
 import { SettingsAdminService, Setting } from '@core/services/settings-admin.service';
 import { ApiService } from '@core/services/api.service';
+import { NotificationService } from '@core/services/notification.service';
 import { environment } from '../../../../environments/environment';
 import packageInfo from '../../../../../package.json';
 
@@ -35,7 +36,8 @@ export class AdminSettingsComponent implements OnInit {
   constructor(
     private settingsService: SettingsAdminService,
     private store: Store,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -117,14 +119,14 @@ export class AdminSettingsComponent implements OnInit {
       error: (err) => {
         console.error('Error loading settings:', err);
         this.loading.set(false);
-        alert('Erro ao carregar configurações');
+        this.notificationService.error('Erro ao carregar configurações');
       }
     });
   }
 
   saveLicenseDuration() {
     if (this.licenseDuration() < 1) {
-      alert('A duração da licença deve ser pelo menos 1 dia');
+      this.notificationService.error('A duração da licença deve ser pelo menos 1 dia');
       return;
     }
 
@@ -134,12 +136,12 @@ export class AdminSettingsComponent implements OnInit {
       description: 'Duração padrão da licença em dias para novos usuários'
     }).subscribe({
       next: () => {
-        alert('✅ Duração da licença salva com sucesso!');
+        this.notificationService.success('Duração da licença salva com sucesso!');
         this.saving.set(false);
       },
       error: (err) => {
         console.error('Error saving license duration:', err);
-        alert('❌ Erro ao salvar duração da licença');
+        this.notificationService.error('Erro ao salvar duração da licença');
         this.saving.set(false);
       }
     });
@@ -147,7 +149,7 @@ export class AdminSettingsComponent implements OnInit {
 
   saveBotName() {
     if (!this.defaultBotName().trim()) {
-      alert('O nome do bot não pode estar vazio');
+      this.notificationService.error('O nome do bot não pode estar vazio');
       return;
     }
 
@@ -157,14 +159,14 @@ export class AdminSettingsComponent implements OnInit {
       description: 'Nome padrão do bot para novos usuários'
     }).subscribe({
       next: () => {
-        alert('✅ Nome do bot salvo com sucesso!');
+        this.notificationService.success('Nome do bot salvo com sucesso!');
         this.saving.set(false);
         // Recarrega a config global para atualizar o nome em toda aplicação
         this.store.dispatch(AppActions.loadConfig());
       },
       error: (err) => {
         console.error('Error saving bot name:', err);
-        alert('❌ Erro ao salvar nome do bot');
+        this.notificationService.error('Erro ao salvar nome do bot');
         this.saving.set(false);
       }
     });
@@ -179,7 +181,7 @@ export class AdminSettingsComponent implements OnInit {
 
   saveWebhookToken() {
     if (!this.generatedToken()) {
-      alert('Token não gerado');
+      this.notificationService.error('Token não gerado');
       return;
     }
 
@@ -189,7 +191,7 @@ export class AdminSettingsComponent implements OnInit {
       description: 'Token de segurança para autenticar webhooks'
     }).subscribe({
       next: () => {
-        alert('✅ Token de webhook salvo com sucesso!');
+        this.notificationService.success('Token de webhook salvo com sucesso!');
         this.webhookToken.set('****');
         this.showGeneratedToken.set(false);
         this.generatedToken.set('');
@@ -197,7 +199,7 @@ export class AdminSettingsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error saving webhook token:', err);
-        alert('❌ Erro ao salvar token de webhook');
+        this.notificationService.error('Erro ao salvar token de webhook');
         this.saving.set(false);
       }
     });
@@ -213,10 +215,11 @@ export class AdminSettingsComponent implements OnInit {
     try {
       await navigator.clipboard.writeText(this.generatedToken());
       this.tokenCopied.set(true);
+      this.notificationService.success('Token copiado para área de transferência!');
       setTimeout(() => this.tokenCopied.set(false), 2000);
     } catch (err) {
       console.error('Failed to copy:', err);
-      alert('Erro ao copiar token');
+      this.notificationService.error('Erro ao copiar token');
     }
   }
 
@@ -224,10 +227,10 @@ export class AdminSettingsComponent implements OnInit {
     try {
       const url = this.getWebhookUrl();
       await navigator.clipboard.writeText(url);
-      alert('✅ URL copiada para área de transferência!');
+      this.notificationService.success('URL copiada para área de transferência!');
     } catch (err) {
       console.error('Failed to copy:', err);
-      alert('Erro ao copiar URL');
+      this.notificationService.error('Erro ao copiar URL');
     }
   }
 
