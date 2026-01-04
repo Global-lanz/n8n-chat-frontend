@@ -1,0 +1,18 @@
+<div class="messages-container" #messagesContainer>
+  @if (!messages || messages.length === 0) {
+    <div class="welcome-message">
+      <h3>👋 Bem-vindo!</h3>
+      <p>Como posso ajudar você hoje?</p>
+    </div>
+  } @else {
+    @for (message of messages; track message.timestamp) {
+      <div class="chat-message {{ message.sender }}">
+        <div class="message-sender">
+          {{ message.sender === 'user' ? '👤 Você' : '🤖 ' + botName }}
+        </div>
+        <div class="message-bubble" [innerHTML]="renderMarkdown(message.content)"></div>
+        <div class="message-timestamp">{{ formatTime(message.timestamp) }}</div>
+      </div>
+    }
+  }
+</div>
