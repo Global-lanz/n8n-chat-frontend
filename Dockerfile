@@ -21,6 +21,9 @@ FROM nginx:alpine
 # Copy built files
 COPY --from=build /app/dist/chat-n8n-angular/browser /usr/share/nginx/html
 
+# Copy package.json para fallback de versão
+COPY --from=build /app/package.json /usr/share/nginx/html/package.json
+
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
