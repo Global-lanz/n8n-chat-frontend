@@ -107,7 +107,7 @@ jobs:
           push: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'RC')) }}
           tags: ${{ steps.set_tags.outputs.tags }}
           build-args: |
-            APP_VERSION=${{ steps.set_tags.outputs.app_version }}
+            VERSION=${{ steps.set_tags.outputs.app_version }}
 
       - name: Create Git Tag
         if: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'RC') }}
