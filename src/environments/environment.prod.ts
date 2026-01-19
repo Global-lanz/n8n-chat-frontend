@@ -1,5 +1,16 @@
+// Declaração do tipo para window.__env
+declare global {
+  interface Window {
+    __env?: {
+      apiBaseUrl: string;
+      version: string;
+      production: boolean;
+    };
+  }
+}
+
 export const environment = {
-  production: true,
-  apiBaseUrl: '__API_BASE_URL__',
-  version: '__VERSION__'
+  production: window.__env?.production || true,
+  apiBaseUrl: window.__env?.apiBaseUrl || 'http://localhost:3000',
+  version: window.__env?.version || '0.1.0'
 };
