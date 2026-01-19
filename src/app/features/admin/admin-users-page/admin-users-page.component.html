@@ -1,0 +1,86 @@
+<div class="admin-users-container">
+  <div class="admin-header">
+    <div>
+      <h1>👥 Gerenciamento de Usuários</h1>
+      <p class="subtitle">Crie, edite e gerencie usuários do sistema</p>
+    </div>
+    <button class="btn-primary" (click)="onShowCreateForm()">
+      ➕ Criar Novo Usuário
+    </button>
+  </div>
+
+  <!-- Filtro de Busca -->
+  <div class="filter-section">
+    <div class="filter-container">
+      <input 
+        type="text" 
+        [(ngModel)]="searchFilter" 
+        [value]="searchFilter()"
+        (ngModelChange)="searchFilter.set($event); onFilterChange()"
+        placeholder="🔍 Buscar por nome ou email..."
+        class="filter-input"
+      />
+      <div class="filter-stats">
+        <span>{{ filteredUsers().length }} usuário(s) encontrado(s)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Form -->
+  @if (showUserForm) {
+    <div class="form-container">
+      <app-user-form
+        [editingUser]="editingUser"
+        (save)="onSaveUser($event)"
+        (cancel)="onCancelForm()"
+      ></app-user-form>
+    </div>
+  }
+
+  <!-- Users Table -->
+  <div class="table-container">
+    <app-users-table
+      [users]="paginatedUsers()"
+      [loading]="loading$ | async"
+      (edit)="onEditUser($event)"
+      (delete)="onDeleteUser($event)"
+    ></app-users-table>
+  </div>
+
+  <!-- Paginação -->
+  @if (totalPages() > 1) {
+    <div class="pagination">
+      <button 
+        class="pagination-btn" 
+        (click)="previousPage()" 
+        [disabled]="currentPage() === 1"
+      >
+        ← Anterior
+      </button>
+      
+      <div class="pagination-numbers">
+        @for (page of getPageNumbers(); track page) {
+          <button 
+            class="pagination-number" 
+            [class.active]="page === currentPage()"
+            (click)="goToPage(page)"
+          >
+            {{ page }}
+          </button>
+        }
+      </div>
+      
+      <button 
+        class="pagination-btn" 
+        (click)="nextPage()" 
+        [disabled]="currentPage() === totalPages()"
+      >
+        Próximo →
+      </button>
+      
+      <div class="pagination-info">
+        Página {{ currentPage() }} de {{ totalPages() }}
+      </div>
+    </div>
+  }
+</div>

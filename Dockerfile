@@ -1,21 +1,37 @@
+# Build Stage
+FROM node:20-alpine AS build
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy source code
+COPY . .
+
+# Build the application
+RUN npm run build:prod
+
+# Production Stage
 FROM nginx:alpine
 
-COPY index.html /usr/share/nginx/html/
-COPY style.css /usr/share/nginx/html/
-COPY app.js /usr/share/nginx/html/
-COPY package.json /usr/share/nginx/html/
+# Copy built files
+COPY --from=build /app/dist/chat-n8n-angular/browser /usr/share/nginx/html
 
+# Copy package.json para fallback de versão
+COPY --from=build /app/package.json /usr/share/nginx/html/package.json
+
+# Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Script de entrypoint para substituir a URL e versão em runtime
-RUN echo '#!/bin/sh' > /entrypoint.sh && \
-    echo 'CHAT_API_URL=${CHAT_API_URL:-http://localhost:3000}' >> /entrypoint.sh && \
-    echo 'VERSION=$(sed -n '"'"'s/.*"version": "\([^"]*\)".*/\1/p'"'"' /usr/share/nginx/html/package.json 2>/dev/null || echo "0.0.0")' >> /entrypoint.sh && \
-    echo 'sed -i "s|__API_BASE_URL__|${CHAT_API_URL}|g; s|__VERSION__|${VERSION}|g" /usr/share/nginx/html/index.html' >> /entrypoint.sh && \
-    echo 'exec "$@"' >> /entrypoint.sh && \
-    chmod +x /entrypoint.sh
+# Copy entrypoint script
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
 EXPOSE 80
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]

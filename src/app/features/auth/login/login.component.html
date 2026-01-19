@@ -1,0 +1,30 @@
+<div class="auth-screen">
+  <div class="auth-container">
+    <h1>💬 {{ botName$ | async }}</h1>
+    
+    <div class="auth-form">
+      <h2>Login</h2>
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+        <input 
+          type="email" 
+          formControlName="email" 
+          placeholder="Email" 
+          required
+        >
+        <input 
+          type="password" 
+          formControlName="password" 
+          placeholder="Senha" 
+          required
+        >
+        <button type="submit" [disabled]="loading$ | async">
+          {{ (loading$ | async) ? 'Entrando...' : 'Entrar' }}
+        </button>
+      </form>
+    </div>
+    
+    @if (error$ | async; as error) {
+      <div class="error-message">{{ error }}</div>
+    }
+  </div>
+</div>
