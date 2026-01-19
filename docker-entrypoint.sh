@@ -5,13 +5,16 @@ echo "🚀 Starting docker-entrypoint.sh..."
 # Pegar API_BASE_URL da variável de ambiente
 API_BASE_URL=${API_BASE_URL:-"http://localhost:3000"}
 
-# Pegar VERSION do package.json
-if [ -f /usr/share/nginx/html/package.json ]; then
+# Pegar VERSION: prioridade .version > package.json
+if [ -f /usr/share/nginx/html/.version ]; then
+    VERSION=$(cat /usr/share/nginx/html/.version)
+    echo "✅ VERSION do arquivo .version: ${VERSION}"
+elif [ -f /usr/share/nginx/html/package.json ]; then
     VERSION=$(grep -o '"version"[[:space:]]*:[[:space:]]*"[^"]*"' /usr/share/nginx/html/package.json | sed 's/"version"[[:space:]]*:[[:space:]]*"\([^"]*\)"/\1/')
     echo "✅ VERSION do package.json: ${VERSION}"
 else
     VERSION="0.1.0"
-    echo "⚠️  package.json não encontrado, usando versão padrão: ${VERSION}"
+    echo "⚠️  Nenhuma fonte de versão encontrada, usando padrão: ${VERSION}"
 fi
 
 echo "✅ API_BASE_URL: ${API_BASE_URL}"
