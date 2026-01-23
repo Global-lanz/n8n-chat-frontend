@@ -4,7 +4,8 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, catchError, switchMap, tap } from 'rxjs/operators';
 import * as AppActions from '../actions/app.actions';
-import { ApiService, AuthService, WebSocketService, NotificationService, ThemeService } from '@core/services';import { ThemeService } from '@core/services/theme.service';
+import { ApiService, AuthService, WebSocketService, NotificationService, ThemeService } from '@core/services';
+
 @Injectable()
 export class AppEffects {
   login$ = createEffect(() =>
