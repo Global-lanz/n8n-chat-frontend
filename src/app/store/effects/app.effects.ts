@@ -4,7 +4,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, catchError, switchMap, tap } from 'rxjs/operators';
 import * as AppActions from '../actions/app.actions';
-import { ApiService, AuthService, WebSocketService, NotificationService } from '@core/services';
+import { ApiService, AuthService, WebSocketService, NotificationService, ThemeService } from '@core/services';
 
 @Injectable()
 export class AppEffects {
@@ -58,7 +58,11 @@ export class AppEffects {
   loginSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AppActions.loginSuccess, AppActions.registerSuccess),
-      tap(() => {
+      tap(({ user }) => {
+        // Apply user's theme preference
+        if (user.theme) {
+          this.themeService.setTheme(user.theme as any);
+        }
         this.webSocketService.connect();
         this.router.navigate(['/chat']);
       })
@@ -69,8 +73,25 @@ export class AppEffects {
   validateTokenSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AppActions.validateTokenSuccess),
-      tap(() => {
+      tap(({ user }) => {
+        // Apply user's theme preference
+        if (user.theme) {
+          this.themeService.setTheme(user.theme as any);
+        }
         this.webSocketService.connect();
+      })
+    ),
+    { dispatch: false }
+  );
+
+  updateUsernameSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AppActions.updateUsernameSuccess),
+      tap(({ user }) => {
+        // Apply user's theme preference when updated
+        if (user.theme) {
+          this.themeService.setTheme(user.theme as any);
+        }
       })
     ),
     { dispatch: false }
@@ -91,10 +112,29 @@ export class AppEffects {
   updateUsername$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AppActions.updateUsername),
-      switchMap(({ username }) =>
-        this.apiService.updateUsername({ username }).pipe(
+      switchMap(({ username, theme }) =>
+        this.apiService.updateUsername({ username, theme }).pipe(
           map(response => AppActions.updateUsernameSuccess({ user: response.user })),
           catchError(error => of(AppActions.loginFailure({ error: error.error?.error || 'Update failed' })))
+        )
+      )
+    )
+  );
+
+  changePassword$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AppActions.changePassword),
+      switchMap(({ currentPassword, newPassword }) =>
+        this.apiService.changePassword({ currentPassword, newPassword }).pipe(
+          map(() => {
+            this.notificationService.success('Senha alterada com sucesso!');
+            return AppActions.changePasswordSuccess();
+          }),
+          catchError(error => {
+            const errorMsg = error.error?.error || 'Erro ao alterar senha';
+            this.notificationService.error(errorMsg);
+            return of(AppActions.changePasswordFailure({ error: errorMsg }));
+          })
         )
       )
     )
@@ -218,6 +258,7 @@ export class AppEffects {
     private authService: AuthService,
     private webSocketService: WebSocketService,
     private notificationService: NotificationService,
+    private themeService: ThemeService,
     private router: Router
   ) {}
 }

@@ -10,7 +10,7 @@
     }
     <div class="setting-item">
       <label for="theme-toggle">Modo:</label>
-      <select id="theme-toggle" [(ngModel)]="selectedTheme" (change)="onThemeChange()">
+      <select id="theme-toggle" [(ngModel)]="selectedTheme">
         <option value="dark">Escuro</option>
         <option value="light">Claro</option>
       </select>
@@ -23,11 +23,59 @@
         [(ngModel)]="username" 
         placeholder="Seu nome"
       >
-      <button (click)="onUpdateName()">Salvar Nome</button>
     </div>
-    
-    @if (!standalone) {
-      <button class="close-settings-btn" (click)="close.emit()">Fechar</button>
-    }
+
+    <div class="password-section">
+      <div class="section-header" (click)="togglePasswordSection()">
+        <h4>Alterar Senha</h4>
+        <button class="toggle-btn" type="button">
+          {{ showPasswordSection ? '▲' : '▼' }}
+        </button>
+      </div>
+      
+      @if (showPasswordSection) {
+        <div class="password-fields">
+          <div class="setting-item">
+            <label for="current-password">Senha Atual:</label>
+            <input 
+              type="password" 
+              id="current-password" 
+              [(ngModel)]="currentPassword" 
+              placeholder="Digite sua senha atual"
+            >
+          </div>
+          
+          <div class="setting-item">
+            <label for="new-password">Nova Senha:</label>
+            <input 
+              type="password" 
+              id="new-password" 
+              [(ngModel)]="newPassword" 
+              placeholder="Digite a nova senha"
+            >
+            <small class="field-hint">Mínimo de 6 caracteres</small>
+          </div>
+          
+          <div class="setting-item">
+            <label for="confirm-password">Confirmar Nova Senha:</label>
+            <input 
+              type="password" 
+              id="confirm-password" 
+              [(ngModel)]="confirmPassword" 
+              placeholder="Confirme a nova senha"
+            >
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-primary" (click)="onSaveSettings()">
+        💾 Salvar Todas as Alterações
+      </button>
+      @if (!standalone) {
+        <button class="btn-secondary" (click)="close.emit()">Fechar</button>
+      }
+    </div>
   </div>
 </div>

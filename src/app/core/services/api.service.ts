@@ -43,6 +43,10 @@ export class ApiService {
     return this.http.put<UserResponse>(`${this.baseUrl}/user/username`, data);
   }
 
+  changePassword(data: { currentPassword: string; newPassword: string }): Observable<any> {
+    return this.http.put(`${this.baseUrl}/user/password`, data);
+  }
+
   // Messages Endpoints
   getMessages(): Observable<Message[]> {
     return this.http.get<Message[]>(`${this.baseUrl}/messages`);
