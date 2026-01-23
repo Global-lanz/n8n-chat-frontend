@@ -87,7 +87,8 @@ export class UserFormComponent implements OnInit, OnChanges {
         isActive: formValue.isActive
       };
       
-      if (!this.editingUser && formValue.password) {
+      // Include password if provided (required for creation, optional for editing)
+      if (formValue.password && formValue.password.trim()) {
         data.password = formValue.password;
       }
       

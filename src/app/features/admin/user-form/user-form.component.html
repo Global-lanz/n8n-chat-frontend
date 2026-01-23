@@ -28,20 +28,22 @@
       }
     </div>
     
-    @if (!editingUser) {
-      <div class="form-group">
-        <label>Senha:</label>
-        <input 
-          type="password" 
-          formControlName="password" 
-          required
-          [class.error]="isFieldInvalid('password')">
-        @if (hasError('password', 'required')) {
-          <span class="error-message">Senha é obrigatória</span>
-        }
+    <div class="form-group">
+      <label>Senha:</label>
+      <input 
+        type="password" 
+        formControlName="password" 
+        [required]="!editingUser"
+        [class.error]="isFieldInvalid('password')">
+      @if (hasError('password', 'required')) {
+        <span class="error-message">Senha é obrigatória</span>
+      }
+      @if (editingUser) {
+        <small class="field-hint">Deixe em branco para manter a senha atual</small>
+      } @else {
         <small class="field-hint">Mínimo de 6 caracteres</small>
-      </div>
-    }
+      }
+    </div>
     
     <div class="form-group">
       <label>Data de Expiração da Licença:</label>
