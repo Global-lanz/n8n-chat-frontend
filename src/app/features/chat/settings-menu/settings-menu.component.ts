@@ -21,6 +21,12 @@ export class SettingsMenuComponent implements OnInit {
   
   selectedTheme: Theme = 'dark';
   username = '';
+  
+  // Password change
+  currentPassword = '';
+  newPassword = '';
+  confirmPassword = '';
+  showPasswordSection = false;
 
   constructor(
     private themeService: ThemeService,
@@ -29,22 +35,73 @@ export class SettingsMenuComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.selectedTheme = this.themeService.getCurrentTheme();
+    // Load theme from user profile or current theme
+    if (this.currentUser?.theme) {
+      this.selectedTheme = this.currentUser.theme as Theme;
+    } else {
+      this.selectedTheme = this.themeService.getCurrentTheme();
+    }
+    
     this.username = this.currentUser?.username || '';
   }
 
-  onThemeChange(): void {
-    this.themeService.setTheme(this.selectedTheme);
-  }
-
-  onUpdateName(): void {
+  onSaveSettings(): void {
     const newName = this.username.trim();
     if (!newName) {
       this.notificationService.error('Nome não pode estar vazio');
       return;
     }
+
+    // Check if password change is requested
+    if (this.showPasswordSection && (this.currentPassword || this.newPassword || this.confirmPassword)) {
+      // Validate password fields
+      if (!this.currentPassword || !this.newPassword || !this.confirmPassword) {
+        this.notificationService.error('Preencha todos os campos de senha');
+        return;
+      }
+
+      if (this.newPassword.length < 6) {
+        this.notificationService.error('A nova senha deve ter no mínimo 6 caracteres');
+        return;
+      }
+
+      if (this.newPassword !== this.confirmPassword) {
+        this.notificationService.error('As senhas não conferem');
+        return;
+      }
+
+      // Dispatch password change
+      this.store.dispatch(AppActions.changePassword({ 
+        currentPassword: this.currentPassword, 
+        newPassword: this.newPassword 
+      }));
+
+      this.clearPasswordFields();
+      this.showPasswordSection = false;
+    }
+
+    // Apply theme immediately
+    this.themeService.setTheme(this.selectedTheme);
+
+    // Update username and theme in backend
+    this.store.dispatch(AppActions.updateUsername({ 
+      username: newName,
+      theme: this.selectedTheme 
+    }));
     
-    this.store.dispatch(AppActions.updateUsername({ username: newName }));
-    this.notificationService.success('Nome atualizado com sucesso!');
+    this.notificationService.success('Configurações salvas com sucesso!');
+  }
+
+  togglePasswordSection(): void {
+    this.showPasswordSection = !this.showPasswordSection;
+    if (!this.showPasswordSection) {
+      this.clearPasswordFields();
+    }
+  }
+
+  private clearPasswordFields(): void {
+    this.currentPassword = '';
+    this.newPassword = '';
+    this.confirmPassword = '';
   }
 }
