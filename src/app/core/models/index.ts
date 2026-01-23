@@ -5,6 +5,7 @@ export interface User {
   email: string;
   isAdmin: boolean;
   isActive: boolean;
+  theme: string;
   licenseExpiresAt: string | null;
   createdAt: string;
 }
@@ -81,6 +82,7 @@ export interface UsersListResponse {
 
 export interface UpdateUsernameRequest {
   username: string;
+  theme?: string;
 }
 
 export interface UserResponse {

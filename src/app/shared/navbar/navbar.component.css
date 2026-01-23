@@ -28,6 +28,21 @@
   opacity: 0.9;
 }
 
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.4rem;
+}
+
 .navbar-menu {
   display: flex;
   gap: 0.5rem;
