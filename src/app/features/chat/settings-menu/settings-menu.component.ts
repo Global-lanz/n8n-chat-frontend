@@ -23,7 +23,6 @@ export class SettingsMenuComponent implements OnInit {
   username = '';
   
   // Password change
-  currentPassword = '';
   newPassword = '';
   confirmPassword = '';
   showPasswordSection = false;
@@ -53,10 +52,10 @@ export class SettingsMenuComponent implements OnInit {
     }
 
     // Check if password change is requested
-    if (this.showPasswordSection && (this.currentPassword || this.newPassword || this.confirmPassword)) {
+    if (this.showPasswordSection && (this.newPassword || this.confirmPassword)) {
       // Validate password fields
-      if (!this.currentPassword || !this.newPassword || !this.confirmPassword) {
-        this.notificationService.error('Preencha todos os campos de senha');
+      if (!this.newPassword || !this.confirmPassword) {
+        this.notificationService.error('Preencha a nova senha e a confirmação');
         return;
       }
 
@@ -72,7 +71,6 @@ export class SettingsMenuComponent implements OnInit {
 
       // Dispatch password change
       this.store.dispatch(AppActions.changePassword({ 
-        currentPassword: this.currentPassword, 
         newPassword: this.newPassword 
       }));
 
@@ -100,7 +98,6 @@ export class SettingsMenuComponent implements OnInit {
   }
 
   private clearPasswordFields(): void {
-    this.currentPassword = '';
     this.newPassword = '';
     this.confirmPassword = '';
   }

@@ -124,8 +124,8 @@ export class AppEffects {
   changePassword$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AppActions.changePassword),
-      switchMap(({ currentPassword, newPassword }) =>
-        this.apiService.changePassword({ currentPassword, newPassword }).pipe(
+      switchMap(({ newPassword }) =>
+        this.apiService.changePassword({ newPassword }).pipe(
           map(() => {
             this.notificationService.success('Senha alterada com sucesso!');
             return AppActions.changePasswordSuccess();

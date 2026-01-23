@@ -55,7 +55,7 @@ export const updateUsernameSuccess = createAction(
 
 export const changePassword = createAction(
   '[Auth] Change Password',
-  props<{ currentPassword: string; newPassword: string }>()
+  props<{ newPassword: string }>()
 );
 
 export const changePasswordSuccess = createAction(
