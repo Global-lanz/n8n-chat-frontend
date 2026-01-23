@@ -1,11 +1,13 @@
 <nav class="navbar">
   <div class="navbar-brand">
-    <a routerLink="/chat" class="logo">💬 {{ botName$ | async }}</a>
+    <a routerLink="/chat" class="logo">
+      <img src="assets/chat-icon.svg" alt="Chat" class="logo-icon"> {{ botName$ | async }}
+    </a>
   </div>
 
   <div class="navbar-menu">
     <a routerLink="/chat" routerLinkActive="active" class="nav-link">
-      💬 Chat
+      <img src="assets/chat-icon.svg" alt="Chat" class="nav-icon"> Chat
     </a>
     
     @if (isAdmin$ | async) {

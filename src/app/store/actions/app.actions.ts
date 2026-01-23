@@ -45,12 +45,26 @@ export const validateTokenFailure = createAction('[Auth] Validate Token Failure'
 
 export const updateUsername = createAction(
   '[Auth] Update Username',
-  props<{ username: string }>()
+  props<{ username: string; theme?: string }>()
 );
 
 export const updateUsernameSuccess = createAction(
   '[Auth] Update Username Success',
   props<{ user: User }>()
+);
+
+export const changePassword = createAction(
+  '[Auth] Change Password',
+  props<{ newPassword: string }>()
+);
+
+export const changePasswordSuccess = createAction(
+  '[Auth] Change Password Success'
+);
+
+export const changePasswordFailure = createAction(
+  '[Auth] Change Password Failure',
+  props<{ error: string }>()
 );
 
 // Messages Actions
