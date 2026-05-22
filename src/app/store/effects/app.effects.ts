@@ -176,6 +176,18 @@ export class AppEffects {
     )
   );
 
+  loadConfigSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AppActions.loadConfigSuccess),
+      tap(({ config }) => {
+        if (config && config.systemPalette) {
+          this.themeService.setPalette(config.systemPalette);
+        }
+      })
+    ),
+    { dispatch: false }
+  );
+
   loadUsers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AppActions.loadUsers),

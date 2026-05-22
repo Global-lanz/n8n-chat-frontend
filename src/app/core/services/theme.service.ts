@@ -42,4 +42,22 @@ export class ThemeService {
       document.body.classList.remove('light-mode');
     }
   }
+
+  private currentPalette = 'green';
+
+  setPalette(palette: string): void {
+    this.currentPalette = palette || 'green';
+    this.applyPalette(this.currentPalette);
+  }
+
+  private applyPalette(palette: string): void {
+    // Remove any existing palette classes from body
+    const classesToRemove = Array.from(document.body.classList).filter(c => c.startsWith('palette-'));
+    classesToRemove.forEach(c => document.body.classList.remove(c));
+    
+    // Add the new palette class if not default (green)
+    if (palette && palette !== 'green') {
+      document.body.classList.add(`palette-${palette}`);
+    }
+  }
 }
