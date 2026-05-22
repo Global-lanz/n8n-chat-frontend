@@ -180,8 +180,13 @@ export class AppEffects {
     this.actions$.pipe(
       ofType(AppActions.loadConfigSuccess),
       tap(({ config }) => {
-        if (config && config.systemPalette) {
-          this.themeService.setPalette(config.systemPalette);
+        if (config) {
+          if (config.systemPalette) {
+            this.themeService.setPalette(config.systemPalette);
+          }
+          if (config.botName) {
+            document.title = config.botName;
+          }
         }
       })
     ),

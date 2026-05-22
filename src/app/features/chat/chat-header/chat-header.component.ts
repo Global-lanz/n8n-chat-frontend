@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-chat-header',
@@ -9,5 +10,5 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./chat-header.component.css']
 })
 export class ChatHeaderComponent {
-  @Input() botName: string | null = 'NorteIA';
+  @Input() botName: string | null = environment.appName;
 }
