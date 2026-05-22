@@ -21,6 +21,9 @@ export class AdminSettingsComponent implements OnInit {
   licenseDuration = signal<number>(365);
   webhookToken = signal<string>('');
   defaultBotName = signal<string>('Assistente Virtual');
+  systemPalette = signal<string>('green');
+  systemPrompt = signal<string>('Você é um assistente virtual útil.');
+  activeTab = signal<string>('visual'); // tabs: 'visual', 'ai', 'integration', 'system'
   
   backendVersion = signal<string>('Carregando...');
   frontendVersion = signal<string>('Carregando...');
@@ -129,6 +132,12 @@ export class AdminSettingsComponent implements OnInit {
               break;
             case 'default_bot_name':
               this.defaultBotName.set(setting.value || 'Assistente Virtual');
+              break;
+            case 'system_color_palette':
+              this.systemPalette.set(setting.value || 'green');
+              break;
+            case 'system_prompt':
+              this.systemPrompt.set(setting.value || 'Você é um assistente virtual útil.');
               break;
           }
         });
@@ -254,5 +263,52 @@ export class AdminSettingsComponent implements OnInit {
 
   getWebhookUrl(): string {
     return `${environment.apiBaseUrl}/api/webhook/create-client`;
+  }
+
+  saveSystemPalette() {
+    this.saving.set(true);
+    this.settingsService.updateSetting('system_color_palette', {
+      value: this.systemPalette(),
+      description: 'Paleta de cores ativa do sistema'
+    }).subscribe({
+      next: () => {
+        this.notificationService.success('Paleta de cores salva com sucesso!');
+        this.saving.set(false);
+        // Recarrega a config global para atualizar a cor em toda a aplicação
+        this.store.dispatch(AppActions.loadConfig());
+      },
+      error: (err) => {
+        console.error('Error saving system palette:', err);
+        this.notificationService.error('Erro ao salvar paleta de cores');
+        this.saving.set(false);
+      }
+    });
+  }
+
+  saveSystemPrompt() {
+    if (!this.systemPrompt().trim()) {
+      this.notificationService.error('O prompt de IA não pode estar vazio');
+      return;
+    }
+
+    this.saving.set(true);
+    this.settingsService.updateSetting('system_prompt', {
+      value: this.systemPrompt(),
+      description: 'Prompt padrão enviado para a ferramenta de IA (N8N)'
+    }).subscribe({
+      next: () => {
+        this.notificationService.success('Prompt de IA salvo com sucesso!');
+        this.saving.set(false);
+      },
+      error: (err) => {
+        console.error('Error saving system prompt:', err);
+        this.notificationService.error('Erro ao salvar prompt de IA');
+        this.saving.set(false);
+      }
+    });
+  }
+
+  setTab(tab: string) {
+    this.activeTab.set(tab);
   }
 }
