@@ -1,21 +1,37 @@
-<div class="admin-panel">
+<div class="admin-panel" [class.modal-open]="showUserForm">
   <div class="admin-header">
-    <h2>🔐 Painel de Administração</h2>
+    <div>
+      <h2>🔐 Painel de Administração</h2>
+      <p>Gerencie usuários e ações administrativas com o mesmo padrão visual da plataforma.</p>
+    </div>
     <button class="close-admin" (click)="close.emit()">✕</button>
   </div>
   
   <div class="admin-content">
     <div class="admin-actions">
-      <button (click)="onShowCreateForm()">➕ Criar Usuário</button>
+      <button class="btn-primary" (click)="onShowCreateForm()">➕ Criar Usuário</button>
     </div>
 
-    <!-- User Form -->
+    <!-- User Form Modal -->
     @if (showUserForm) {
-      <app-user-form
-        [editingUser]="editingUser"
-        (save)="onSaveUser($event)"
-        (cancel)="onCancelForm()"
-      ></app-user-form>
+      <div class="modal-backdrop" (click)="onCancelForm()">
+        <div class="modal-panel" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <div>
+              <p class="modal-kicker">Cadastro de usuário</p>
+              <h3>{{ editingUser ? 'Editar usuário' : 'Novo usuário' }}</h3>
+              <p>Crie ou altere um usuário sem sair do painel administrativo.</p>
+            </div>
+            <button type="button" class="modal-close" (click)="onCancelForm()">✕</button>
+          </div>
+
+          <app-user-form
+            [editingUser]="editingUser"
+            (save)="onSaveUser($event)"
+            (cancel)="onCancelForm()"
+          ></app-user-form>
+        </div>
+      </div>
     }
 
     <!-- Users List -->
