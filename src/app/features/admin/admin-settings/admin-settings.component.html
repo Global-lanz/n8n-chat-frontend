@@ -42,8 +42,7 @@
                 <div class="input-group">
                   <input 
                     type="text" 
-                    [(ngModel)]="defaultBotName"
-                    [value]="defaultBotName()"
+                    [ngModel]="defaultBotName()"
                     (ngModelChange)="defaultBotName.set($event)"
                     placeholder="Ex: NorteIA"
                     class="input-field full-width"
@@ -68,8 +67,8 @@
               <div class="card-body">
                 <div class="palette-selector">
                   
-                  <label class="palette-option" [class.selected]="systemPalette() === 'green'">
-                    <input type="radio" name="palette" value="green" [(ngModel)]="systemPalette" [value]="systemPalette()" (ngModelChange)="systemPalette.set($event)">
+                  <label class="palette-option" [class.selected]="systemPalette() === 'green'" (click)="selectPalette('green')">
+                    <input type="radio" name="palette" value="green" [checked]="systemPalette() === 'green'">
                     <span class="color-dot green"></span>
                     <div class="palette-info">
                       <span class="palette-name">Emerald Green</span>
@@ -77,8 +76,8 @@
                     </div>
                   </label>
 
-                  <label class="palette-option" [class.selected]="systemPalette() === 'blue'">
-                    <input type="radio" name="palette" value="blue" [(ngModel)]="systemPalette" [value]="systemPalette()" (ngModelChange)="systemPalette.set($event)">
+                  <label class="palette-option" [class.selected]="systemPalette() === 'blue'" (click)="selectPalette('blue')">
+                    <input type="radio" name="palette" value="blue" [checked]="systemPalette() === 'blue'">
                     <span class="color-dot blue"></span>
                     <div class="palette-info">
                       <span class="palette-name">Ocean Blue</span>
@@ -86,8 +85,8 @@
                     </div>
                   </label>
 
-                  <label class="palette-option" [class.selected]="systemPalette() === 'purple'">
-                    <input type="radio" name="palette" value="purple" [(ngModel)]="systemPalette" [value]="systemPalette()" (ngModelChange)="systemPalette.set($event)">
+                  <label class="palette-option" [class.selected]="systemPalette() === 'purple'" (click)="selectPalette('purple')">
+                    <input type="radio" name="palette" value="purple" [checked]="systemPalette() === 'purple'">
                     <span class="color-dot purple"></span>
                     <div class="palette-info">
                       <span class="palette-name">Amethyst Purple</span>
@@ -95,8 +94,8 @@
                     </div>
                   </label>
 
-                  <label class="palette-option" [class.selected]="systemPalette() === 'blueprint'">
-                    <input type="radio" name="palette" value="blueprint" [(ngModel)]="systemPalette" [value]="systemPalette()" (ngModelChange)="systemPalette.set($event)">
+                  <label class="palette-option" [class.selected]="systemPalette() === 'blueprint'" (click)="selectPalette('blueprint')">
+                    <input type="radio" name="palette" value="blueprint" [checked]="systemPalette() === 'blueprint'">
                     <span class="color-dot blueprint"></span>
                     <div class="palette-info">
                       <span class="palette-name">Blueprint (Teal)</span>
@@ -104,8 +103,8 @@
                     </div>
                   </label>
 
-                  <label class="palette-option" [class.selected]="systemPalette() === 'red'">
-                    <input type="radio" name="palette" value="red" [(ngModel)]="systemPalette" [value]="systemPalette()" (ngModelChange)="systemPalette.set($event)">
+                  <label class="palette-option" [class.selected]="systemPalette() === 'red'" (click)="selectPalette('red')">
+                    <input type="radio" name="palette" value="red" [checked]="systemPalette() === 'red'">
                     <span class="color-dot red"></span>
                     <div class="palette-info">
                       <span class="palette-name">Ruby Red</span>
@@ -140,8 +139,7 @@
             <div class="card-body">
               <div class="textarea-container">
                 <textarea 
-                  [(ngModel)]="systemPrompt"
-                  [value]="systemPrompt()"
+                  [ngModel]="systemPrompt()"
                   (ngModelChange)="systemPrompt.set($event)"
                   rows="12"
                   placeholder="Ex: Você é o assistente virtual da empresa X. Seja cortês e ajude os clientes a encontrar os produtos..."
@@ -298,8 +296,7 @@
                 <div class="input-group">
                   <input 
                     type="number" 
-                    [(ngModel)]="licenseDuration" 
-                    [value]="licenseDuration()"
+                    [ngModel]="licenseDuration()"
                     (ngModelChange)="licenseDuration.set($event)"
                     min="1"
                     placeholder="365"

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -7,6 +7,7 @@ import * as AppActions from '@store/actions/app.actions';
 import { SettingsAdminService, Setting } from '@core/services/settings-admin.service';
 import { ApiService } from '@core/services/api.service';
 import { NotificationService } from '@core/services/notification.service';
+import { ThemeService } from '@core/services/theme.service';
 import { environment } from '../../../../environments/environment';
 import { catchError, of } from 'rxjs';
 
@@ -17,13 +18,15 @@ import { catchError, of } from 'rxjs';
   templateUrl: './admin-settings.component.html',
   styleUrls: ['./admin-settings.component.css']
 })
-export class AdminSettingsComponent implements OnInit {
+export class AdminSettingsComponent implements OnInit, OnDestroy {
   licenseDuration = signal<number>(365);
   webhookToken = signal<string>('');
   defaultBotName = signal<string>('Assistente Virtual');
   systemPalette = signal<string>('green');
   systemPrompt = signal<string>('Você é um assistente virtual útil.');
   activeTab = signal<string>('visual'); // tabs: 'visual', 'ai', 'integration', 'system'
+  
+  initialPalette = 'green';
   
   backendVersion = signal<string>('Carregando...');
   frontendVersion = signal<string>('Carregando...');
@@ -42,7 +45,8 @@ export class AdminSettingsComponent implements OnInit {
     private store: Store,
     private apiService: ApiService,
     private notificationService: NotificationService,
-    private http: HttpClient
+    private http: HttpClient,
+    private themeService: ThemeService
   ) {}
 
   ngOnInit() {
@@ -134,7 +138,9 @@ export class AdminSettingsComponent implements OnInit {
               this.defaultBotName.set(setting.value || 'Assistente Virtual');
               break;
             case 'system_color_palette':
-              this.systemPalette.set(setting.value || 'green');
+              const pal = setting.value || 'green';
+              this.systemPalette.set(pal);
+              this.initialPalette = pal;
               break;
             case 'system_prompt':
               this.systemPrompt.set(setting.value || 'Você é um assistente virtual útil.');
@@ -274,6 +280,7 @@ export class AdminSettingsComponent implements OnInit {
       next: () => {
         this.notificationService.success('Paleta de cores salva com sucesso!');
         this.saving.set(false);
+        this.initialPalette = this.systemPalette(); // Update initialPalette to new saved one
         // Recarrega a config global para atualizar a cor em toda a aplicação
         this.store.dispatch(AppActions.loadConfig());
       },
@@ -310,5 +317,18 @@ export class AdminSettingsComponent implements OnInit {
 
   setTab(tab: string) {
     this.activeTab.set(tab);
+  }
+
+  selectPalette(palette: string) {
+    this.systemPalette.set(palette);
+    // Apply theme immediately for visual preview only
+    this.themeService.setPalette(palette);
+  }
+
+  ngOnDestroy() {
+    // If the admin previewed a palette but did not save/persist it, restore the original saved theme
+    if (this.systemPalette() !== this.initialPalette) {
+      this.themeService.setPalette(this.initialPalette);
+    }
   }
 }
