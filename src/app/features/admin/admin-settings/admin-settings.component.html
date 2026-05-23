@@ -1,7 +1,23 @@
 <div class="settings-container">
   <div class="settings-header">
     <h1>⚙️ Configurações do Sistema</h1>
-    <p class="subtitle">Gerencie configurações administrativas e integrações</p>
+    <p class="subtitle">Gerencie de forma centralizada a identidade visual, inteligência e integrações da sua plataforma</p>
+  </div>
+
+  <!-- Tab Switcher -->
+  <div class="settings-tabs">
+    <button class="tab-btn" [class.active]="activeTab() === 'visual'" (click)="setTab('visual')">
+      🎨 Aparência & Identidade
+    </button>
+    <button class="tab-btn" [class.active]="activeTab() === 'ai'" (click)="setTab('ai')">
+      🤖 Agente de IA
+    </button>
+    <button class="tab-btn" [class.active]="activeTab() === 'integration'" (click)="setTab('integration')">
+      🔑 Integração & Webhook
+    </button>
+    <button class="tab-btn" [class.active]="activeTab() === 'system'" (click)="setTab('system')">
+      ⚙️ Sistema & Licenças
+    </button>
   </div>
 
   @if (loading()) {
@@ -9,276 +25,347 @@
       <p>⏳ Carregando configurações...</p>
     </div>
   } @else {
-    <div class="settings-grid">
-      <!-- Duração da Licença -->
-      <div class="card">
-        <div class="card-header">
-          <h3>⏰ Duração Padrão da Licença</h3>
-          <p>Tempo em dias que novos usuários terão acesso ao sistema</p>
-        </div>
-        <div class="card-body">
-          <div class="input-group">
-            <input 
-              type="number" 
-              [(ngModel)]="licenseDuration" 
-              [value]="licenseDuration()"
-              (ngModelChange)="licenseDuration.set($event)"
-              min="1"
-              placeholder="365"
-              class="input-field"
-            >
-            <span class="input-suffix">dias</span>
-          </div>
-          <button 
-            (click)="saveLicenseDuration()" 
-            class="btn-primary"
-            [disabled]="saving()"
-          >
-            💾 Salvar Duração
-          </button>
-        </div>
-      </div>
+    <div class="tab-content-container">
+      
+      <!-- Tab 1: Aparência & Identidade -->
+      @if (activeTab() === 'visual') {
+        <div class="tab-pane active animated fadeIn">
+          <div class="pane-grid">
+            
+            <!-- Bot Name -->
+            <div class="card">
+              <div class="card-header">
+                <h3>🤖 Nome do Assistente (Branding)</h3>
+                <p>O nome do cliente/bot que será exibido no topo e nas conversas do sistema (ex: NorteIA, GuIA)</p>
+              </div>
+              <div class="card-body">
+                <div class="input-group">
+                  <input 
+                    type="text" 
+                    [ngModel]="defaultBotName()"
+                    (ngModelChange)="defaultBotName.set($event)"
+                    placeholder="Ex: NorteIA"
+                    class="input-field full-width"
+                  >
+                </div>
+                <button 
+                  (click)="saveBotName()" 
+                  class="btn-primary"
+                  [disabled]="saving()"
+                >
+                  💾 Salvar Nome
+                </button>
+              </div>
+            </div>
 
-      <!-- Nome do Bot -->
-      <div class="card">
-        <div class="card-header">
-          <h3>🤖 Nome Padrão do Bot</h3>
-          <p>Nome exibido para o assistente virtual</p>
-        </div>
-        <div class="card-body">
-          <div class="input-group">
-            <input 
-              type="text" 
-              [(ngModel)]="defaultBotName"
-              [value]="defaultBotName()"
-              (ngModelChange)="defaultBotName.set($event)"
-              placeholder="Assistente Virtual"
-              class="input-field full-width"
-            >
-          </div>
-          <button 
-            (click)="saveBotName()" 
-            class="btn-primary"
-            [disabled]="saving()"
-          >
-            💾 Salvar Nome
-          </button>
-        </div>
-      </div>
+            <!-- Color Palette -->
+            <div class="card">
+              <div class="card-header">
+                <h3>🎨 Paleta de Cores do Sistema</h3>
+                <p>Personalize a cor principal e o visual dos balões de mensagens para combinar com a marca</p>
+              </div>
+              <div class="card-body">
+                <div class="palette-selector">
+                  
+                  <label class="palette-option" [class.selected]="systemPalette() === 'green'" (click)="selectPalette('green')">
+                    <input type="radio" name="palette" value="green" [checked]="systemPalette() === 'green'">
+                    <span class="color-dot green"></span>
+                    <div class="palette-info">
+                      <span class="palette-name">Emerald Green</span>
+                      <span class="palette-desc">Padrão clássico WhatsApp</span>
+                    </div>
+                  </label>
 
-      <!-- Token de Webhook -->
-      <div class="card card-highlight">
-        <div class="card-header">
-          <h3>🔒 Token de Segurança do Webhook</h3>
-          <p>Token para autenticar requisições ao webhook</p>
-          <small class="code-hint">Header: <code>x-webhook-token</code></small>
+                  <label class="palette-option" [class.selected]="systemPalette() === 'blue'" (click)="selectPalette('blue')">
+                    <input type="radio" name="palette" value="blue" [checked]="systemPalette() === 'blue'">
+                    <span class="color-dot blue"></span>
+                    <div class="palette-info">
+                      <span class="palette-name">Ocean Blue</span>
+                      <span class="palette-desc">Tecnológico e corporativo</span>
+                    </div>
+                  </label>
+
+                  <label class="palette-option" [class.selected]="systemPalette() === 'purple'" (click)="selectPalette('purple')">
+                    <input type="radio" name="palette" value="purple" [checked]="systemPalette() === 'purple'">
+                    <span class="color-dot purple"></span>
+                    <div class="palette-info">
+                      <span class="palette-name">Amethyst Purple</span>
+                      <span class="palette-desc">Moderno e criativo</span>
+                    </div>
+                  </label>
+
+                  <label class="palette-option" [class.selected]="systemPalette() === 'blueprint'" (click)="selectPalette('blueprint')">
+                    <input type="radio" name="palette" value="blueprint" [checked]="systemPalette() === 'blueprint'">
+                    <span class="color-dot blueprint"></span>
+                    <div class="palette-info">
+                      <span class="palette-name">Blueprint (Teal)</span>
+                      <span class="palette-desc">Exclusivo verde-azulado premium</span>
+                    </div>
+                  </label>
+
+                  <label class="palette-option" [class.selected]="systemPalette() === 'red'" (click)="selectPalette('red')">
+                    <input type="radio" name="palette" value="red" [checked]="systemPalette() === 'red'">
+                    <span class="color-dot red"></span>
+                    <div class="palette-info">
+                      <span class="palette-name">Ruby Red</span>
+                      <span class="palette-desc">Impactante e sofisticado</span>
+                    </div>
+                  </label>
+                  
+                </div>
+
+                <button 
+                  (click)="saveSystemPalette()" 
+                  class="btn-primary"
+                  [disabled]="saving()"
+                >
+                  💾 Aplicar Paleta de Cores
+                </button>
+              </div>
+            </div>
+
+          </div>
         </div>
-        <div class="card-body">
-          @if (!showGeneratedToken()) {
-            <div class="token-status">
-              <span 
-                class="badge" 
-                [class.success]="webhookToken()"
-                [class.warning]="!webhookToken()"
-              >
-                {{ webhookToken() ? '✓ Token configurado' : '⚠ Nenhum token configurado' }}
-              </span>
+      }
+
+      <!-- Tab 2: Agente de IA -->
+      @if (activeTab() === 'ai') {
+        <div class="tab-pane active animated fadeIn">
+          <div class="card card-full">
+            <div class="card-header">
+              <h3>🤖 Prompt do Sistema (System Instructions)</h3>
+              <p>Defina a persona, o comportamento e as regras de negócio para a inteligência artificial. Este prompt é enviado à sua automação N8N separado da mensagem do usuário.</p>
             </div>
-            <button 
-              (click)="generateWebhookToken()" 
-              class="btn-secondary"
-            >
-              {{ webhookToken() ? '🔄 Gerar Novo Token' : '✨ Gerar Token' }}
-            </button>
-          } @else {
-            <div class="alert warning">
-              ⚠️ <strong>Atenção!</strong> Copie este token agora! Ele não será mostrado novamente.
-            </div>
-            <div class="token-display">
-              <code class="token-value">{{ generatedToken() }}</code>
+            <div class="card-body">
+              <div class="textarea-container">
+                <textarea 
+                  [ngModel]="systemPrompt()"
+                  (ngModelChange)="systemPrompt.set($event)"
+                  rows="12"
+                  placeholder="Ex: Você é o assistente virtual da empresa X. Seja cortês e ajude os clientes a encontrar os produtos..."
+                  class="prompt-textarea"
+                ></textarea>
+              </div>
               <button 
-                (click)="copyTokenToClipboard()" 
-                class="btn-copy"
-                [class.copied]="tokenCopied()"
-              >
-                {{ tokenCopied() ? '✓ Copiado' : '📋 Copiar' }}
-              </button>
-            </div>
-            <div class="button-group">
-              <button 
-                (click)="saveWebhookToken()" 
-                class="btn-primary"
+                (click)="saveSystemPrompt()" 
+                class="btn-primary btn-large"
                 [disabled]="saving()"
               >
-                💾 Salvar Token
-              </button>
-              <button 
-                (click)="cancelTokenGeneration()" 
-                class="btn-cancel"
-                [disabled]="saving()"
-              >
-                Cancelar
+                💾 Salvar Configurações do Prompt
               </button>
             </div>
-          }
-        </div>
-      </div>
-
-      <!-- URL do Webhook -->
-      <div class="card card-info">
-        <div class="card-header">
-          <h3>🔗 URL do Webhook</h3>
-          <p>Configure esta URL no sistema externo (Hotmart, N8N, etc)</p>
-        </div>
-        <div class="card-body">
-          <div class="webhook-url">
-            <code class="url-display">{{ getWebhookUrl() }}</code>
-            <button 
-              (click)="copyWebhookUrl()" 
-              class="btn-copy"
-            >
-              📋 Copiar URL
-            </button>
           </div>
         </div>
-      </div>
+      }
 
-      <!-- Instruções de Integração -->
-      <div class="card card-full">
-        <div class="card-header">
-          <h3>📚 Instruções de Integração</h3>
-        </div>
-        <div class="card-body instructions">
-          <ol>
-            <li>
-              <strong>1. Configure o Token:</strong>
-              <ul>
-                <li>Gere e salve o <strong>Token de Segurança</strong> acima</li>
-                <li>Copie o token gerado (não será mostrado novamente)</li>
-              </ul>
-            </li>
-            <li>
-              <strong>2. Copie a URL do Webhook</strong>
-            </li>
-            <li>
-              <strong>3. Configure no sistema externo:</strong>
-              <div class="integration-section">
-                <h4>🛒 Hotmart:</h4>
-                <ul>
-                  <li>Acesse: <strong>Ferramentas → Webhooks</strong></li>
-                  <li>Clique em <strong>Adicionar Webhook</strong></li>
-                  <li>Cole a URL do webhook</li>
-                  <li>Adicione header customizado: <code>x-webhook-token: SEU_TOKEN</code></li>
-                  <li>Selecione eventos: <code>PURCHASE_COMPLETE</code>, <code>PURCHASE_REFUNDED</code></li>
-                </ul>
+      <!-- Tab 3: Integração & Webhook -->
+      @if (activeTab() === 'integration') {
+        <div class="tab-pane active animated fadeIn">
+          <div class="pane-grid">
+            
+            <!-- Webhook Token -->
+            <div class="card card-highlight">
+              <div class="card-header">
+                <h3>🔒 Token de Segurança</h3>
+                <p>Token secreto usado para autenticar as chamadas de webhook recebidas.</p>
+                <small class="code-hint">Header: <code>x-webhook-token</code></small>
               </div>
-              <div class="integration-section">
-                <h4>🔄 N8N:</h4>
-                <ul>
-                  <li>Use nó <strong>HTTP Request</strong></li>
-                  <li>Método: <code>POST</code></li>
-                  <li>URL: Cole a URL do webhook</li>
-                  <li>Headers: <code>x-webhook-token: SEU_TOKEN</code></li>
-                  <li>Body (JSON):</li>
-                </ul>
-                <pre class="code-block">{{'{'}}"email": "usuario&#64;example.com","name": "Nome do Usuário","event": "PURCHASE_COMPLETE"{{'}'}}
-</pre>
-              </div>
-            </li>
-            <li>
-              <strong>4. Eventos suportados:</strong>
-              <ul>
-                <li><code>PURCHASE_COMPLETE</code> - Cria novo usuário ou renova licença</li>
-                <li><code>SUBSCRIPTION_CREATED</code> - Cria novo usuário ou renova licença</li>
-                <li><code>PURCHASE_REFUNDED</code> - Desativa usuário</li>
-              </ul>
-            </li>
-          </ol>
-        </div>
-      </div>
-
-      <!-- Versões do Sistema -->
-      <div class="card card-full">
-        <div class="card-header">
-          <h3>📦 Versões do Sistema</h3>
-          <p>Informações sobre as versões instaladas</p>
-        </div>
-        <div class="card-body">
-          <div class="version-grid">
-            <!-- Frontend Version -->
-            <div class="version-item frontend">
-              <div class="version-label">
-                <span class="version-icon">🎨</span>
-                <span>Frontend</span>
-              </div>
-              <div class="version-display">
-                <code class="version-code">v{{ frontendVersion() }}</code>
-                <span [class]="getVersionBadgeClass(frontendVersion())">
-                  {{ getVersionLabel(frontendVersion()) }}
-                </span>
-              </div>
-            </div>
-
-            <!-- Backend Version -->
-            <div class="version-item backend">
-              <div class="version-label">
-                <span class="version-icon">⚙️</span>
-                <span>Backend</span>
-              </div>
-              <div class="version-display">
-                <code class="version-code">v{{ backendVersion() }}</code>
-                @if (backendVersion() !== 'N/A' && backendVersion() !== 'Carregando...') {
-                  <span [class]="getVersionBadgeClass(backendVersion())">
-                    {{ getVersionLabel(backendVersion()) }}
-                  </span>
+              <div class="card-body">
+                @if (!showGeneratedToken()) {
+                  <div class="token-status">
+                    <span 
+                      class="badge" 
+                      [class.success]="webhookToken()"
+                      [class.warning]="!webhookToken()"
+                    >
+                      {{ webhookToken() ? '✓ Token ativo' : '⚠ Nenhum token configurado' }}
+                    </span>
+                  </div>
+                  <button 
+                    (click)="generateWebhookToken()" 
+                    class="btn-secondary"
+                  >
+                    {{ webhookToken() ? '🔄 Gerar Novo Token' : '✨ Gerar Token' }}
+                  </button>
+                } @else {
+                  <div class="alert warning">
+                    ⚠️ <strong>Cuidado:</strong> Copie este token agora! Ele não será mostrado novamente.
+                  </div>
+                  <div class="token-display">
+                    <code class="token-value">{{ generatedToken() }}</code>
+                    <button 
+                      (click)="copyTokenToClipboard()" 
+                      class="btn-copy"
+                      [class.copied]="tokenCopied()"
+                    >
+                      {{ tokenCopied() ? '✓ Copiado' : '📋 Copiar' }}
+                    </button>
+                  </div>
+                  <div class="button-group">
+                    <button 
+                      (click)="saveWebhookToken()" 
+                      class="btn-primary"
+                      [disabled]="saving()"
+                    >
+                      💾 Salvar Token
+                    </button>
+                    <button 
+                      (click)="cancelTokenGeneration()" 
+                      class="btn-cancel"
+                      [disabled]="saving()"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
                 }
               </div>
             </div>
 
-            <!-- Build Date -->
-            @if (buildDate()) {
-              <div class="version-item">
-                <div class="version-label">
-                  <span class="version-icon">📅</span>
-                  <span>Build</span>
-                </div>
-                <div class="version-value">
-                  {{ buildDate() | date: 'dd/MM/yyyy HH:mm' }}
-                </div>
+            <!-- Webhook URL -->
+            <div class="card card-info">
+              <div class="card-header">
+                <h3>🔗 URL de Integração do Webhook</h3>
+                <p>Cole esta URL de destino nas configurações da plataforma externa (Hotmart, etc) ou no N8N.</p>
               </div>
-            }
-
-            <!-- Environment -->
-            <div class="version-item">
-              <div class="version-label">
-                <span class="version-icon">🌍</span>
-                <span>Ambiente</span>
-              </div>
-              <div class="version-value">
-                <span [class]="apiEnvironment() === 'production' ? 'badge warning' : 'badge'">
-                  {{ apiEnvironment() === 'production' ? 'Produção' : 'Desenvolvimento' }}
-                </span>
+              <div class="card-body">
+                <div class="webhook-url">
+                  <code class="url-display">{{ getWebhookUrl() }}</code>
+                  <button 
+                    (click)="copyWebhookUrl()" 
+                    class="btn-copy"
+                  >
+                    📋 Copiar URL
+                  </button>
+                </div>
               </div>
             </div>
+
+            <!-- Integration Instructions -->
+            <div class="card card-full">
+              <div class="card-header">
+                <h3>📚 Como conectar o N8N e Hotmart</h3>
+              </div>
+              <div class="card-body instructions">
+                <div class="instructions-accordion">
+                  <details open>
+                    <summary><strong>🔄 Automação no N8N (Configuração do Prompt)</strong></summary>
+                    <div class="instruction-content">
+                      <p>Sua automação do N8N receberá o seguinte payload JSON a cada nova mensagem:</p>
+                      <pre class="code-block">{{'{'}}
+  "userId": 12,
+  "username": "Maicon",
+  "message": "Olá! Gostaria de saber os preços",
+  "systemPrompt": "Você é o assistente virtual da..."
+{{'}'}}</pre>
+                      <p>Para ler o prompt separado do chat, no nó do seu N8N (como um AI Agent ou OpenAi LLM), mapeie o campo <code>System Message / Prompt</code> para ler <code>{{'{{'}}$json.systemPrompt{{'}}'}}</code> e a mensagem do chat para <code>{{'{{'}}$json.message{{'}}'}}</code>.</p>
+                    </div>
+                  </details>
+
+                  <details>
+                    <summary><strong>🛒 Integração Hotmart (Criação de Clientes)</strong></summary>
+                    <div class="instruction-content">
+                      <p>Acesse o painel da Hotmart → <strong>Ferramentas → Webhooks (API e Serviços)</strong>:</p>
+                      <ol>
+                        <li>Adicione um novo webhook.</li>
+                        <li>Cole a <strong>URL de Integração</strong> exibida acima.</li>
+                        <li>Adicione um Cabeçalho (Header) Customizado com a chave <code>x-webhook-token</code> e o valor do <strong>Token de Segurança</strong>.</li>
+                        <li>Selecione os eventos de interesse (ex: <code>Compra Aprovada</code>).</li>
+                      </ol>
+                    </div>
+                  </details>
+                </div>
+              </div>
+            </div>
+
           </div>
-
-          <!-- Alerta RC -->
-          @if (hasRCVersion()) {
-            <div class="alert alert-warning">
-              <strong>⚠️ Atenção:</strong> Você está usando uma versão Release Candidate (RC). 
-              Esta versão está em fase de testes finais e pode conter bugs. 
-              Não recomendado para ambientes de produção críticos.
-            </div>
-          }
-
-          <!-- Alerta Estável -->
-          @if (allStable()) {
-            <div class="alert alert-success">
-              <strong>✅ Sistema Estável:</strong> Todas as versões são estáveis e prontas para produção.
-            </div>
-          }
         </div>
-      </div>
+      }
+
+      <!-- Tab 4: Sistema & Licenças -->
+      @if (activeTab() === 'system') {
+        <div class="tab-pane active animated fadeIn">
+          <div class="pane-grid">
+            
+            <!-- License duration -->
+            <div class="card">
+              <div class="card-header">
+                <h3>⏰ Duração de Licença Padrão</h3>
+                <p>Prazo padrão (em dias) concedido a novos clientes criados via webhook de pagamento</p>
+              </div>
+              <div class="card-body">
+                <div class="input-group">
+                  <input 
+                    type="number" 
+                    [ngModel]="licenseDuration()"
+                    (ngModelChange)="licenseDuration.set($event)"
+                    min="1"
+                    placeholder="365"
+                    class="input-field"
+                  >
+                  <span class="input-suffix">dias</span>
+                </div>
+                <button 
+                  (click)="saveLicenseDuration()" 
+                  class="btn-primary"
+                  [disabled]="saving()"
+                >
+                  💾 Salvar Duração
+                </button>
+              </div>
+            </div>
+
+            <!-- App Versions -->
+            <div class="card">
+              <div class="card-header">
+                <h3>📦 Versões do Sistema</h3>
+                <p>Status atual do ambiente e código instalado</p>
+              </div>
+              <div class="card-body">
+                <div class="version-grid">
+                  <div class="version-item">
+                    <div class="version-label">🎨 Frontend</div>
+                    <div class="version-display">
+                      <code>v{{ frontendVersion() }}</code>
+                      <span [class]="getVersionBadgeClass(frontendVersion())">
+                        {{ getVersionLabel(frontendVersion()) }}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div class="version-item">
+                    <div class="version-label">⚙️ Backend</div>
+                    <div class="version-display">
+                      <code>v{{ backendVersion() }}</code>
+                      @if (backendVersion() !== 'N/A' && backendVersion() !== 'Carregando...') {
+                        <span [class]="getVersionBadgeClass(backendVersion())">
+                          {{ getVersionLabel(backendVersion()) }}
+                        </span>
+                      }
+                    </div>
+                  </div>
+
+                  <div class="version-item">
+                    <div class="version-label">🌍 Ambiente</div>
+                    <div class="version-value">
+                      <span [class]="apiEnvironment() === 'production' ? 'badge warning' : 'badge'">
+                        {{ apiEnvironment() === 'production' ? 'Produção' : 'Desenvolvimento' }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                @if (allStable()) {
+                  <div class="alert alert-success mt-15">
+                    ✓ Todos os serviços estão rodando em versões de produção estáveis.
+                  </div>
+                }
+              </div>
+            </div>
+
+          </div>
+        </div>
+      }
+
     </div>
   }
 </div>

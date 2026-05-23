@@ -1,5 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { AppState, AuthState, MessagesState, ConfigState, AdminState } from '../reducers/app.reducer';
+import { environment } from '../../../environments/environment';
 
 // Feature Selectors
 export const selectAuthState = createFeatureSelector<AuthState>('auth');
@@ -57,7 +58,7 @@ export const selectConfig = createSelector(
 
 export const selectBotName = createSelector(
   selectConfig,
-  (config) => config?.botName ?? 'NorteIA'
+  (config) => config?.botName ?? environment.appName
 );
 
 export const selectConfigLoading = createSelector(
