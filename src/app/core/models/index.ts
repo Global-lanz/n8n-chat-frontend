@@ -67,6 +67,7 @@ export interface UpdateUserRequest {
 // Config Models
 export interface AppConfig {
   botName: string;
+  systemPalette?: string;
 }
 
 // API Response Models

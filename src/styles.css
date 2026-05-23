@@ -76,6 +76,56 @@ body.light-mode {
   --info: #2563eb;
 }
 
+/* ===== COLOR PALETTES ===== */
+
+/* 1. Blue Palette (Ocean) */
+body.palette-blue {
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --bg-message-user: #1e3a8a;
+}
+body.light-mode.palette-blue {
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --bg-message-user: #dbeafe;
+}
+
+/* 2. Purple Palette (Amethyst) */
+body.palette-purple {
+  --accent: #8b5cf6;
+  --accent-hover: #7c3aed;
+  --bg-message-user: #4c1d95;
+}
+body.light-mode.palette-purple {
+  --accent: #7c3aed;
+  --accent-hover: #6d28d9;
+  --bg-message-user: #f3e8ff;
+}
+
+/* 3. Blueprint Palette (Teal/Green Custom Colors) */
+body.palette-blueprint {
+  --accent: #00bfa5;
+  --accent-hover: #009688;
+  --bg-message-user: #0e3b33;
+}
+body.light-mode.palette-blueprint {
+  --accent: #009688;
+  --accent-hover: #0e3b33;
+  --bg-message-user: #e0f2f1;
+}
+
+/* 4. Red Palette (Ruby) */
+body.palette-red {
+  --accent: #ef4444;
+  --accent-hover: #dc2626;
+  --bg-message-user: #7f1d1d;
+}
+body.light-mode.palette-red {
+  --accent: #dc2626;
+  --accent-hover: #b91c1c;
+  --bg-message-user: #fee2e2;
+}
+
 /* ===== GLOBAL STYLES ===== */
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;

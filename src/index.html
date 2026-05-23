@@ -8,6 +8,11 @@
   <link rel="icon" type="image/svg+xml" href="assets/chat-icon.svg">
   <!-- Carregar configuração de ambiente em runtime -->
   <script src="env-config.js"></script>
+  <script>
+    if (window.__env && window.__env.appName) {
+      document.title = window.__env.appName;
+    }
+  </script>
 </head>
 <body>
   <app-root></app-root>
