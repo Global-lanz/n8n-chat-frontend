@@ -67,8 +67,8 @@ body.light-mode {
   --text-primary: #1f2937;
   --text-secondary: #6b7280;
   --accent: #059669;
-  --accent-primary: #667eea;
-  --accent-secondary: #764ba2;
+  --accent-primary: #059669;
+  --accent-secondary: #047857;
   --accent-hover: #047857;
   --error: #dc2626;
   --success: #059669;
@@ -82,11 +82,15 @@ body.light-mode {
 body.palette-blue {
   --accent: #3b82f6;
   --accent-hover: #2563eb;
+  --accent-primary: #3b82f6;
+  --accent-secondary: #2563eb;
   --bg-message-user: #1e3a8a;
 }
 body.light-mode.palette-blue {
   --accent: #2563eb;
   --accent-hover: #1d4ed8;
+  --accent-primary: #2563eb;
+  --accent-secondary: #1d4ed8;
   --bg-message-user: #dbeafe;
 }
 
@@ -94,11 +98,15 @@ body.light-mode.palette-blue {
 body.palette-purple {
   --accent: #8b5cf6;
   --accent-hover: #7c3aed;
+  --accent-primary: #8b5cf6;
+  --accent-secondary: #7c3aed;
   --bg-message-user: #4c1d95;
 }
 body.light-mode.palette-purple {
   --accent: #7c3aed;
   --accent-hover: #6d28d9;
+  --accent-primary: #7c3aed;
+  --accent-secondary: #6d28d9;
   --bg-message-user: #f3e8ff;
 }
 
@@ -106,11 +114,15 @@ body.light-mode.palette-purple {
 body.palette-blueprint {
   --accent: #00bfa5;
   --accent-hover: #009688;
+  --accent-primary: #00bfa5;
+  --accent-secondary: #009688;
   --bg-message-user: #0e3b33;
 }
 body.light-mode.palette-blueprint {
   --accent: #009688;
   --accent-hover: #0e3b33;
+  --accent-primary: #009688;
+  --accent-secondary: #0e3b33;
   --bg-message-user: #e0f2f1;
 }
 
@@ -118,11 +130,15 @@ body.light-mode.palette-blueprint {
 body.palette-red {
   --accent: #ef4444;
   --accent-hover: #dc2626;
+  --accent-primary: #ef4444;
+  --accent-secondary: #dc2626;
   --bg-message-user: #7f1d1d;
 }
 body.light-mode.palette-red {
   --accent: #dc2626;
   --accent-hover: #b91c1c;
+  --accent-primary: #dc2626;
+  --accent-secondary: #b91c1c;
   --bg-message-user: #fee2e2;
 }
 

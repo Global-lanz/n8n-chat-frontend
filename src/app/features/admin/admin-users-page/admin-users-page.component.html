@@ -1,4 +1,4 @@
-<div class="admin-users-container">
+<div class="admin-users-container" [class.modal-open]="showUserForm">
   <div class="admin-header">
     <div>
       <h1>👥 Gerenciamento de Usuários</h1>
@@ -26,14 +26,25 @@
     </div>
   </div>
 
-  <!-- User Form -->
+  <!-- User Form Modal -->
   @if (showUserForm) {
-    <div class="form-container">
-      <app-user-form
-        [editingUser]="editingUser"
-        (save)="onSaveUser($event)"
-        (cancel)="onCancelForm()"
-      ></app-user-form>
+    <div class="modal-backdrop" (click)="onCancelForm()">
+      <div class="modal-panel" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div>
+            <p class="modal-kicker">Cadastro de usuário</p>
+            <h2>{{ editingUser ? 'Editar usuário' : 'Novo usuário' }}</h2>
+            <p>Use esta janela para criar ou atualizar um cadastro sem sair da lista.</p>
+          </div>
+          <button type="button" class="modal-close" (click)="onCancelForm()">✕</button>
+        </div>
+
+        <app-user-form
+          [editingUser]="editingUser"
+          (save)="onSaveUser($event)"
+          (cancel)="onCancelForm()"
+        ></app-user-form>
+      </div>
     </div>
   }
 
