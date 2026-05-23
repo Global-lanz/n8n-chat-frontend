@@ -4,3 +4,5 @@ window.__env = window.__env || {};
 window.__env.apiBaseUrl = 'http://localhost:3000';
 window.__env.version = '0.1.0';
 window.__env.production = false;
+window.__env.appName = 'Chat IA';
+

@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef, AfterViewChecked, OnChanges } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { marked } from 'marked';
@@ -11,24 +11,25 @@ import { Message } from '@core/models';
   templateUrl: './message-list.component.html',
   styleUrls: ['./message-list.component.css']
 })
-export class MessageListComponent implements AfterViewChecked, OnChanges {
+export class MessageListComponent implements AfterViewInit, OnChanges {
   @Input() messages: Message[] | null = [];
   @Input() botName: string | null = 'Bot';
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
-  
   private shouldScroll = false;
+  private viewReady = false;
 
   constructor(private sanitizer: DomSanitizer) {}
 
-  ngOnChanges(): void {
-    this.shouldScroll = true;
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['messages']) {
+      this.shouldScroll = true;
+      this.scheduleScroll();
+    }
   }
 
-  ngAfterViewChecked(): void {
-    if (this.shouldScroll) {
-      this.scrollToBottom();
-      this.shouldScroll = false;
-    }
+  ngAfterViewInit(): void {
+    this.viewReady = true;
+    this.scheduleScroll();
   }
 
   renderMarkdown(content: string): SafeHtml {
@@ -54,7 +55,21 @@ export class MessageListComponent implements AfterViewChecked, OnChanges {
   private scrollToBottom(): void {
     if (this.messagesContainer) {
       const element = this.messagesContainer.nativeElement;
-      element.scrollTop = element.scrollHeight;
+      element.scrollTo({
+        top: element.scrollHeight,
+        behavior: 'smooth'
+      });
     }
+  }
+
+  private scheduleScroll(): void {
+    if (!this.viewReady || !this.shouldScroll) {
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      this.scrollToBottom();
+      this.shouldScroll = false;
+    });
   }
 }

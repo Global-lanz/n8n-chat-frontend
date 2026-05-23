@@ -1,6 +1,14 @@
 <div class="user-form">
-  <h3>{{ editingUser ? 'Editar Usuário' : 'Criar Novo Usuário' }}</h3>
-  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <div class="user-form-header">
+    <div>
+      <p class="form-kicker">{{ editingUser ? 'Atualização' : 'Novo cadastro' }}</p>
+      <h3>{{ editingUser ? 'Editar Usuário' : 'Criar Novo Usuário' }}</h3>
+      <p>Preencha os campos abaixo para manter os dados do sistema organizados.</p>
+    </div>
+    <button type="button" class="icon-close" (click)="cancel.emit()">✕</button>
+  </div>
+
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="user-form-body">
     <div class="form-group">
       <label>Nome de Usuário:</label>
       <input 

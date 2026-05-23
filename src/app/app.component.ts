@@ -32,6 +32,9 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Load system config immediately on app initialization to apply custom palette/branding
+    this.store.dispatch(AppActions.loadConfig());
+
     // Validate token on app initialization to restore user state
     if (this.authService.isAuthenticated()) {
       this.store.dispatch(AppActions.validateToken());
