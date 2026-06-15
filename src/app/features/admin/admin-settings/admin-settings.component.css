@@ -79,12 +79,10 @@ body.light-mode .settings-header {
 
 .tab-btn.active {
   color: var(--accent);
-  background: rgba(0, 168, 132, 0.08);
+  background: var(--accent-tint);
 }
 
-body.light-mode .tab-btn.active {
-  background: rgba(5, 150, 105, 0.08);
-}
+
 
 .tab-btn.active::after {
   content: '';
@@ -159,12 +157,10 @@ body.light-mode .tab-btn.active {
 .card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
-  border-color: rgba(0, 168, 132, 0.25);
+  border-color: var(--accent);
 }
 
-body.light-mode .card:hover {
-  border-color: rgba(5, 150, 105, 0.25);
-}
+
 
 .card-full {
   grid-column: 1 / -1;
@@ -251,12 +247,10 @@ body.light-mode .card:hover {
 .input-field:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(0, 168, 132, 0.12);
+  box-shadow: 0 0 0 4px var(--focus-ring);
 }
 
-body.light-mode .input-field:focus {
-  box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.12);
-}
+
 
 .input-suffix {
   color: var(--text-secondary);
@@ -290,13 +284,11 @@ body.light-mode .input-field:focus {
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 168, 132, 0.3);
+  box-shadow: 0 8px 20px var(--focus-ring);
   background: var(--accent-hover);
 }
 
-body.light-mode .btn-primary:hover:not(:disabled) {
-  box-shadow: 0 8px 20px rgba(5, 150, 105, 0.3);
-}
+
 
 .btn-primary:disabled {
   opacity: 0.5;
@@ -349,6 +341,38 @@ body.light-mode .btn-primary:hover:not(:disabled) {
   border-radius: 12px;
 }
 
+
+/* Visual section grouping */
+.visual-section {
+  margin-bottom: 2rem;
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+/* Palette grid layout (2 columns) */
+.palette-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 0;
+}
+
+@media (max-width: 600px) {
+  .palette-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Palette Customizer Grid */
 .palette-selector {
   display: grid;
@@ -380,12 +404,10 @@ body.light-mode .btn-primary:hover:not(:disabled) {
 .palette-option.selected {
   border-color: var(--accent);
   background: var(--bg-secondary);
-  box-shadow: 0 4px 12px rgba(0, 168, 132, 0.08);
+  box-shadow: 0 4px 12px var(--accent-tint);
 }
 
-body.light-mode .palette-option.selected {
-  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.08);
-}
+
 
 .palette-option input[type="radio"] {
   display: none; /* Hide standard radio input */
@@ -411,19 +433,39 @@ body.light-mode .color-dot {
 }
 
 .color-dot.blue {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  background: linear-gradient(135deg, #4f9cf9 0%, #2563eb 100%);
 }
 
 .color-dot.purple {
-  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
 }
 
 .color-dot.blueprint {
-  background: linear-gradient(135deg, #00bfa5 0%, #009688 100%);
+  background: linear-gradient(135deg, #00d4b8 0%, #009688 100%);
 }
 
 .color-dot.red {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  background: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+}
+
+.color-dot.orange {
+  background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
+}
+
+.color-dot.rose {
+  background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%);
+}
+
+.color-dot.gold {
+  background: linear-gradient(135deg, #fbbf24 0%, #b45309 100%);
+}
+
+.color-dot.indigo {
+  background: linear-gradient(135deg, #818cf8 0%, #4f46e5 100%);
+}
+
+.color-dot.cyan {
+  background: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%);
 }
 
 .palette-option.selected .color-dot::after {
@@ -478,13 +520,11 @@ body.light-mode .color-dot {
 
 .prompt-textarea:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(0, 168, 132, 0.12);
+  box-shadow: 0 0 0 4px var(--focus-ring);
   background: var(--bg-secondary);
 }
 
-body.light-mode .prompt-textarea:focus {
-  box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.12);
-}
+
 
 /* Webhook Token Display */
 .token-status {
@@ -621,7 +661,7 @@ body.light-mode .prompt-textarea:focus {
 
 .instructions-accordion details[open] {
   border-color: var(--accent);
-  box-shadow: 0 4px 12px rgba(0, 168, 132, 0.05);
+  box-shadow: 0 4px 12px var(--accent-tint);
 }
 
 .instructions-accordion details[open] summary::after {

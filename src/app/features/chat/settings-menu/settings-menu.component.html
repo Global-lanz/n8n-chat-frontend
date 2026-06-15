@@ -1,71 +1,132 @@
-<div class="settings-menu" [class.standalone]="standalone">
-  <div class="settings-content">
-    @if (!standalone) {
-      <div class="settings-header">
-        <h3>Configurações</h3>
-        <button class="close-btn" (click)="close.emit()">✕</button>
-      </div>
-    } @else {
-      <h3>Suas Preferências</h3>
-    }
-    <div class="setting-item">
-      <label for="theme-toggle">Modo:</label>
-      <select id="theme-toggle" [(ngModel)]="selectedTheme">
-        <option value="dark">Escuro</option>
-        <option value="light">Claro</option>
-      </select>
+<div class="settings-wrap" [class.standalone]="standalone">
+
+  @if (!standalone) {
+    <div class="settings-topbar">
+      <span class="settings-title">Configurações</span>
+      <button class="topbar-close" (click)="close.emit()" aria-label="Fechar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
-    <div class="setting-item">
-      <label for="name-input">Nome:</label>
-      <input 
-        type="text" 
-        id="name-input" 
-        [(ngModel)]="username" 
+  }
+
+  <!-- Profile card -->
+  <div class="settings-card">
+    <div class="card-label">Perfil</div>
+
+    <!-- Avatar display -->
+    <div class="profile-avatar-row">
+      <div class="profile-avatar">
+        {{ (currentUser?.username || 'U').charAt(0).toUpperCase() }}
+      </div>
+      <div class="profile-info">
+        <div class="profile-name">{{ currentUser?.username || '—' }}</div>
+        <div class="profile-email">{{ currentUser?.email || '' }}</div>
+      </div>
+    </div>
+
+    <!-- Name field -->
+    <div class="field-group">
+      <label class="field-label">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Nome de exibição
+      </label>
+      <input
+        type="text"
+        class="field-input"
+        [(ngModel)]="username"
         placeholder="Seu nome"
       >
     </div>
+  </div>
 
-    <div class="password-section">
-      <div class="section-header" (click)="togglePasswordSection()">
-        <h4>Alterar Senha</h4>
-        <button class="toggle-btn" type="button">
-          {{ showPasswordSection ? '▲' : '▼' }}
-        </button>
+  <!-- Tema card -->
+  <div class="settings-card">
+    <div class="card-label">Aparência</div>
+
+    <div class="toggle-row">
+      <div class="toggle-info">
+        <div class="toggle-title">
+          {{ selectedTheme === 'dark' ? '🌙 Modo Escuro' : '☀️ Modo Claro' }}
+        </div>
+        <div class="toggle-sub">Alterne entre os temas claro e escuro</div>
       </div>
-      
-      @if (showPasswordSection) {
-        <div class="password-fields">
-          <div class="setting-item">
-            <label for="new-password">Nova Senha:</label>
-            <input 
-              type="password" 
-              id="new-password" 
-              [(ngModel)]="newPassword" 
-              placeholder="Digite a nova senha"
+      <label class="toggle-switch">
+        <input
+          type="checkbox"
+          [checked]="selectedTheme === 'light'"
+          (change)="selectedTheme = selectedTheme === 'dark' ? 'light' : 'dark'"
+        >
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Senha card -->
+  <div class="settings-card">
+    <div class="card-label-row" (click)="togglePasswordSection()">
+      <div class="card-label" style="margin-bottom:0">Alterar Senha</div>
+      <button class="expand-btn" type="button" [class.open]="showPasswordSection">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+    </div>
+
+    @if (showPasswordSection) {
+      <div class="password-fields">
+        <div class="field-group">
+          <label class="field-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Nova Senha
+          </label>
+          <div class="input-eye-wrap">
+            <input
+              [type]="showNewPassword ? 'text' : 'password'"
+              class="field-input"
+              [(ngModel)]="newPassword"
+              placeholder="Mínimo 6 caracteres"
             >
-            <small class="field-hint">Mínimo de 6 caracteres</small>
-          </div>
-          
-          <div class="setting-item">
-            <label for="confirm-password">Confirmar Nova Senha:</label>
-            <input 
-              type="password" 
-              id="confirm-password" 
-              [(ngModel)]="confirmPassword" 
-              placeholder="Confirme a nova senha"
-            >
+            <button type="button" class="eye-btn" (click)="showNewPassword = !showNewPassword" tabindex="-1">
+              @if (showNewPassword) {
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              } @else {
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              }
+            </button>
           </div>
         </div>
-      }
-    </div>
 
-    <div class="form-actions">
-      <button class="btn-primary" (click)="onSaveSettings()">
-        💾 Salvar Todas as Alterações
-      </button>
-      @if (!standalone) {
-        <button class="btn-secondary" (click)="close.emit()">Fechar</button>
-      }
-    </div>
+        <div class="field-group">
+          <label class="field-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Confirmar Senha
+          </label>
+          <div class="input-eye-wrap">
+            <input
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              class="field-input"
+              [(ngModel)]="confirmPassword"
+              placeholder="Repita a nova senha"
+            >
+            <button type="button" class="eye-btn" (click)="showConfirmPassword = !showConfirmPassword" tabindex="-1">
+              @if (showConfirmPassword) {
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              } @else {
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              }
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Actions -->
+  <div class="form-actions">
+    <button class="btn-save" (click)="onSaveSettings()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Salvar alterações
+    </button>
+    @if (!standalone) {
+      <button class="btn-cancel" (click)="close.emit()">Cancelar</button>
+    }
   </div>
 </div>

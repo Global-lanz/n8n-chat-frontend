@@ -2,17 +2,12 @@
 <html lang="pt-BR" data-theme="dark">
 <head>
   <meta charset="utf-8">
-  <title>NorteIA</title>
+  <!-- Carregar configuração de ambiente em runtime ANTES de qualquer coisa -->
+  <script src="env-config.js"></script>
+  <title></title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/svg+xml" href="assets/chat-icon.svg">
-  <!-- Carregar configuração de ambiente em runtime -->
-  <script src="env-config.js"></script>
-  <script>
-    if (window.__env && window.__env.appName) {
-      document.title = window.__env.appName;
-    }
-  </script>
 </head>
 <body>
   <app-root></app-root>

@@ -58,7 +58,7 @@ export const selectConfig = createSelector(
 
 export const selectBotName = createSelector(
   selectConfig,
-  (config) => config?.botName ?? environment.appName
+  (config) => config?.botName ?? ''
 );
 
 export const selectConfigLoading = createSelector(

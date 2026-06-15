@@ -30,49 +30,42 @@
       <!-- Tab 1: Aparência & Identidade -->
       @if (activeTab() === 'visual') {
         <div class="tab-pane active animated fadeIn">
-          <div class="pane-grid">
-            
-            <!-- Bot Name -->
-            <div class="card">
-              <div class="card-header">
-                <h3>🤖 Nome do Assistente (Branding)</h3>
-                <p>O nome do cliente/bot que será exibido no topo e nas conversas do sistema (ex: NorteIA, GuIA)</p>
-              </div>
-              <div class="card-body">
-                <div class="input-group">
-                  <input 
-                    type="text" 
-                    [ngModel]="defaultBotName()"
-                    (ngModelChange)="defaultBotName.set($event)"
-                    placeholder="Ex: NorteIA"
-                    class="input-field full-width"
-                  >
-                </div>
-                <button 
-                  (click)="saveBotName()" 
-                  class="btn-primary"
-                  [disabled]="saving()"
-                >
-                  💾 Salvar Nome
-                </button>
-              </div>
+          <div class="card card-full">
+            <div class="card-header">
+              <h3>🎨 Aparência & Identidade</h3>
+              <p>Defina o nome e a paleta de cores da plataforma. Clique em uma paleta para ver a prévia em tempo real.</p>
             </div>
+            <div class="card-body">
 
-            <!-- Color Palette -->
-            <div class="card">
-              <div class="card-header">
-                <h3>🎨 Paleta de Cores do Sistema</h3>
-                <p>Personalize a cor principal e o visual dos balões de mensagens para combinar com a marca</p>
+              <!-- Bot Name -->
+              <div class="visual-section">
+                <div class="section-label">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+                  Nome do Assistente
+                </div>
+                <input
+                  type="text"
+                  [ngModel]="defaultBotName()"
+                  (ngModelChange)="defaultBotName.set($event)"
+                  placeholder="Ex: NorteIA, GuIA, Assistente..."
+                  class="input-field full-width"
+                >
               </div>
-              <div class="card-body">
-                <div class="palette-selector">
-                  
+
+              <!-- Color Palette -->
+              <div class="visual-section">
+                <div class="section-label">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r="1"/><circle cx="17.5" cy="10.5" r="1"/><circle cx="8.5" cy="7.5" r="1"/><circle cx="6.5" cy="12.5" r="1"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+                  Paleta de Cores
+                </div>
+                <div class="palette-selector palette-grid">
+
                   <label class="palette-option" [class.selected]="systemPalette() === 'green'" (click)="selectPalette('green')">
                     <input type="radio" name="palette" value="green" [checked]="systemPalette() === 'green'">
                     <span class="color-dot green"></span>
                     <div class="palette-info">
-                      <span class="palette-name">Emerald Green</span>
-                      <span class="palette-desc">Padrão clássico WhatsApp</span>
+                      <span class="palette-name">Emerald</span>
+                      <span class="palette-desc">Clássico</span>
                     </div>
                   </label>
 
@@ -81,7 +74,7 @@
                     <span class="color-dot blue"></span>
                     <div class="palette-info">
                       <span class="palette-name">Ocean Blue</span>
-                      <span class="palette-desc">Tecnológico e corporativo</span>
+                      <span class="palette-desc">Corporativo</span>
                     </div>
                   </label>
 
@@ -89,8 +82,8 @@
                     <input type="radio" name="palette" value="purple" [checked]="systemPalette() === 'purple'">
                     <span class="color-dot purple"></span>
                     <div class="palette-info">
-                      <span class="palette-name">Amethyst Purple</span>
-                      <span class="palette-desc">Moderno e criativo</span>
+                      <span class="palette-name">Amethyst</span>
+                      <span class="palette-desc">Criativo</span>
                     </div>
                   </label>
 
@@ -98,8 +91,8 @@
                     <input type="radio" name="palette" value="blueprint" [checked]="systemPalette() === 'blueprint'">
                     <span class="color-dot blueprint"></span>
                     <div class="palette-info">
-                      <span class="palette-name">Blueprint (Teal)</span>
-                      <span class="palette-desc">Exclusivo verde-azulado premium</span>
+                      <span class="palette-name">Blueprint</span>
+                      <span class="palette-desc">Premium</span>
                     </div>
                   </label>
 
@@ -108,22 +101,68 @@
                     <span class="color-dot red"></span>
                     <div class="palette-info">
                       <span class="palette-name">Ruby Red</span>
-                      <span class="palette-desc">Impactante e sofisticado</span>
+                      <span class="palette-desc">Impactante</span>
                     </div>
                   </label>
-                  
+
+                  <label class="palette-option" [class.selected]="systemPalette() === 'orange'" (click)="selectPalette('orange')">
+                    <input type="radio" name="palette" value="orange" [checked]="systemPalette() === 'orange'">
+                    <span class="color-dot orange"></span>
+                    <div class="palette-info">
+                      <span class="palette-name">Sunset</span>
+                      <span class="palette-desc">Energético</span>
+                    </div>
+                  </label>
+
+                  <label class="palette-option" [class.selected]="systemPalette() === 'rose'" (click)="selectPalette('rose')">
+                    <input type="radio" name="palette" value="rose" [checked]="systemPalette() === 'rose'">
+                    <span class="color-dot rose"></span>
+                    <div class="palette-info">
+                      <span class="palette-name">Rose</span>
+                      <span class="palette-desc">Delicado</span>
+                    </div>
+                  </label>
+
+                  <label class="palette-option" [class.selected]="systemPalette() === 'gold'" (click)="selectPalette('gold')">
+                    <input type="radio" name="palette" value="gold" [checked]="systemPalette() === 'gold'">
+                    <span class="color-dot gold"></span>
+                    <div class="palette-info">
+                      <span class="palette-name">Imperial Gold</span>
+                      <span class="palette-desc">Luxuoso</span>
+                    </div>
+                  </label>
+
+                  <label class="palette-option" [class.selected]="systemPalette() === 'indigo'" (click)="selectPalette('indigo')">
+                    <input type="radio" name="palette" value="indigo" [checked]="systemPalette() === 'indigo'">
+                    <span class="color-dot indigo"></span>
+                    <div class="palette-info">
+                      <span class="palette-name">Deep Indigo</span>
+                      <span class="palette-desc">Sofisticado</span>
+                    </div>
+                  </label>
+
+                  <label class="palette-option" [class.selected]="systemPalette() === 'cyan'" (click)="selectPalette('cyan')">
+                    <input type="radio" name="palette" value="cyan" [checked]="systemPalette() === 'cyan'">
+                    <span class="color-dot cyan"></span>
+                    <div class="palette-info">
+                      <span class="palette-name">Arctic Cyan</span>
+                      <span class="palette-desc">Fresco</span>
+                    </div>
+                  </label>
+
                 </div>
-
-                <button 
-                  (click)="saveSystemPalette()" 
-                  class="btn-primary"
-                  [disabled]="saving()"
-                >
-                  💾 Aplicar Paleta de Cores
-                </button>
               </div>
-            </div>
 
+              <!-- Single save button -->
+              <button
+                (click)="saveVisualSettings()"
+                class="btn-primary btn-large"
+                [disabled]="saving()"
+              >
+                {{ saving() ? '⏳ Salvando...' : '💾 Salvar Aparência & Identidade' }}
+              </button>
+
+            </div>
           </div>
         </div>
       }
