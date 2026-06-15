@@ -1,80 +1,138 @@
-<div class="user-form">
-  <div class="user-form-header">
-    <div>
-      <p class="form-kicker">{{ editingUser ? 'Atualização' : 'Novo cadastro' }}</p>
-      <h3>{{ editingUser ? 'Editar Usuário' : 'Criar Novo Usuário' }}</h3>
-      <p>Preencha os campos abaixo para manter os dados do sistema organizados.</p>
-    </div>
-    <button type="button" class="icon-close" (click)="cancel.emit()">✕</button>
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="user-form-body">
+
+  <!-- Username -->
+  <div class="form-group">
+    <label class="form-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Nome de Usuário
+    </label>
+    <input
+      type="text"
+      formControlName="username"
+      placeholder="Digite o nome do usuário"
+      [class.error]="isFieldInvalid('username')">
+    @if (hasError('username', 'required')) {
+      <span class="field-error">Nome de usuário é obrigatório</span>
+    }
   </div>
 
-  <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="user-form-body">
-    <div class="form-group">
-      <label>Nome de Usuário:</label>
-      <input 
-        type="text" 
-        formControlName="username" 
-        required
-        [class.error]="isFieldInvalid('username')">
-      @if (hasError('username', 'required')) {
-        <span class="error-message">Nome de usuário é obrigatório</span>
-      }
-    </div>
-    
-    <div class="form-group">
-      <label>Email:</label>
-      <input 
-        type="email" 
-        formControlName="email" 
-        required
-        [class.error]="isFieldInvalid('email')">
-      @if (hasError('email', 'required')) {
-        <span class="error-message">Email é obrigatório</span>
-      }
-      @if (hasError('email', 'email')) {
-        <span class="error-message">Email inválido</span>
-      }
-    </div>
-    
-    <div class="form-group">
-      <label>Senha:</label>
-      <input 
-        type="password" 
-        formControlName="password" 
-        [required]="!editingUser"
-        [class.error]="isFieldInvalid('password')">
-      @if (hasError('password', 'required')) {
-        <span class="error-message">Senha é obrigatória</span>
-      }
+  <!-- Email -->
+  <div class="form-group">
+    <label class="form-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Email
+    </label>
+    <input
+      type="email"
+      formControlName="email"
+      placeholder="usuario@exemplo.com"
+      [class.error]="isFieldInvalid('email')">
+    @if (hasError('email', 'required')) {
+      <span class="field-error">Email é obrigatório</span>
+    }
+    @if (hasError('email', 'email')) {
+      <span class="field-error">Formato de email inválido</span>
+    }
+  </div>
+
+  <!-- Password -->
+  <div class="form-group">
+    <label class="form-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Senha
       @if (editingUser) {
-        <small class="field-hint">Deixe em branco para manter a senha atual</small>
-      } @else {
-        <small class="field-hint">Mínimo de 6 caracteres</small>
+        <span class="label-badge">opcional</span>
       }
+    </label>
+    <div class="input-eye-wrap">
+      <input
+        [type]="showPassword ? 'text' : 'password'"
+        formControlName="password"
+        [placeholder]="editingUser ? 'Deixe em branco para manter atual' : 'Mínimo 6 caracteres'"
+        [class.error]="isFieldInvalid('password')">
+      <button type="button" class="eye-btn" (click)="showPassword = !showPassword" tabindex="-1">
+        @if (showPassword) {
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        } @else {
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        }
+      </button>
     </div>
-    
-    <div class="form-group">
-      <label>Data de Expiração da Licença:</label>
-      <input type="datetime-local" formControlName="licenseExpiresAt">
+    @if (hasError('password', 'required')) {
+      <span class="field-error">Senha é obrigatória para novos usuários</span>
+    }
+  </div>
+
+  <!-- License Expires At -->
+  <div class="form-group">
+    <label class="form-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Expiração da Licença
+      <span class="label-badge">opcional</span>
+    </label>
+    <div class="date-row">
+      <div class="date-field-wrap">
+        <input
+          type="date"
+          class="date-field"
+          [value]="getLicenseDate()"
+          (change)="onDateChange($event, 'date')">
+        <span class="date-icon">📅</span>
+      </div>
+      <div class="date-field-wrap">
+        <input
+          type="time"
+          class="date-field"
+          [value]="getLicenseTime()"
+          (change)="onDateChange($event, 'time')">
+        <span class="date-icon">🕐</span>
+      </div>
     </div>
-    
-    <div class="form-group">
-      <label>
+    @if (getLicenseDate()) {
+      <div class="date-preview">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Expira em: <strong>{{ formatLicensePreview() }}</strong>
+        <button type="button" class="date-clear" (click)="clearLicense()">✕ limpar</button>
+      </div>
+    }
+    @if (!getLicenseDate()) {
+      <span class="field-hint">Sem data definida — acesso sem expiração</span>
+    }
+  </div>
+
+  <!-- Toggles -->
+  <div class="toggle-group">
+    <div class="toggle-row">
+      <div class="toggle-text">
+        <div class="toggle-title">Administrador</div>
+        <div class="toggle-sub">Acesso total ao painel admin</div>
+      </div>
+      <label class="toggle-switch">
         <input type="checkbox" formControlName="isAdmin">
-        Administrador
+        <span class="toggle-slider"></span>
       </label>
     </div>
-    
-    <div class="form-group">
-      <label>
+
+    <div class="divider"></div>
+
+    <div class="toggle-row">
+      <div class="toggle-text">
+        <div class="toggle-title">Usuário Ativo</div>
+        <div class="toggle-sub">Pode fazer login no sistema</div>
+      </div>
+      <label class="toggle-switch">
         <input type="checkbox" formControlName="isActive">
-        Usuário Ativo
+        <span class="toggle-slider"></span>
       </label>
     </div>
-    
-    <div class="form-actions">
-      <button type="submit" class="btn-primary">💾 Salvar</button>
-      <button type="button" class="btn-secondary" (click)="cancel.emit()">❌ Cancelar</button>
-    </div>
-  </form>
-</div>
+  </div>
+
+  <!-- Actions -->
+  <div class="form-actions">
+    <button type="submit" class="btn-primary">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      {{ editingUser ? 'Salvar Alterações' : 'Criar Usuário' }}
+    </button>
+    <button type="button" class="btn-secondary" (click)="cancel.emit()">Cancelar</button>
+  </div>
+</form>

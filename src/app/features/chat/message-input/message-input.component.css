@@ -1,36 +1,40 @@
 .input-container {
   display: flex;
   align-items: flex-end;
-  gap: 8px;
-  padding: 16px 20px;
-  background: var(--bg-tertiary);
+  gap: 10px;
+  padding: 0.85rem 1.25rem;
+  background: var(--bg-secondary);
   border-top: 1px solid var(--border-color);
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.1);
 }
 
 textarea {
   flex: 1;
-  padding: 10px 16px;
+  padding: 0.7rem 1rem;
   background: var(--bg-input);
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 22px;
   color: var(--text-primary);
-  font-size: 15px;
+  font: inherit;
+  font-size: 0.93rem;
   resize: none;
-  max-height: 120px;
-  font-family: inherit;
-  line-height: 1.4;
+  max-height: 130px;
+  line-height: 1.5;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
+
+textarea::placeholder { color: var(--text-muted); }
 
 textarea:focus {
   outline: none;
   border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0,201,167,0.08);
 }
 
 .send-btn {
-  width: 48px;
-  height: 48px;
-  background: #ff0000;
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent));
   border: none;
   border-radius: 50%;
   color: white;
@@ -38,20 +42,28 @@ textarea:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
+  transition: all var(--transition-fast);
   flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-.send-btn:hover {
-  background: #cc0000;
+.send-btn:hover:not(:disabled) {
+  transform: scale(1.08);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.28);
+  filter: brightness(1.1);
 }
 
 .send-btn:disabled {
-  background: #999;
+  background: var(--bg-elevated);
+  box-shadow: none;
   cursor: not-allowed;
+  opacity: 0.5;
 }
 
-.send-btn svg {
-  width: 24px;
-  height: 24px;
+.send-btn svg { width: 20px; height: 20px; }
+
+@media (max-width: 768px) {
+  .input-container { padding: 0.7rem 0.85rem; gap: 8px; }
+  textarea { font-size: 0.9rem; }
+  .send-btn { width: 40px; height: 40px; }
 }
