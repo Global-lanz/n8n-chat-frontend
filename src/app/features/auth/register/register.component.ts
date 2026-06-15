@@ -21,6 +21,7 @@ export class RegisterComponent implements OnInit {
   error$: Observable<string | null>;
   botName$: Observable<string>;
   version = environment.version;
+  showPassword = false;
 
   constructor(
     private fb: FormBuilder,

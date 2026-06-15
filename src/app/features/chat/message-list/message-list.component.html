@@ -1,8 +1,9 @@
 <div class="messages-container" #messagesContainer>
   @if (!messages || messages.length === 0) {
     <div class="welcome-message">
-      <h3>👋 Bem-vindo!</h3>
-      <p>Como posso ajudar você hoje?</p>
+      <div class="welcome-icon">🤖</div>
+      <h3>Olá! Como posso ajudar?</h3>
+      <p>Envie uma mensagem para iniciar a conversa.</p>
     </div>
   } @else {
     @for (message of messages; track message.timestamp) {

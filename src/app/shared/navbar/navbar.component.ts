@@ -18,6 +18,7 @@ export class NavbarComponent {
   currentUser$: Observable<User | null>;
   isAdmin$: Observable<boolean>;
   botName$: Observable<string>;
+  menuOpen = false;
 
   constructor(
     private store: Store,
@@ -28,7 +29,16 @@ export class NavbarComponent {
     this.botName$ = this.store.select(AppSelectors.selectBotName);
   }
 
+  toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  closeMenu(): void {
+    this.menuOpen = false;
+  }
+
   onLogout(): void {
+    this.menuOpen = false;
     this.store.dispatch(AppActions.logout());
     this.router.navigate(['/login']);
   }
