@@ -5,8 +5,8 @@
   padding: 0 1.5rem;
   height: 60px;
   background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-color);
-  box-shadow: 0 1px 8px rgba(0,0,0,0.15);
+  border-bottom: 2px solid var(--accent);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.15), 0 1px 0 var(--accent-tint);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -82,13 +82,13 @@
 
 .nav-link.active {
   color: var(--accent);
-  background: rgba(0,201,167,0.08);
+  background: var(--accent-tint);
   font-weight: 600;
 }
 
 body.light-mode .nav-link.active {
   color: var(--accent);
-  background: rgba(5,150,105,0.08);
+  background: var(--accent-tint);
 }
 
 /* User area */
@@ -285,7 +285,7 @@ body.light-mode .nav-link.active {
 
 .drawer-link.active {
   color: var(--accent);
-  background: rgba(0,201,167,0.08);
+  background: var(--accent-tint);
   font-weight: 700;
 }
 

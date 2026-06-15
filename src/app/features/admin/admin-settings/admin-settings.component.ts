@@ -9,7 +9,7 @@ import { ApiService } from '@core/services/api.service';
 import { NotificationService } from '@core/services/notification.service';
 import { ThemeService } from '@core/services/theme.service';
 import { environment } from '../../../../environments/environment';
-import { catchError, of } from 'rxjs';
+import { catchError, forkJoin, of } from 'rxjs';
 
 @Component({
   selector: 'app-admin-settings',
@@ -269,6 +269,37 @@ export class AdminSettingsComponent implements OnInit, OnDestroy {
 
   getWebhookUrl(): string {
     return `${environment.apiBaseUrl}/api/webhook/create-client`;
+  }
+
+  saveVisualSettings() {
+    if (!this.defaultBotName().trim()) {
+      this.notificationService.error('O nome do bot não pode estar vazio');
+      return;
+    }
+
+    this.saving.set(true);
+    forkJoin({
+      name: this.settingsService.updateSetting('default_bot_name', {
+        value: this.defaultBotName(),
+        description: 'Nome padrão do bot para novos usuários'
+      }),
+      palette: this.settingsService.updateSetting('system_color_palette', {
+        value: this.systemPalette(),
+        description: 'Paleta de cores ativa do sistema'
+      })
+    }).subscribe({
+      next: () => {
+        this.notificationService.success('Aparência & Identidade salva com sucesso!');
+        this.saving.set(false);
+        this.initialPalette = this.systemPalette();
+        this.store.dispatch(AppActions.loadConfig());
+      },
+      error: (err) => {
+        console.error('Error saving visual settings:', err);
+        this.notificationService.error('Erro ao salvar configurações de aparência');
+        this.saving.set(false);
+      }
+    });
   }
 
   saveSystemPalette() {
