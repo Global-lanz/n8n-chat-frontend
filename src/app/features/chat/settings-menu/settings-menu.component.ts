@@ -26,6 +26,8 @@ export class SettingsMenuComponent implements OnInit {
   newPassword = '';
   confirmPassword = '';
   showPasswordSection = false;
+  showNewPassword = false;
+  showConfirmPassword = false;
 
   constructor(
     private themeService: ThemeService,
