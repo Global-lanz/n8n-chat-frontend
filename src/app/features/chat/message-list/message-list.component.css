@@ -95,19 +95,80 @@
 
 .message-bubble {
   color: var(--text-primary);
-  line-height: 1.5;
+  line-height: 1.6;
   word-wrap: break-word;
-  white-space: pre-wrap;
+  font-size: 1rem;
 }
 
+/* Headings */
+.message-bubble ::ng-deep h1,
+.message-bubble ::ng-deep h2,
+.message-bubble ::ng-deep h3,
+.message-bubble ::ng-deep h4,
+.message-bubble ::ng-deep h5,
+.message-bubble ::ng-deep h6 {
+  margin: 1rem 0 0.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.message-bubble ::ng-deep h1 {
+  font-size: 1.75rem;
+}
+
+.message-bubble ::ng-deep h2 {
+  font-size: 1.5rem;
+}
+
+.message-bubble ::ng-deep h3 {
+  font-size: 1.25rem;
+}
+
+.message-bubble ::ng-deep h4 {
+  font-size: 1.1rem;
+}
+
+.message-bubble ::ng-deep h5 {
+  font-size: 1.05rem;
+}
+
+.message-bubble ::ng-deep h6 {
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+/* Paragraphs */
 .message-bubble ::ng-deep p {
-  margin: 0 0 .5rem;
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.message-bubble ::ng-deep p:first-child {
+  margin-top: 0;
 }
 
 .message-bubble ::ng-deep p:last-child {
   margin-bottom: 0;
 }
 
+/* Text formatting */
+.message-bubble ::ng-deep strong,
+.message-bubble ::ng-deep b {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.message-bubble ::ng-deep em,
+.message-bubble ::ng-deep i {
+  font-style: italic;
+}
+
+.message-bubble ::ng-deep u {
+  text-decoration: underline;
+}
+
+/* Code and blocks */
 .message-bubble ::ng-deep code {
   background: rgba(0, 0, 0, .2);
   padding: .2rem .4rem;
@@ -121,12 +182,64 @@
   padding: .75rem;
   border-radius: 6px;
   overflow-x: auto;
-  margin: .5rem 0;
+  margin: 0.75rem 0;
+  font-size: 0.9em;
+  line-height: 1.4;
 }
 
 .message-bubble ::ng-deep pre code {
   background: none;
   padding: 0;
+  font-size: inherit;
+}
+
+/* Lists */
+.message-bubble ::ng-deep ul,
+.message-bubble ::ng-deep ol {
+  margin: 0.75rem 0;
+  padding-left: 2rem;
+}
+
+.message-bubble ::ng-deep li {
+  margin: 0.25rem 0;
+  font-size: 1rem;
+}
+
+.message-bubble ::ng-deep ul li {
+  list-style-type: disc;
+}
+
+.message-bubble ::ng-deep ol li {
+  list-style-type: decimal;
+}
+
+/* Blockquotes */
+.message-bubble ::ng-deep blockquote {
+  margin: 0.75rem 0;
+  padding-left: 1rem;
+  border-left: 3px solid var(--accent);
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Links */
+.message-bubble ::ng-deep a {
+  color: var(--accent-primary);
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.message-bubble ::ng-deep a:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+/* Horizontal rule */
+.message-bubble ::ng-deep hr {
+  margin: 1rem 0;
+  border: none;
+  border-top: 1px solid var(--border-color);
 }
 
 .message-timestamp {
