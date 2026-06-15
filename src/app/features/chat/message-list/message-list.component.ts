@@ -33,14 +33,7 @@ export class MessageListComponent implements AfterViewInit, OnChanges {
   }
 
   renderMarkdown(content: string): SafeHtml {
-    const cleanContent = content
-      .split('\n')
-      .map(line => line.trim())
-      .filter(line => line)
-      .join('\n')
-      .trim();
-    
-    const html = marked.parse(cleanContent) as string;
+    const html = marked.parse(content) as string;
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
