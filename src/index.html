@@ -4,17 +4,10 @@
   <meta charset="utf-8">
   <!-- Carregar configuração de ambiente em runtime ANTES de qualquer coisa -->
   <script src="env-config.js"></script>
-  <title id="app-title"></title>
+  <title></title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/svg+xml" href="assets/chat-icon.svg">
-  <script>
-    // Definir o título da página imediatamente após carregar env-config
-    if (window.__env && window.__env.appName) {
-      document.title = window.__env.appName;
-      document.getElementById('app-title').textContent = window.__env.appName;
-    }
-  </script>
 </head>
 <body>
   <app-root></app-root>
