@@ -1,0 +1,39 @@
+name: Changeset Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    # Skip for Version Packages PRs created by the changesets bot
+    if: "!startsWith(github.head_ref, 'changeset-release/')"
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for changeset or skip-changeset label
+        run: |
+          LABELS="${{ join(github.event.pull_request.labels.*.name, ',') }}"
+          if echo "$LABELS" | grep -q "skip-changeset"; then
+            echo "skip-changeset label found — skipping changeset requirement"
+            exit 0
+          fi
+
+          CHANGESETS=$(find .changeset -name "*.md" ! -name "README.md" 2>/dev/null | wc -l)
+          if [ "$CHANGESETS" -gt 0 ]; then
+            echo "Changeset found"
+            exit 0
+          fi
+
+          echo ""
+          echo "❌ No changeset found."
+          echo ""
+          echo "Run 'npx changeset' in your branch and commit the generated .changeset/*.md file."
+          echo "Choose the bump type (patch/minor/major) and write a human-readable description of the change."
+          echo ""
+          echo "If this PR does not affect users (CI, refactor, docs), add the 'skip-changeset' label instead."
+          exit 1

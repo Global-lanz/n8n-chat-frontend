@@ -2,7 +2,11 @@
   <!-- Chat Header -->
   <div class="chat-info">
     <div class="bot-avatar-wrap">
-      <div class="bot-avatar">🤖</div>
+      @if (appLogo$ | async; as logo) {
+        <img [src]="logo" alt="Logo" class="bot-avatar bot-avatar-logo">
+      } @else {
+        <div class="bot-avatar">🤖</div>
+      }
       <div class="status-dot"></div>
     </div>
     <div class="bot-details">
