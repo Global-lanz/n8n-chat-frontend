@@ -1,11 +1,11 @@
-# This workflow has been superseded by:
-#   build-rc.yml             — RC builds on PRs with 'RC' label
-#   version-and-release.yml  — Versioning and production releases via changesets
-#   pr-changeset-check.yml   — Changeset requirement enforcement
-#
-# This file can be safely deleted.
+# Deprecated — superseded by build-rc.yml, version-and-release.yml, pr-changeset-check.yml
+# Kept only to satisfy existing branch protection required status checks.
 name: (Deprecated) Build and Publish
-on: workflow_dispatch
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 jobs:
   noop:
     runs-on: ubuntu-latest
