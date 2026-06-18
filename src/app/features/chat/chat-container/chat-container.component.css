@@ -35,6 +35,15 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
+.bot-avatar-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: transparent;
+  display: block;
+}
+
 .status-dot {
   position: absolute;
   bottom: 1px;
