@@ -61,6 +61,11 @@ export const selectBotName = createSelector(
   (config) => config?.botName ?? ''
 );
 
+export const selectAppLogo = createSelector(
+  selectConfig,
+  (config) => config?.appLogo ?? null
+);
+
 export const selectConfigLoading = createSelector(
   selectConfigState,
   (state) => state.loading
