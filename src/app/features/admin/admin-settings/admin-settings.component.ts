@@ -24,8 +24,9 @@ export class AdminSettingsComponent implements OnInit, OnDestroy {
   defaultBotName = signal<string>('Assistente Virtual');
   systemPalette = signal<string>('green');
   systemPrompt = signal<string>('Você é um assistente virtual útil.');
+  appLogo = signal<string | null>(null);
   activeTab = signal<string>('visual'); // tabs: 'visual', 'ai', 'integration', 'system'
-  
+
   initialPalette = 'green';
   
   backendVersion = signal<string>('Carregando...');
@@ -144,6 +145,9 @@ export class AdminSettingsComponent implements OnInit, OnDestroy {
               break;
             case 'system_prompt':
               this.systemPrompt.set(setting.value || 'Você é um assistente virtual útil.');
+              break;
+            case 'app_logo':
+              this.appLogo.set(setting.value || null);
               break;
           }
         });
@@ -271,6 +275,32 @@ export class AdminSettingsComponent implements OnInit, OnDestroy {
     return `${environment.apiBaseUrl}/api/webhook/create-client`;
   }
 
+  onLogoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      this.notificationService.error('Por favor, selecione um arquivo de imagem.');
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      this.notificationService.error('A imagem deve ter no máximo 2 MB.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.appLogo.set(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeLogo(): void {
+    this.appLogo.set(null);
+  }
+
   saveVisualSettings() {
     if (!this.defaultBotName().trim()) {
       this.notificationService.error('O nome do bot não pode estar vazio');
@@ -278,16 +308,21 @@ export class AdminSettingsComponent implements OnInit, OnDestroy {
     }
 
     this.saving.set(true);
-    forkJoin({
-      name: this.settingsService.updateSetting('default_bot_name', {
+
+    forkJoin([
+      this.settingsService.updateSetting('default_bot_name', {
         value: this.defaultBotName(),
         description: 'Nome padrão do bot para novos usuários'
       }),
-      palette: this.settingsService.updateSetting('system_color_palette', {
+      this.settingsService.updateSetting('system_color_palette', {
         value: this.systemPalette(),
         description: 'Paleta de cores ativa do sistema'
+      }),
+      this.settingsService.updateSetting('app_logo', {
+        value: this.appLogo() || '',
+        description: 'Logo da aplicação (base64)'
       })
-    }).subscribe({
+    ]).subscribe({
       next: () => {
         this.notificationService.success('Aparência & Identidade salva com sucesso!');
         this.saving.set(false);
