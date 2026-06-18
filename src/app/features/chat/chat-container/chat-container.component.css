@@ -19,6 +19,43 @@
 }
 
 
+.bot-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.bot-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.bot-avatar-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: transparent;
+  display: block;
+}
+
+.status-dot {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  width: 10px;
+  height: 10px;
+  background: var(--success);
+  border-radius: 50%;
+  border: 2px solid var(--bg-secondary);
+}
+
 .bot-details {
   display: flex;
   flex-direction: column;
@@ -64,4 +101,5 @@ app-message-input {
 
 @media (max-width: 768px) {
   .chat-info { padding: 0.7rem 1rem; }
+  .bot-avatar { width: 36px; height: 36px; font-size: 1rem; }
 }

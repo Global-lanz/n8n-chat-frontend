@@ -40,14 +40,6 @@
   filter: brightness(10);
 }
 
-.brand-logo {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  object-fit: cover;
-  filter: none;
-}
-
 .brand-name {
   font-size: 1.1rem;
   font-weight: 800;
