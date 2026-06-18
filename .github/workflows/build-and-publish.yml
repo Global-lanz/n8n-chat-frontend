@@ -1,125 +1,13 @@
-name: Build and Publish Docker Image
-
+# Deprecated — superseded by build-rc.yml, version-and-release.yml, pr-changeset-check.yml
+# Kept only to satisfy existing branch protection required status checks.
+name: (Deprecated) Build and Publish
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   pull_request:
-    branches: [ "main" ]
-    types: [opened, synchronize, labeled]
-
+    branches: [main]
 jobs:
-  build-and-publish:
-    permissions: write-all
+  noop:
     runs-on: ubuntu-latest
-    env:
-      IMAGE_NAME: maiconlanzendorf/n8n-chat-frontend
-      GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
-      GITHUB_ACTOR: ${{ github.actor }}
-
     steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build application
-        run: npm run build -- --configuration production
-
-      - name: Verify and prepare dist folder
-        run: |
-          echo "Checking dist folder structure..."
-          ls -la dist/ || true
-          if [ -d "dist/chat-n8n-angular/browser" ]; then
-            echo "Moving files from dist/chat-n8n-angular/browser to dist/"
-            mkdir -p dist/temp
-            mv dist/chat-n8n-angular/browser/* dist/temp/ || true
-            rm -rf dist/chat-n8n-angular
-            mv dist/temp/* dist/
-            rm -rf dist/temp
-          fi
-          echo "Final dist structure:"
-          ls -la dist/
-
-      - name: Verify files before Docker build
-        run: |
-          echo "Current directory contents:"
-          ls -la
-          echo "Dist folder contents:"
-          ls -la dist/
-          echo "Checking .dockerignore:"
-          cat .dockerignore || echo "No .dockerignore file"
-
-      - name: Get version from package.json
-        id: get_version
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          echo "Version from package.json: $VERSION"
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-
-      - name: Generate RC Version
-        id: rc_version
-        if: ${{ contains(github.event.pull_request.labels.*.name, 'RC') }}
-        run: |
-          DATE=$(date +'%Y%m%d') 
-          EXISTING_TAGS=$(git ls-remote --tags origin "refs/tags/RC.${DATE}.*" | wc -l) 
-          COUNT=$(printf "%03d" $((EXISTING_TAGS + 1))) 
-          RC_VERSION="RC.${DATE}.${COUNT}" 
-          echo "RC Version: $RC_VERSION"
-          echo "rc_version=$RC_VERSION" >> $GITHUB_OUTPUT
-
-      - name: Login to Docker Hub
-        if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'RC')) }}
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_HUB_USER }}
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-
-      - name: Set Docker tags
-        id: set_tags
-        run: |
-          if [[ "${{ github.ref }}" == refs/tags/RC.* ]]; then
-            # Tag RC manual
-            TAG_NAME="${GITHUB_REF#refs/tags/}"
-            echo "tags=${{ env.IMAGE_NAME }}:$TAG_NAME" >> $GITHUB_OUTPUT
-            echo "app_version=$TAG_NAME" >> $GITHUB_OUTPUT
-          elif [ "${{ github.event_name }}" == "push" ] && [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            # Push para main (merge)
-            echo "tags=${{ env.IMAGE_NAME }}:${{ env.VERSION }},${{ env.IMAGE_NAME }}:latest" >> $GITHUB_OUTPUT
-            echo "app_version=${{ env.VERSION }}" >> $GITHUB_OUTPUT
-          elif [ "${{ github.event_name }}" == "pull_request" ] && [ "${{ contains(github.event.pull_request.labels.*.name, 'RC') }}" == "true" ]; then
-            # PR com label RC
-            echo "tags=${{ env.IMAGE_NAME }}:${{ steps.rc_version.outputs.rc_version }}" >> $GITHUB_OUTPUT
-            echo "app_version=${{ steps.rc_version.outputs.rc_version }}" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Build and push Docker image
-        if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'RC')) }}
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'RC')) }}
-          tags: ${{ steps.set_tags.outputs.tags }}
-          build-args: |
-            VERSION=${{ steps.set_tags.outputs.app_version }}
-
-      - name: Create Git Tag
-        if: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'RC') }}
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com" 
-          git tag ${{ steps.rc_version.outputs.rc_version }}
-          git push origin ${{ steps.rc_version.outputs.rc_version }}
-
-      - name: Comment RC Version on PR
-        if: ${{ (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'RC')) }}
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          message: |
-            🚀 New Release Candidate Version generated: `${{ env.IMAGE_NAME }}:${{ steps.rc_version.outputs.rc_version }}`
+      - run: echo "This workflow is deprecated. See build-rc.yml and version-and-release.yml."

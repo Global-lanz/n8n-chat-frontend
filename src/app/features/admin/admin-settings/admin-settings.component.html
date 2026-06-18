@@ -37,6 +37,42 @@
             </div>
             <div class="card-body">
 
+              <!-- Logo Upload -->
+              <div class="visual-section">
+                <div class="section-label">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  Logo da Aplicação
+                </div>
+                <div class="logo-upload-area">
+                  @if (appLogo()) {
+                    <div class="logo-preview-wrap">
+                      <img [src]="appLogo()!" alt="Logo" class="logo-preview">
+                      <button type="button" class="btn-remove-logo" (click)="removeLogo()" title="Remover logo">✕</button>
+                    </div>
+                    <p class="logo-hint">Logo atual — clique em "Salvar" para confirmar a remoção, ou escolha outra imagem.</p>
+                  } @else {
+                    <label class="logo-dropzone" for="logoFileInput">
+                      <span class="logo-dropzone-icon">🖼️</span>
+                      <span class="logo-dropzone-text">Clique para escolher uma imagem</span>
+                      <span class="logo-dropzone-hint">PNG, JPG ou SVG — máx. 2 MB</span>
+                    </label>
+                  }
+                  <input
+                    id="logoFileInput"
+                    type="file"
+                    accept="image/*"
+                    style="display:none"
+                    (change)="onLogoSelected($event)"
+                  >
+                  @if (appLogo()) {
+                    <label for="logoFileInput" class="btn-secondary btn-change-logo">
+                      🔄 Trocar imagem
+                    </label>
+                  }
+                </div>
+                <p class="logo-usage-hint">A logo é exibida em círculo no cabeçalho do chat e como ícone da aba do navegador.</p>
+              </div>
+
               <!-- Bot Name -->
               <div class="visual-section">
                 <div class="section-label">
