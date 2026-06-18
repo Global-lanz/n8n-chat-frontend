@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
   loading$: Observable<boolean>;
   error$: Observable<string | null>;
   botName$: Observable<string>;
+  appLogo$: Observable<string | null>;
   version = environment.version;
   showPassword = false;
 
@@ -34,6 +35,7 @@ export class LoginComponent implements OnInit {
     this.loading$ = this.store.select(AppSelectors.selectAuthLoading);
     this.error$ = this.store.select(AppSelectors.selectAuthError);
     this.botName$ = this.store.select(AppSelectors.selectBotName);
+    this.appLogo$ = this.store.select(AppSelectors.selectAppLogo);
   }
 
   ngOnInit(): void {
