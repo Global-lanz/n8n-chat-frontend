@@ -3,7 +3,11 @@
 
     <!-- Logo -->
     <div class="auth-logo">
-      <div class="logo-icon-wrap">💬</div>
+      @if (appLogo$ | async; as logo) {
+        <img [src]="logo" alt="Logo" class="logo-img">
+      } @else {
+        <div class="logo-icon-wrap">💬</div>
+      }
       <h1>{{ botName$ | async }}</h1>
       <p class="auth-subtitle">Faça login para continuar</p>
     </div>

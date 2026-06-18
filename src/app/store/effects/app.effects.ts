@@ -187,6 +187,10 @@ export class AppEffects {
           if (config.botName) {
             document.title = config.botName;
           }
+          const favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+          if (favicon) {
+            favicon.href = config.appLogo || 'assets/chat-icon.svg';
+          }
         }
       })
     ),

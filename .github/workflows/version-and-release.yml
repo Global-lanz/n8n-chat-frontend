@@ -1,0 +1,134 @@
+name: Version and Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+  packages: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: maiconlanzendorf/n8n-chat-frontend
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Normalize repository owner
+        id: repo_owner
+        run: |
+          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          echo "owner=$OWNER" >> $GITHUB_OUTPUT
+
+      - name: Set GHCR image
+        run: echo "GHCR_IMAGE=ghcr.io/${{ steps.repo_owner.outputs.owner }}/n8n-chat-frontend" >> $GITHUB_ENV
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Configure git remote for HTTPS
+        run: git remote set-url origin https://github.com/${{ github.repository }}.git
+
+      # If there are pending changesets: creates/updates the "Version Packages" PR.
+      # If no pending changesets (Version PR was just merged): hasChangesets='false'.
+      - name: Create Version PR or detect release
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: npx changeset version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Detect if this push was the Version PR merge (package.json version bumped)
+      - name: Check if this is a release commit
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        id: version_check
+        run: |
+          VERSION_CHANGED=$(git diff HEAD~1 HEAD -- package.json | grep '"version"' | wc -l)
+          if [ "$VERSION_CHANGED" -gt 0 ]; then
+            VERSION=$(node -p "require('./package.json').version")
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build app
+        if: steps.version_check.outputs.changed == 'true'
+        run: npm run build:prod
+
+      - name: Login to Docker Hub
+        if: steps.version_check.outputs.changed == 'true'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      - name: Login to GHCR
+        if: steps.version_check.outputs.changed == 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push final image
+        if: steps.version_check.outputs.changed == 'true'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ steps.version_check.outputs.version }}
+            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.GHCR_IMAGE }}:${{ steps.version_check.outputs.version }}
+            ${{ env.GHCR_IMAGE }}:latest
+          build-args: |
+            VERSION=${{ steps.version_check.outputs.version }}
+
+      - name: Create Git Tag
+        if: steps.version_check.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag v${{ steps.version_check.outputs.version }}
+          git push origin v${{ steps.version_check.outputs.version }}
+
+      - name: Extract changelog entry
+        if: steps.version_check.outputs.changed == 'true'
+        id: changelog
+        run: |
+          VERSION="${{ steps.version_check.outputs.version }}"
+          NOTES=$(awk "/^## $VERSION/{found=1; next} found && /^## /{exit} found{print}" CHANGELOG.md | sed '/^[[:space:]]*$/d')
+          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        if: steps.version_check.outputs.changed == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version_check.outputs.version }}
+          name: Release v${{ steps.version_check.outputs.version }}
+          body: |
+            ${{ steps.changelog.outputs.notes }}
+
+            ---
+            Docker Hub: `${{ env.IMAGE_NAME }}:${{ steps.version_check.outputs.version }}`
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
