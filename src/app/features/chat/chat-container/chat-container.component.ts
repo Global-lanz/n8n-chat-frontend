@@ -26,7 +26,6 @@ export class ChatContainerComponent implements OnInit, OnDestroy {
   messages$: Observable<Message[]>;
   currentUser$: Observable<User | null>;
   botName$: Observable<string>;
-  appLogo$: Observable<string | null>;
   
   private destroy$ = new Subject<void>();
 
@@ -38,7 +37,6 @@ export class ChatContainerComponent implements OnInit, OnDestroy {
     this.messages$ = this.store.select(AppSelectors.selectMessages);
     this.currentUser$ = this.store.select(AppSelectors.selectCurrentUser);
     this.botName$ = this.store.select(AppSelectors.selectBotName);
-    this.appLogo$ = this.store.select(AppSelectors.selectAppLogo);
   }
 
   ngOnInit(): void {
