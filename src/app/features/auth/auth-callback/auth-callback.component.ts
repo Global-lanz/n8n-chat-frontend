@@ -28,7 +28,7 @@ export class AuthCallbackComponent implements OnInit {
       this.apiService.getCurrentUser().subscribe({
         next: (response) => {
           this.authService.updateCurrentUser(response.user);
-          this.router.navigate(['/chat']);
+          window.location.href = '/chat';
         },
         error: () => {
           this.authService.logout();
