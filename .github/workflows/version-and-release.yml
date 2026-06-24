@@ -44,13 +44,20 @@ jobs:
       - name: Configure git remote for HTTPS
         run: git remote set-url origin https://github.com/${{ github.repository }}.git
 
-      # If there are pending changesets: creates/updates the "Version Packages" PR.
-      # If no pending changesets (Version PR was just merged): hasChangesets='false'.
       - name: Create Version PR or detect release
         id: changesets
         uses: changesets/action@v1
         with:
           version: npx changeset version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Rename Version PR to include version
+        if: steps.changesets.outputs.pullRequestNumber
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          gh pr edit ${{ steps.changesets.outputs.pullRequestNumber }} \
+            --title "RELEASE: $VERSION"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
