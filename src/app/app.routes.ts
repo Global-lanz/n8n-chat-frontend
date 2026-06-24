@@ -7,6 +7,10 @@ import { AdminGuard } from './core/guards/admin.guard';
 export const routes: Routes = [
   { path: '', redirectTo: '/chat', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
+  {
+    path: 'auth/callback',
+    loadComponent: () => import('./features/auth/auth-callback/auth-callback.component').then(m => m.AuthCallbackComponent)
+  },
   { path: 'chat', component: ChatContainerComponent, canActivate: [AuthGuard] },
   {
     path: 'settings',
