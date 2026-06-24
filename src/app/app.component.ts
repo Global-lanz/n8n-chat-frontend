@@ -32,6 +32,9 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Initialize auth after bootstrap is complete
+    this.authService.initializeAuth().subscribe();
+
     // Load system config immediately on app initialization to apply custom palette/branding
     this.store.dispatch(AppActions.loadConfig());
 
@@ -42,7 +45,7 @@ export class AppComponent implements OnInit {
 
     // Set initial state based on authentication
     this.updateNavbarVisibility(this.router.url);
-    
+
     // Update navbar visibility on route changes
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
