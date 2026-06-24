@@ -66,6 +66,16 @@ export const selectAppLogo = createSelector(
   (config) => config?.appLogo ?? null
 );
 
+export const selectAuthMode = createSelector(
+  selectConfig,
+  (config) => config?.authMode ?? 'internal'
+);
+
+export const selectAuthPortalUrl = createSelector(
+  selectConfig,
+  (config) => config?.authPortalUrl ?? null
+);
+
 export const selectConfigLoading = createSelector(
   selectConfigState,
   (state) => state.loading

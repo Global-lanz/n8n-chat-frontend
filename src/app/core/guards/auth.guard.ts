@@ -3,6 +3,7 @@ import { Router, CanActivate, UrlTree } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
+import { environment } from '@environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -15,20 +16,27 @@ export class AuthGuard implements CanActivate {
 
   canActivate(): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     if (!this.authService.isAuthenticated()) {
-      return this.router.createUrlTree(['/login']);
+      return this.redirectToLogin();
     }
 
-    // Validate token with backend
     return this.authService.validateToken().pipe(
       map(isValid => {
         if (isValid) {
           return true;
         }
-        return this.router.createUrlTree(['/login']);
+        return this.redirectToLogin();
       }),
       catchError(() => {
-        return of(this.router.createUrlTree(['/login']));
+        return of(this.redirectToLogin());
       })
     );
+  }
+
+  private redirectToLogin(): false | UrlTree {
+    if (environment.authPortalUrl) {
+      window.location.href = environment.authPortalUrl;
+      return false;
+    }
+    return this.router.createUrlTree(['/login']);
   }
 }
