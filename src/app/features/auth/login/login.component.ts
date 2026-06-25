@@ -39,6 +39,10 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (environment.authPortalUrl) {
+      window.location.href = environment.authPortalUrl;
+      return;
+    }
     this.store.dispatch(AppActions.loadConfig());
   }
 
