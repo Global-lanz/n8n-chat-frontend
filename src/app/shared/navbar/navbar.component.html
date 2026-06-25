@@ -8,6 +8,11 @@
 
   <!-- Desktop nav links -->
   <div class="navbar-menu">
+    @if (portalUrl) {
+      <a [href]="portalUrl" class="nav-link">
+        <span class="nav-icon">🏠</span> Início
+      </a>
+    }
     <a routerLink="/chat" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="nav-link">
       <span class="nav-icon">💬</span> Chat
     </a>
@@ -16,9 +21,11 @@
       <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-link">
         <span class="nav-icon">📊</span> Dashboard
       </a>
-      <a routerLink="/admin/users" routerLinkActive="active" class="nav-link">
-        <span class="nav-icon">👥</span> Usuários
-      </a>
+      @if (localUserMgmt$ | async) {
+        <a routerLink="/admin/users" routerLinkActive="active" class="nav-link">
+          <span class="nav-icon">👥</span> Usuários
+        </a>
+      }
       <a routerLink="/admin/settings" routerLinkActive="active" class="nav-link">
         <span class="nav-icon">🔧</span> Sistema
       </a>
@@ -71,6 +78,11 @@
     }
 
     <nav class="drawer-nav">
+      @if (portalUrl) {
+        <a [href]="portalUrl" class="drawer-link" (click)="closeMenu()">
+          <span>🏠</span> Início
+        </a>
+      }
       <a routerLink="/chat" routerLinkActive="active" class="drawer-link" (click)="closeMenu()">
         <span>💬</span> Chat
       </a>
@@ -78,9 +90,11 @@
         <a routerLink="/admin/dashboard" routerLinkActive="active" class="drawer-link" (click)="closeMenu()">
           <span>📊</span> Dashboard
         </a>
-        <a routerLink="/admin/users" routerLinkActive="active" class="drawer-link" (click)="closeMenu()">
-          <span>👥</span> Usuários
-        </a>
+        @if (localUserMgmt$ | async) {
+          <a routerLink="/admin/users" routerLinkActive="active" class="drawer-link" (click)="closeMenu()">
+            <span>👥</span> Usuários
+          </a>
+        }
         <a routerLink="/admin/settings" routerLinkActive="active" class="drawer-link" (click)="closeMenu()">
           <span>🔧</span> Config. Sistema
         </a>

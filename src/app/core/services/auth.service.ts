@@ -12,15 +12,14 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private apiService: ApiService) {
-    this.initializeAuth();
-  }
+  constructor(private apiService: ApiService) {}
 
-  private initializeAuth(): void {
+  initializeAuth(): Observable<boolean> {
     const token = this.getToken();
     if (token) {
-      this.validateToken().subscribe();
+      return this.validateToken();
     }
+    return of(false);
   }
 
   login(credentials: LoginRequest): Observable<User> {
