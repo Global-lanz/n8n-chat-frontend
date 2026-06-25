@@ -69,6 +69,8 @@ export interface AppConfig {
   botName: string;
   systemPalette?: string;
   appLogo?: string | null;
+  authMode?: 'internal' | 'external';
+  authPortalUrl?: string | null;
 }
 
 // API Response Models

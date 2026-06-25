@@ -2,10 +2,11 @@
 <html lang="pt-BR" data-theme="dark">
 <head>
   <meta charset="utf-8">
-  <!-- Carregar configuração de ambiente em runtime ANTES de qualquer coisa -->
-  <script src="env-config.js"></script>
-  <title></title>
   <base href="/">
+  <!-- Carregar configuração de ambiente em runtime ANTES de qualquer coisa.
+       Caminho absoluto + base href antes garante resolução pela raiz em qualquer rota (ex.: /auth/callback). -->
+  <script src="/env-config.js"></script>
+  <title></title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/svg+xml" href="assets/chat-icon.svg">
 </head>

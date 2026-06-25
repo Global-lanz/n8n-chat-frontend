@@ -5,6 +5,7 @@ import { of } from 'rxjs';
 import { map, catchError, switchMap, tap } from 'rxjs/operators';
 import * as AppActions from '../actions/app.actions';
 import { ApiService, AuthService, WebSocketService, NotificationService, ThemeService } from '@core/services';
+import { environment } from '@environments/environment';
 
 @Injectable()
 export class AppEffects {
@@ -103,6 +104,15 @@ export class AppEffects {
       tap(() => {
         this.authService.logout();
         this.webSocketService.disconnect();
+        if (environment.authPortalUrl) {
+          // External (SSO) mode: terminate the whole session in the central
+          // auth portal — revokes the central refresh token and clears its
+          // storage — so the user is logged out of every connected app, not
+          // just this one. Hard navigation guarantees a clean re-bootstrap.
+          const base = environment.authPortalUrl.replace(/\/+$/, '');
+          window.location.href = `${base}/logout`;
+          return;
+        }
         this.router.navigate(['/login']);
       })
     ),
