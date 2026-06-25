@@ -19,12 +19,14 @@ fi
 
 echo "✅ API_BASE_URL: ${API_BASE_URL}"
 
-# Criar env-config.js que será carregado pelo index.html
+AUTH_PORTAL_URL=${AUTH_PORTAL_URL:-}
+
 cat > /usr/share/nginx/html/env-config.js <<EOF
 window.__env = window.__env || {};
 window.__env.apiBaseUrl = '${API_BASE_URL}';
 window.__env.version = '${VERSION}';
 window.__env.production = true;
+window.__env.authPortalUrl = '${AUTH_PORTAL_URL}';
 EOF
 
 echo "✅ env-config.js criado com sucesso!"

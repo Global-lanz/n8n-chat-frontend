@@ -9,35 +9,37 @@
     </div>
   }
 
-  <!-- Profile card -->
-  <div class="settings-card">
-    <div class="card-label">Perfil</div>
+  <!-- Profile card (local name editing — internal auth mode only) -->
+  @if (canEditProfile$ | async) {
+    <div class="settings-card">
+      <div class="card-label">Perfil</div>
 
-    <!-- Avatar display -->
-    <div class="profile-avatar-row">
-      <div class="profile-avatar">
-        {{ (currentUser?.username || 'U').charAt(0).toUpperCase() }}
+      <!-- Avatar display -->
+      <div class="profile-avatar-row">
+        <div class="profile-avatar">
+          {{ (currentUser?.username || 'U').charAt(0).toUpperCase() }}
+        </div>
+        <div class="profile-info">
+          <div class="profile-name">{{ currentUser?.username || '—' }}</div>
+          <div class="profile-email">{{ currentUser?.email || '' }}</div>
+        </div>
       </div>
-      <div class="profile-info">
-        <div class="profile-name">{{ currentUser?.username || '—' }}</div>
-        <div class="profile-email">{{ currentUser?.email || '' }}</div>
+
+      <!-- Name field -->
+      <div class="field-group">
+        <label class="field-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Nome de exibição
+        </label>
+        <input
+          type="text"
+          class="field-input"
+          [(ngModel)]="username"
+          placeholder="Seu nome"
+        >
       </div>
     </div>
-
-    <!-- Name field -->
-    <div class="field-group">
-      <label class="field-label">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Nome de exibição
-      </label>
-      <input
-        type="text"
-        class="field-input"
-        [(ngModel)]="username"
-        placeholder="Seu nome"
-      >
-    </div>
-  </div>
+  }
 
   <!-- Tema card -->
   <div class="settings-card">
@@ -61,7 +63,8 @@
     </div>
   </div>
 
-  <!-- Senha card -->
+  <!-- Senha card (internal auth mode only) -->
+  @if (canEditProfile$ | async) {
   <div class="settings-card">
     <div class="card-label-row" (click)="togglePasswordSection()">
       <div class="card-label" style="margin-bottom:0">Alterar Senha</div>
@@ -118,6 +121,21 @@
       </div>
     }
   </div>
+  } @else {
+    <!-- External/SSO mode: name + password are managed in the central portal -->
+    <div class="settings-card">
+      <div class="card-label">Conta</div>
+      <p class="portal-hint">
+        Seu nome e senha são gerenciados no portal de acesso.
+      </p>
+      @if (portalAccountUrl) {
+        <a class="portal-link" [href]="portalAccountUrl">
+          Gerenciar nome e senha no portal
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+      }
+    </div>
+  }
 
   <!-- Actions -->
   <div class="form-actions">

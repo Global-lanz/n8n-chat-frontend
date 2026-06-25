@@ -3,10 +3,15 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { ChatContainerComponent } from './features/chat/chat-container/chat-container.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { AdminGuard } from './core/guards/admin.guard';
+import { LocalUserMgmtGuard } from './core/guards/local-user-mgmt.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/chat', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
+  {
+    path: 'auth/callback',
+    loadComponent: () => import('./features/auth/auth-callback/auth-callback.component').then(m => m.AuthCallbackComponent)
+  },
   { path: 'chat', component: ChatContainerComponent, canActivate: [AuthGuard] },
   {
     path: 'settings',
@@ -24,6 +29,7 @@ export const routes: Routes = [
       },
       {
         path: 'users',
+        canActivate: [LocalUserMgmtGuard],
         loadComponent: () => import('./features/admin/admin-users-page/admin-users-page.component').then(m => m.AdminUsersPageComponent)
       },
       {

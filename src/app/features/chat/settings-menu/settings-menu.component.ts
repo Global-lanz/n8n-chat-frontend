@@ -1,10 +1,15 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ThemeService, Theme } from '@core/services/theme.service';
 import { NotificationService } from '@core/services/notification.service';
 import * as AppActions from '@store/actions/app.actions';
+import * as AppSelectors from '@store/selectors/app.selectors';
+import { environment } from '@environments/environment';
 import { User } from '@core/models';
 
 @Component({
@@ -21,7 +26,7 @@ export class SettingsMenuComponent implements OnInit {
   
   selectedTheme: Theme = 'dark';
   username = '';
-  
+
   // Password change
   newPassword = '';
   confirmPassword = '';
@@ -29,11 +34,27 @@ export class SettingsMenuComponent implements OnInit {
   showNewPassword = false;
   showConfirmPassword = false;
 
+  /** In external/SSO mode name + password are managed centrally in the portal,
+   * so this app only edits the theme. */
+  canEditProfile$: Observable<boolean>;
+  private canEditProfile = true;
+  /** Portal self-service account URL (external mode only). */
+  portalAccountUrl = environment.authPortalUrl
+    ? environment.authPortalUrl.replace(/\/+$/, '') + '/conta'
+    : '';
+
   constructor(
     private themeService: ThemeService,
     private store: Store,
     private notificationService: NotificationService
-  ) {}
+  ) {
+    this.canEditProfile$ = this.store
+      .select(AppSelectors.selectAuthMode)
+      .pipe(map((mode) => mode !== 'external'));
+    this.canEditProfile$
+      .pipe(takeUntilDestroyed())
+      .subscribe((v) => (this.canEditProfile = v));
+  }
 
   ngOnInit(): void {
     // Load theme from user profile or current theme
@@ -42,11 +63,26 @@ export class SettingsMenuComponent implements OnInit {
     } else {
       this.selectedTheme = this.themeService.getCurrentTheme();
     }
-    
+
     this.username = this.currentUser?.username || '';
   }
 
   onSaveSettings(): void {
+    // External/SSO mode: only the theme is managed locally; name and password
+    // are edited in the central portal. Persist the theme without touching the
+    // (centrally-owned) name.
+    if (!this.canEditProfile) {
+      this.themeService.setTheme(this.selectedTheme);
+      const currentName = this.currentUser?.username || '';
+      if (currentName) {
+        this.store.dispatch(
+          AppActions.updateUsername({ username: currentName, theme: this.selectedTheme })
+        );
+      }
+      this.notificationService.success('Tema salvo com sucesso!');
+      return;
+    }
+
     const newName = this.username.trim();
     if (!newName) {
       this.notificationService.error('Nome não pode estar vazio');
