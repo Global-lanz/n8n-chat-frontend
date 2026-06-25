@@ -28,7 +28,12 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
+        // Only force a logout when an *authenticated* request (one that carried
+        // a token) is rejected — that means the session really expired. A 401
+        // from the login request itself (wrong password) has no token; it must
+        // propagate so the login screen can show the error, instead of being
+        // hijacked into a logout/redirect that hides it.
+        if (error.status === 401 && token) {
           this.authService.logout();
           if (environment.authPortalUrl) {
             window.location.href = environment.authPortalUrl;
