@@ -9,6 +9,7 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
+import { environment } from '@environments/environment';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -29,6 +30,9 @@ export class AuthInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
           this.authService.logout();
+          if (environment.authPortalUrl) {
+            window.location.href = environment.authPortalUrl;
+          }
         }
         return throwError(() => error);
       })
