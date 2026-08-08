@@ -22,6 +22,14 @@ export class LoginComponent implements OnInit {
   appLogo$: Observable<string | null>;
   version = environment.version;
   showPassword = false;
+  embedFallbackUrl = environment.embedFallbackUrl;
+  // Password login is only ever reachable as a top-level page for the app's
+  // own direct customers. A page running inside an iframe only happens via
+  // the embed-SSO widget — there, /auth/callback (not this form) is the
+  // intended entry point, so credentials should never be collected here.
+  // This check is unconditional (not per-account) so it can't be used to
+  // probe whether a given email is an embed-provisioned account.
+  isEmbedded = window.self !== window.top;
 
   constructor(
     private fb: FormBuilder,
