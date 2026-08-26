@@ -44,20 +44,26 @@ jobs:
       - name: Configure git remote for HTTPS
         run: git remote set-url origin https://github.com/${{ github.repository }}.git
 
+      # Peek at the version that "npx changeset version" would produce, so it can be embedded in the
+      # release PR title/commit below, then revert so changesets/action performs the real versioning.
+      # No-op (nothing to preview/revert) when there are no pending changesets.
+      - name: Preview next version
+        id: preview_version
+        run: |
+          npx changeset version
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          git checkout -- .
+
+      # If there are pending changesets: creates/updates the "RELEASE: <version>" PR.
+      # If no pending changesets (Version PR was just merged): hasChangesets='false'.
       - name: Create Version PR or detect release
         id: changesets
         uses: changesets/action@v1
         with:
           version: npx changeset version
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Rename Version PR to include version
-        if: steps.changesets.outputs.pullRequestNumber
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          gh pr edit ${{ steps.changesets.outputs.pullRequestNumber }} \
-            --title "RELEASE: $VERSION"
+          title: "RELEASE: ${{ steps.preview_version.outputs.version }}"
+          commit: "RELEASE: ${{ steps.preview_version.outputs.version }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

@@ -20,6 +20,7 @@ fi
 echo "✅ API_BASE_URL: ${API_BASE_URL}"
 
 AUTH_PORTAL_URL=${AUTH_PORTAL_URL:-}
+EMBED_FALLBACK_URL=${EMBED_FALLBACK_URL:-}
 
 cat > /usr/share/nginx/html/env-config.js <<EOF
 window.__env = window.__env || {};
@@ -27,9 +28,29 @@ window.__env.apiBaseUrl = '${API_BASE_URL}';
 window.__env.version = '${VERSION}';
 window.__env.production = true;
 window.__env.authPortalUrl = '${AUTH_PORTAL_URL}';
+window.__env.embedFallbackUrl = '${EMBED_FALLBACK_URL}';
 EOF
 
 echo "✅ env-config.js criado com sucesso!"
+
+# Frame-ancestors: by default only allow framing by ourselves (X-Frame-Options,
+# widest browser support). When EMBED_ALLOWED_ORIGIN is set (comma-separated
+# origins), switch to a CSP that also allows those specific third-party
+# origins to embed this app in an iframe — used for the embed-SSO widget.
+# Never falls back to a wildcard.
+EMBED_ALLOWED_ORIGIN=${EMBED_ALLOWED_ORIGIN:-}
+
+if [ -n "$EMBED_ALLOWED_ORIGIN" ]; then
+    FRAME_ANCESTORS=$(echo "$EMBED_ALLOWED_ORIGIN" | tr ',' ' ')
+    echo "✅ EMBED_ALLOWED_ORIGIN: ${EMBED_ALLOWED_ORIGIN}"
+    cat > /etc/nginx/frame-ancestors.conf <<EOF
+add_header Content-Security-Policy "frame-ancestors 'self' ${FRAME_ANCESTORS}" always;
+EOF
+else
+    cat > /etc/nginx/frame-ancestors.conf <<EOF
+add_header X-Frame-Options "SAMEORIGIN" always;
+EOF
+fi
 
 # Criar version.json
 BUILD_DATE=${BUILD_DATE:-$(date -u +"%Y-%m-%dT%H:%M:%SZ")}

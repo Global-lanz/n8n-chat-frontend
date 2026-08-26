@@ -110,6 +110,34 @@
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
+.auth-embed-fallback {
+  text-align: center;
+}
+
+.auth-embed-fallback-link {
+  display: block;
+  width: 100%;
+  margin-top: 1.25rem;
+  padding: 0.85rem;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent));
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  transition: all var(--transition-fast);
+}
+
+.auth-embed-fallback-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(0,0,0,0.28);
+  filter: brightness(1.08);
+}
+
 .auth-version {
   text-align: center;
   margin-top: 1.5rem;
