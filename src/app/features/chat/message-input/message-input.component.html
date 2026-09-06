@@ -4,7 +4,7 @@
     [(ngModel)]="message"
     (keydown)="onKeyDown($event)"
     (input)="autoResize()"
-    placeholder="Digite uma mensagem..."
+    [placeholder]="placeholder"
     rows="1"
   ></textarea>
   <button class="send-btn" (click)="onSend()" [disabled]="!message.trim()">

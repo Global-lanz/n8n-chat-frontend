@@ -92,6 +92,7 @@
   overflow-wrap: break-word;
   line-height: 1.6;
   font-size: 0.93rem;
+  font-family: var(--font-content, inherit);
   color: var(--text-primary);
   position: relative;
 }

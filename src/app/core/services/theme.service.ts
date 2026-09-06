@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export type Theme = 'light' | 'dark';
 
@@ -17,7 +18,7 @@ export class ThemeService {
 
   private getInitialTheme(): Theme {
     const savedTheme = localStorage.getItem(this.THEME_KEY);
-    return (savedTheme as Theme) || 'dark';
+    return (savedTheme as Theme) || 'light';
   }
 
   setTheme(theme: Theme): void {
@@ -35,6 +36,17 @@ export class ThemeService {
     return this.themeSubject.value;
   }
 
+  /**
+   * Picks the logo for the active theme (light/dark), falling back to
+   * whichever one is set when the admin has only uploaded one — so an
+   * existing single-logo setup keeps working after adding the dark variant.
+   */
+  activeLogo$(lightLogo$: Observable<string | null>, darkLogo$: Observable<string | null>): Observable<string | null> {
+    return combineLatest([this.theme$, lightLogo$, darkLogo$]).pipe(
+      map(([theme, light, dark]) => (theme === 'dark' ? dark || light : light || dark) ?? null)
+    );
+  }
+
   private applyTheme(theme: Theme): void {
     if (theme === 'light') {
       document.body.classList.add('light-mode');
@@ -45,6 +57,12 @@ export class ThemeService {
 
   private currentPalette = 'green';
 
+  // Fontes carregadas sob demanda por paleta (nenhum outro tema paga o custo dessa fonte).
+  private readonly PALETTE_FONT_LINK_ID = 'theme-palette-font';
+  private readonly PALETTE_FONTS: Record<string, string> = {
+    norteia: 'https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700&family=Montserrat:wght@400;500;600;700;800&display=swap'
+  };
+
   setPalette(palette: string): void {
     this.currentPalette = palette || 'green';
     this.applyPalette(this.currentPalette);
@@ -54,10 +72,32 @@ export class ThemeService {
     // Remove any existing palette classes from body
     const classesToRemove = Array.from(document.body.classList).filter(c => c.startsWith('palette-'));
     classesToRemove.forEach(c => document.body.classList.remove(c));
-    
+
     // Add the new palette class if not default (green)
     if (palette && palette !== 'green') {
       document.body.classList.add(`palette-${palette}`);
     }
+
+    this.applyPaletteFont(palette);
+  }
+
+  private applyPaletteFont(palette: string): void {
+    const existingLink = document.getElementById(this.PALETTE_FONT_LINK_ID) as HTMLLinkElement | null;
+    const fontUrl = this.PALETTE_FONTS[palette];
+
+    if (!fontUrl) {
+      existingLink?.remove();
+      return;
+    }
+    if (existingLink?.href === fontUrl) {
+      return;
+    }
+    existingLink?.remove();
+
+    const link = document.createElement('link');
+    link.id = this.PALETTE_FONT_LINK_ID;
+    link.rel = 'stylesheet';
+    link.href = fontUrl;
+    document.head.appendChild(link);
   }
 }
