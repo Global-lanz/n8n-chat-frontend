@@ -82,7 +82,30 @@
   padding: 0 4px;
 }
 .chat-message.user .message-sender { color: var(--accent-primary); text-align: right; }
-.chat-message.bot  .message-sender { color: var(--accent); }
+.chat-message.bot  .message-sender { color: var(--accent); display: flex; align-items: center; gap: 4px; }
+
+.sender-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.sender-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.sender-avatar-fallback {
+  font-size: 10px;
+  line-height: 1;
+}
 
 /* Bubble */
 .message-bubble {

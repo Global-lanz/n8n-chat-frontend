@@ -9,7 +9,18 @@
     @for (message of messages; track message.timestamp) {
       <div class="chat-message {{ message.sender }}">
         <div class="message-sender">
-          {{ message.sender === 'user' ? '👤 Você' : '🤖 ' + botName }}
+          @if (message.sender === 'user') {
+            {{ currentUserName || 'Você' }}
+          } @else {
+            <span class="sender-avatar">
+              @if (botLogo) {
+                <img [src]="botLogo" alt="" class="sender-avatar-img">
+              } @else {
+                <span class="sender-avatar-fallback">🤖</span>
+              }
+            </span>
+            {{ botName }}
+          }
         </div>
         <div class="message-bubble" [innerHTML]="renderMarkdown(message.content)"></div>
         <div class="message-timestamp">{{ formatTime(message.timestamp) }}</div>

@@ -55,11 +55,17 @@ export class MessageInputComponent {
     }
   }
 
+  private readonly MAX_HEIGHT = 130;
+
   autoResize(): void {
     if (this.messageInput) {
       const element = this.messageInput.nativeElement;
       element.style.height = 'auto';
-      element.style.height = Math.min(element.scrollHeight, 120) + 'px';
+      const contentHeight = element.scrollHeight;
+      element.style.height = Math.min(contentHeight, this.MAX_HEIGHT) + 'px';
+      // Only show the scrollbar once content truly exceeds the cap — otherwise
+      // it can flash in from sizing rounding even for a single short line.
+      element.style.overflowY = contentHeight > this.MAX_HEIGHT ? 'auto' : 'hidden';
     }
   }
 }
