@@ -67,6 +67,19 @@ export class SettingsMenuComponent implements OnInit {
     this.username = this.currentUser?.username || '';
   }
 
+  /** Applies and persists the theme the moment the toggle is flipped — no need
+   * to hit "Salvar alterações" just to see (and keep) the change. */
+  onThemeToggle(): void {
+    this.selectedTheme = this.selectedTheme === 'dark' ? 'light' : 'dark';
+    this.themeService.setTheme(this.selectedTheme);
+
+    const username = this.currentUser?.username || this.username;
+    if (username) {
+      this.store.dispatch(AppActions.updateUsername({ username, theme: this.selectedTheme }));
+    }
+    this.notificationService.success('Tema salvo com sucesso!');
+  }
+
   onSaveSettings(): void {
     // External/SSO mode: only the theme is managed locally; name and password
     // are edited in the central portal. Persist the theme without touching the

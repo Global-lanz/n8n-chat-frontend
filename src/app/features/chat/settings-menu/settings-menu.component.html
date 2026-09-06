@@ -56,7 +56,7 @@
         <input
           type="checkbox"
           [checked]="selectedTheme === 'light'"
-          (change)="selectedTheme = selectedTheme === 'dark' ? 'light' : 'dark'"
+          (change)="onThemeToggle()"
         >
         <span class="toggle-slider"></span>
       </label>
