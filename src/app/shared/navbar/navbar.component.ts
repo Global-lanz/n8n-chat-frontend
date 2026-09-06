@@ -7,18 +7,22 @@ import { map } from 'rxjs/operators';
 import * as AppActions from '@store/actions/app.actions';
 import * as AppSelectors from '@store/selectors/app.selectors';
 import { User } from '@core/models';
+import { ThemeService } from '@core/services';
 import { environment } from '@environments/environment';
+import { BrandNameComponent } from '../brand-name/brand-name.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, BrandNameComponent],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
   currentUser$: Observable<User | null>;
   isAdmin$: Observable<boolean>;
+  botName$: Observable<string>;
+  appLogo$: Observable<string | null>;
   /** True only in self-contained (internal) auth mode. In external mode user
    * management lives in the central auth portal, so the local Users screen is hidden. */
   localUserMgmt$: Observable<boolean>;
@@ -26,9 +30,14 @@ export class NavbarComponent {
   portalUrl = environment.authPortalUrl;
   menuOpen = false;
 
-  constructor(private store: Store) {
+  constructor(private store: Store, private themeService: ThemeService) {
     this.currentUser$ = this.store.select(AppSelectors.selectCurrentUser);
     this.isAdmin$ = this.store.select(AppSelectors.selectIsAdmin);
+    this.botName$ = this.store.select(AppSelectors.selectBotName);
+    this.appLogo$ = this.themeService.activeLogo$(
+      this.store.select(AppSelectors.selectAppLogo),
+      this.store.select(AppSelectors.selectAppLogoDark)
+    );
     this.localUserMgmt$ = this.store.select(AppSelectors.selectAuthMode).pipe(
       map(mode => mode !== 'external')
     );
