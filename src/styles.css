@@ -167,6 +167,9 @@ body.light-mode.palette-norteia {
   --bg-message-user: #fdf6e0;
   --accent-tint: rgba(138,106,0,0.06);
   --focus-ring: rgba(138,106,0,0.16);
+  /* Hex exatos do Estúdio DUA — casa com o fundo/texto de quem embute a gaveta. */
+  --bg-primary: #f9fafb;
+  --text-primary: #1f2937;
 }
 
 /* ===== BASE ===== */
