@@ -10,7 +10,7 @@
       <div class="status-dot"></div>
     </div>
     <div class="bot-details">
-      <div class="bot-name">{{ botName$ | async }}</div>
+      <div class="bot-name"><app-brand-name [name]="botName$ | async"></app-brand-name></div>
       <div class="bot-status">● Online</div>
     </div>
   </div>
@@ -19,10 +19,12 @@
   <app-message-list
     [messages]="messages$ | async"
     [botName]="botName$ | async"
+    [welcomeMessage]="welcomeMessage$ | async"
   ></app-message-list>
 
   <!-- Input -->
   <app-message-input
+    [placeholder]="inputPlaceholder$ | async"
     (sendMessage)="onSendMessage($event)"
   ></app-message-input>
 </div>

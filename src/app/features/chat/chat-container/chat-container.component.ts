@@ -7,9 +7,10 @@ import { takeUntil } from 'rxjs/operators';
 import * as AppActions from '@store/actions/app.actions';
 import * as AppSelectors from '@store/selectors/app.selectors';
 import { Message, User } from '@core/models';
-import { WebSocketService } from '@core/services';
+import { WebSocketService, ThemeService } from '@core/services';
 import { MessageListComponent } from '../message-list/message-list.component';
 import { MessageInputComponent } from '../message-input/message-input.component';
+import { BrandNameComponent } from '../../../shared/brand-name/brand-name.component';
 
 @Component({
   selector: 'app-chat-container',
@@ -17,7 +18,8 @@ import { MessageInputComponent } from '../message-input/message-input.component'
   imports: [
     CommonModule,
     MessageListComponent,
-    MessageInputComponent
+    MessageInputComponent,
+    BrandNameComponent
   ],
   templateUrl: './chat-container.component.html',
   styleUrls: ['./chat-container.component.css']
@@ -27,18 +29,26 @@ export class ChatContainerComponent implements OnInit, OnDestroy {
   currentUser$: Observable<User | null>;
   botName$: Observable<string>;
   appLogo$: Observable<string | null>;
-  
+  welcomeMessage$: Observable<string>;
+  inputPlaceholder$: Observable<string>;
+
   private destroy$ = new Subject<void>();
 
   constructor(
     private store: Store,
     private webSocketService: WebSocketService,
+    private themeService: ThemeService,
     private router: Router
   ) {
     this.messages$ = this.store.select(AppSelectors.selectMessages);
     this.currentUser$ = this.store.select(AppSelectors.selectCurrentUser);
     this.botName$ = this.store.select(AppSelectors.selectBotName);
-    this.appLogo$ = this.store.select(AppSelectors.selectAppLogo);
+    this.appLogo$ = this.themeService.activeLogo$(
+      this.store.select(AppSelectors.selectAppLogo),
+      this.store.select(AppSelectors.selectAppLogoDark)
+    );
+    this.welcomeMessage$ = this.store.select(AppSelectors.selectWelcomeMessage);
+    this.inputPlaceholder$ = this.store.select(AppSelectors.selectInputPlaceholder);
   }
 
   ngOnInit(): void {

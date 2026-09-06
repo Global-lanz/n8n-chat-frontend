@@ -3,7 +3,7 @@
 
     <div class="auth-logo">
       <div class="logo-icon-wrap">💬</div>
-      <h1>{{ botName$ | async }}</h1>
+      <h1><app-brand-name [name]="botName$ | async"></app-brand-name></h1>
       <p class="auth-subtitle">Crie sua conta</p>
     </div>
 

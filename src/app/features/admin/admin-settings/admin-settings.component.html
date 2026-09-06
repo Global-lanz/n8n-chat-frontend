@@ -37,40 +37,76 @@
             </div>
             <div class="card-body">
 
-              <!-- Logo Upload -->
+              <!-- Logo Upload (Tema Claro) -->
               <div class="visual-section">
                 <div class="section-label">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                  Logo da Aplicação
+                  Logo da Aplicação — Tema Claro
                 </div>
                 <div class="logo-upload-area">
                   @if (appLogo()) {
                     <div class="logo-preview-wrap">
-                      <img [src]="appLogo()!" alt="Logo" class="logo-preview">
-                      <button type="button" class="btn-remove-logo" (click)="removeLogo()" title="Remover logo">✕</button>
+                      <img [src]="appLogo()!" alt="Logo (tema claro)" class="logo-preview">
+                      <button type="button" class="btn-remove-logo" (click)="removeLogo(appLogo)" title="Remover logo">✕</button>
                     </div>
                     <p class="logo-hint">Logo atual — clique em "Salvar" para confirmar a remoção, ou escolha outra imagem.</p>
                   } @else {
-                    <label class="logo-dropzone" for="logoFileInput">
+                    <label class="logo-dropzone" for="logoFileInputLight">
                       <span class="logo-dropzone-icon">🖼️</span>
                       <span class="logo-dropzone-text">Clique para escolher uma imagem</span>
                       <span class="logo-dropzone-hint">PNG, JPG ou SVG — máx. 2 MB</span>
                     </label>
                   }
                   <input
-                    id="logoFileInput"
+                    id="logoFileInputLight"
                     type="file"
                     accept="image/*"
                     style="display:none"
-                    (change)="onLogoSelected($event)"
+                    (change)="onLogoSelected($event, appLogo)"
                   >
                   @if (appLogo()) {
-                    <label for="logoFileInput" class="btn-secondary btn-change-logo">
+                    <label for="logoFileInputLight" class="btn-secondary btn-change-logo">
                       🔄 Trocar imagem
                     </label>
                   }
                 </div>
-                <p class="logo-usage-hint">A logo é exibida em círculo no cabeçalho do chat e como ícone da aba do navegador.</p>
+                <p class="logo-usage-hint">Usada quando o usuário está no tema claro. Se não houver logo do tema escuro, esta é usada nos dois.</p>
+              </div>
+
+              <!-- Logo Upload (Tema Escuro) -->
+              <div class="visual-section">
+                <div class="section-label">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                  Logo da Aplicação — Tema Escuro
+                </div>
+                <div class="logo-upload-area">
+                  @if (appLogoDark()) {
+                    <div class="logo-preview-wrap">
+                      <img [src]="appLogoDark()!" alt="Logo (tema escuro)" class="logo-preview">
+                      <button type="button" class="btn-remove-logo" (click)="removeLogo(appLogoDark)" title="Remover logo">✕</button>
+                    </div>
+                    <p class="logo-hint">Logo atual — clique em "Salvar" para confirmar a remoção, ou escolha outra imagem.</p>
+                  } @else {
+                    <label class="logo-dropzone" for="logoFileInputDark">
+                      <span class="logo-dropzone-icon">🖼️</span>
+                      <span class="logo-dropzone-text">Clique para escolher uma imagem</span>
+                      <span class="logo-dropzone-hint">PNG, JPG ou SVG — máx. 2 MB</span>
+                    </label>
+                  }
+                  <input
+                    id="logoFileInputDark"
+                    type="file"
+                    accept="image/*"
+                    style="display:none"
+                    (change)="onLogoSelected($event, appLogoDark)"
+                  >
+                  @if (appLogoDark()) {
+                    <label for="logoFileInputDark" class="btn-secondary btn-change-logo">
+                      🔄 Trocar imagem
+                    </label>
+                  }
+                </div>
+                <p class="logo-usage-hint">Usada quando o usuário está no tema escuro. Opcional — sem ela, a logo do tema claro é usada nos dois.</p>
               </div>
 
               <!-- Bot Name -->
@@ -88,6 +124,38 @@
                 >
               </div>
 
+              <!-- Chat Welcome Message -->
+              <div class="visual-section">
+                <div class="section-label">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Mensagem Inicial do Chat
+                </div>
+                <input
+                  type="text"
+                  [ngModel]="chatWelcomeMessage()"
+                  (ngModelChange)="chatWelcomeMessage.set($event)"
+                  placeholder="Ex: Envie uma mensagem para iniciar a conversa."
+                  class="input-field full-width"
+                >
+                <p class="logo-usage-hint">Exibida na tela do chat antes da primeira mensagem ser enviada.</p>
+              </div>
+
+              <!-- Chat Input Placeholder -->
+              <div class="visual-section">
+                <div class="section-label">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><line x1="7" y1="12" x2="13" y2="12"/></svg>
+                  Placeholder da Caixa de Texto
+                </div>
+                <input
+                  type="text"
+                  [ngModel]="chatInputPlaceholder()"
+                  (ngModelChange)="chatInputPlaceholder.set($event)"
+                  placeholder="Ex: Digite uma mensagem..."
+                  class="input-field full-width"
+                >
+                <p class="logo-usage-hint">Texto de dica exibido dentro do campo onde o usuário digita.</p>
+              </div>
+
               <!-- Color Palette -->
               <div class="visual-section">
                 <div class="section-label">
@@ -95,33 +163,6 @@
                   Paleta de Cores
                 </div>
                 <div class="palette-selector palette-grid">
-
-                  <label class="palette-option" [class.selected]="systemPalette() === 'green'" (click)="selectPalette('green')">
-                    <input type="radio" name="palette" value="green" [checked]="systemPalette() === 'green'">
-                    <span class="color-dot green"></span>
-                    <div class="palette-info">
-                      <span class="palette-name">Emerald</span>
-                      <span class="palette-desc">Clássico</span>
-                    </div>
-                  </label>
-
-                  <label class="palette-option" [class.selected]="systemPalette() === 'blue'" (click)="selectPalette('blue')">
-                    <input type="radio" name="palette" value="blue" [checked]="systemPalette() === 'blue'">
-                    <span class="color-dot blue"></span>
-                    <div class="palette-info">
-                      <span class="palette-name">Ocean Blue</span>
-                      <span class="palette-desc">Corporativo</span>
-                    </div>
-                  </label>
-
-                  <label class="palette-option" [class.selected]="systemPalette() === 'purple'" (click)="selectPalette('purple')">
-                    <input type="radio" name="palette" value="purple" [checked]="systemPalette() === 'purple'">
-                    <span class="color-dot purple"></span>
-                    <div class="palette-info">
-                      <span class="palette-name">Amethyst</span>
-                      <span class="palette-desc">Criativo</span>
-                    </div>
-                  </label>
 
                   <label class="palette-option" [class.selected]="systemPalette() === 'blueprint'" (click)="selectPalette('blueprint')">
                     <input type="radio" name="palette" value="blueprint" [checked]="systemPalette() === 'blueprint'">
@@ -141,24 +182,6 @@
                     </div>
                   </label>
 
-                  <label class="palette-option" [class.selected]="systemPalette() === 'orange'" (click)="selectPalette('orange')">
-                    <input type="radio" name="palette" value="orange" [checked]="systemPalette() === 'orange'">
-                    <span class="color-dot orange"></span>
-                    <div class="palette-info">
-                      <span class="palette-name">Sunset</span>
-                      <span class="palette-desc">Energético</span>
-                    </div>
-                  </label>
-
-                  <label class="palette-option" [class.selected]="systemPalette() === 'rose'" (click)="selectPalette('rose')">
-                    <input type="radio" name="palette" value="rose" [checked]="systemPalette() === 'rose'">
-                    <span class="color-dot rose"></span>
-                    <div class="palette-info">
-                      <span class="palette-name">Rose</span>
-                      <span class="palette-desc">Delicado</span>
-                    </div>
-                  </label>
-
                   <label class="palette-option" [class.selected]="systemPalette() === 'gold'" (click)="selectPalette('gold')">
                     <input type="radio" name="palette" value="gold" [checked]="systemPalette() === 'gold'">
                     <span class="color-dot gold"></span>
@@ -168,21 +191,12 @@
                     </div>
                   </label>
 
-                  <label class="palette-option" [class.selected]="systemPalette() === 'indigo'" (click)="selectPalette('indigo')">
-                    <input type="radio" name="palette" value="indigo" [checked]="systemPalette() === 'indigo'">
-                    <span class="color-dot indigo"></span>
+                  <label class="palette-option" [class.selected]="systemPalette() === 'norteia'" (click)="selectPalette('norteia')">
+                    <input type="radio" name="palette" value="norteia" [checked]="systemPalette() === 'norteia'">
+                    <span class="color-dot norteia"></span>
                     <div class="palette-info">
-                      <span class="palette-name">Deep Indigo</span>
-                      <span class="palette-desc">Sofisticado</span>
-                    </div>
-                  </label>
-
-                  <label class="palette-option" [class.selected]="systemPalette() === 'cyan'" (click)="selectPalette('cyan')">
-                    <input type="radio" name="palette" value="cyan" [checked]="systemPalette() === 'cyan'">
-                    <span class="color-dot cyan"></span>
-                    <div class="palette-info">
-                      <span class="palette-name">Arctic Cyan</span>
-                      <span class="palette-desc">Fresco</span>
+                      <span class="palette-name">NorteIA</span>
+                      <span class="palette-desc">Estúdio DUA</span>
                     </div>
                   </label>
 

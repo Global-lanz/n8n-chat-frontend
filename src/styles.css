@@ -47,6 +47,8 @@
   --transition-normal: 0.28s ease;
   --accent-tint: rgba(0,201,167,0.06);
   --focus-ring: rgba(0,201,167,0.14);
+  --font-ui: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  --font-content: var(--font-ui);
 }
 
 body.light-mode {
@@ -74,46 +76,6 @@ body.light-mode {
   --shadow-glow: 0 0 20px rgba(5,150,105,0.12);
   --accent-tint: rgba(5,150,105,0.06);
   --focus-ring: rgba(5,150,105,0.14);
-}
-
-body.palette-blue {
-  --accent: #4f9cf9;
-  --accent-hover: #2d7dd2;
-  --accent-primary: #4f9cf9;
-  --accent-secondary: #2d7dd2;
-  --bg-message-user: #1a3460;
-  --shadow-glow: 0 0 20px rgba(79,156,249,0.15);
-  --accent-tint: rgba(79,156,249,0.06);
-  --focus-ring: rgba(79,156,249,0.15);
-}
-body.light-mode.palette-blue {
-  --accent: #2563eb;
-  --accent-hover: #1d4ed8;
-  --accent-primary: #2563eb;
-  --accent-secondary: #1d4ed8;
-  --bg-message-user: #dbeafe;
-  --accent-tint: rgba(37,99,235,0.06);
-  --focus-ring: rgba(37,99,235,0.14);
-}
-
-body.palette-purple {
-  --accent: #a78bfa;
-  --accent-hover: #8b5cf6;
-  --accent-primary: #a78bfa;
-  --accent-secondary: #8b5cf6;
-  --bg-message-user: #2e1a4a;
-  --shadow-glow: 0 0 20px rgba(167,139,250,0.15);
-  --accent-tint: rgba(167,139,250,0.06);
-  --focus-ring: rgba(167,139,250,0.15);
-}
-body.light-mode.palette-purple {
-  --accent: #7c3aed;
-  --accent-hover: #6d28d9;
-  --accent-primary: #7c3aed;
-  --accent-secondary: #6d28d9;
-  --bg-message-user: #f3e8ff;
-  --accent-tint: rgba(124,58,237,0.06);
-  --focus-ring: rgba(124,58,237,0.14);
 }
 
 body.palette-blueprint {
@@ -158,46 +120,6 @@ body.light-mode.palette-red {
 
 /* ===== NEW PALETTES ===== */
 
-body.palette-orange {
-  --accent: #fb923c;
-  --accent-hover: #ea6a15;
-  --accent-primary: #f97316;
-  --accent-secondary: #ea6a15;
-  --bg-message-user: #3d1806;
-  --shadow-glow: 0 0 20px rgba(251,146,60,0.15);
-  --accent-tint: rgba(251,146,60,0.06);
-  --focus-ring: rgba(251,146,60,0.15);
-}
-body.light-mode.palette-orange {
-  --accent: #ea580c;
-  --accent-hover: #c2410c;
-  --accent-primary: #ea580c;
-  --accent-secondary: #c2410c;
-  --bg-message-user: #ffedd5;
-  --accent-tint: rgba(234,88,12,0.06);
-  --focus-ring: rgba(234,88,12,0.14);
-}
-
-body.palette-rose {
-  --accent: #fb7185;
-  --accent-hover: #f43f5e;
-  --accent-primary: #fb7185;
-  --accent-secondary: #f43f5e;
-  --bg-message-user: #3d0a15;
-  --shadow-glow: 0 0 20px rgba(251,113,133,0.15);
-  --accent-tint: rgba(251,113,133,0.06);
-  --focus-ring: rgba(251,113,133,0.15);
-}
-body.light-mode.palette-rose {
-  --accent: #e11d48;
-  --accent-hover: #be123c;
-  --accent-primary: #e11d48;
-  --accent-secondary: #be123c;
-  --bg-message-user: #ffe4e6;
-  --accent-tint: rgba(225,29,72,0.06);
-  --focus-ring: rgba(225,29,72,0.14);
-}
-
 body.palette-gold {
   --accent: #fbbf24;
   --accent-hover: #d97706;
@@ -218,51 +140,40 @@ body.light-mode.palette-gold {
   --focus-ring: rgba(180,83,9,0.14);
 }
 
-body.palette-indigo {
-  --accent: #818cf8;
-  --accent-hover: #4f46e5;
-  --accent-primary: #818cf8;
-  --accent-secondary: #6366f1;
-  --bg-message-user: #1a1d4a;
-  --shadow-glow: 0 0 20px rgba(129,140,248,0.15);
-  --accent-tint: rgba(129,140,248,0.06);
-  --focus-ring: rgba(129,140,248,0.15);
-}
-body.light-mode.palette-indigo {
-  --accent: #4f46e5;
-  --accent-hover: #4338ca;
-  --accent-primary: #4f46e5;
-  --accent-secondary: #4338ca;
-  --bg-message-user: #e0e7ff;
-  --accent-tint: rgba(79,70,229,0.06);
-  --focus-ring: rgba(79,70,229,0.14);
-}
+/* ===== NORTEIA (Estúdio DUA branding) ===== */
 
-body.palette-cyan {
-  --accent: #22d3ee;
-  --accent-hover: #0891b2;
-  --accent-primary: #06b6d4;
-  --accent-secondary: #0891b2;
-  --bg-message-user: #062a35;
-  --shadow-glow: 0 0 20px rgba(34,211,238,0.15);
-  --accent-tint: rgba(34,211,238,0.06);
-  --focus-ring: rgba(34,211,238,0.15);
+body.palette-norteia {
+  --accent: #f0c531;
+  --accent-hover: #cca72a;
+  --accent-primary: #052e44;
+  --accent-secondary: #052e44;
+  --bg-message-user: #0b3650;
+  --shadow-glow: 0 0 20px rgba(240,197,49,0.15);
+  --accent-tint: rgba(240,197,49,0.06);
+  --focus-ring: rgba(240,197,49,0.18);
+  /* Estúdio DUA: Montserrat na interface, Lora nos balões/conteúdo. Só esta paleta paga o custo da fonte (ver theme.service.ts). */
+  --font-ui: 'Montserrat', -apple-system, 'Segoe UI', sans-serif;
+  --font-content: 'Lora', Georgia, serif;
+  /* Botões e cartões com raio 16px só nesta paleta — --radius-sm (ícones) e --radius-full (pílulas/avatares) ficam de fora de propósito. */
+  --radius-md: 16px;
+  --radius-lg: 16px;
+  --radius-xl: 16px;
 }
-body.light-mode.palette-cyan {
-  --accent: #0891b2;
-  --accent-hover: #0e7490;
-  --accent-primary: #0891b2;
-  --accent-secondary: #0e7490;
-  --bg-message-user: #cffafe;
-  --accent-tint: rgba(8,145,178,0.06);
-  --focus-ring: rgba(8,145,178,0.14);
+body.light-mode.palette-norteia {
+  --accent: #8a6a00;
+  --accent-hover: #6e5500;
+  --accent-primary: #052e44;
+  --accent-secondary: #052e44;
+  --bg-message-user: #fdf6e0;
+  --accent-tint: rgba(138,106,0,0.06);
+  --focus-ring: rgba(138,106,0,0.16);
 }
 
 /* ===== BASE ===== */
 html { font-size: 16px; -webkit-text-size-adjust: 100%; }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-ui);
   background: var(--bg-primary);
   color: var(--text-primary);
   height: 100dvh;
