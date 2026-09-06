@@ -10,16 +10,19 @@
 
 textarea {
   flex: 1;
-  padding: 0.7rem 1rem;
+  min-height: 44px;
+  padding: 0.75rem 1.1rem;
   background: var(--bg-input);
   border: 1.5px solid var(--border-color);
-  border-radius: 22px;
+  border-radius: 16px;
   color: var(--text-primary);
   font: inherit;
-  font-size: 0.93rem;
+  font-size: 0.95rem;
   resize: none;
   max-height: 130px;
   line-height: 1.5;
+  overflow-y: hidden;
+  box-sizing: border-box;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 

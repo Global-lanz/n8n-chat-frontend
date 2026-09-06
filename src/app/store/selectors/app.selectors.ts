@@ -45,6 +45,11 @@ export const selectMessagesLoading = createSelector(
   (state) => state.loading
 );
 
+export const selectAwaitingBotReply = createSelector(
+  selectMessagesState,
+  (state) => state.awaitingBotReply
+);
+
 export const selectMessagesError = createSelector(
   selectMessagesState,
   (state) => state.error
