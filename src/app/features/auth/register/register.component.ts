@@ -7,11 +7,12 @@ import { Observable } from 'rxjs';
 import * as AppActions from '@store/actions/app.actions';
 import * as AppSelectors from '@store/selectors/app.selectors';
 import { environment } from '@environments/environment';
+import { BrandNameComponent } from '../../../shared/brand-name/brand-name.component';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, BrandNameComponent],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })

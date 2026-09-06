@@ -1,9 +1,14 @@
 <nav class="navbar">
   <!-- Brand -->
   <a routerLink="/chat" class="navbar-brand" (click)="closeMenu()">
-    <div class="brand-icon">
-      <img src="assets/chat-icon.svg" alt="" class="brand-svg">
+    <div class="brand-avatar">
+      @if (appLogo$ | async; as logo) {
+        <img [src]="logo" alt="" class="brand-avatar-logo">
+      } @else {
+        <span class="brand-avatar-fallback">🤖</span>
+      }
     </div>
+    <span class="brand-name"><app-brand-name [name]="botName$ | async"></app-brand-name></span>
   </a>
 
   <!-- Desktop nav links -->

@@ -23,21 +23,28 @@
   flex-shrink: 0;
 }
 
-.brand-icon {
+.brand-avatar {
   width: 34px;
   height: 34px;
-  border-radius: 10px;
+  border-radius: 50%;
   background: linear-gradient(135deg, var(--accent-primary), var(--accent));
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  overflow: hidden;
 }
 
-.brand-svg {
-  width: 20px;
-  height: 20px;
-  filter: brightness(10);
+.brand-avatar-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.brand-avatar-fallback {
+  font-size: 1rem;
+  line-height: 1;
 }
 
 .brand-name {

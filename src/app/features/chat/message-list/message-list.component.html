@@ -3,7 +3,7 @@
     <div class="welcome-message">
       <div class="welcome-icon">🤖</div>
       <h3>Olá! Como posso ajudar?</h3>
-      <p>Envie uma mensagem para iniciar a conversa.</p>
+      <p>{{ welcomeMessage }}</p>
     </div>
   } @else {
     @for (message of messages; track message.timestamp) {

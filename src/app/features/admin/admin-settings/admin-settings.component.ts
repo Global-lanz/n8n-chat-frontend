@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -22,9 +22,12 @@ export class AdminSettingsComponent implements OnInit, OnDestroy {
   licenseDuration = signal<number>(365);
   webhookToken = signal<string>('');
   defaultBotName = signal<string>('Assistente Virtual');
+  chatWelcomeMessage = signal<string>('Envie uma mensagem para iniciar a conversa.');
+  chatInputPlaceholder = signal<string>('Digite uma mensagem...');
   systemPalette = signal<string>('green');
   systemPrompt = signal<string>('Você é um assistente virtual útil.');
   appLogo = signal<string | null>(null);
+  appLogoDark = signal<string | null>(null);
   activeTab = signal<string>('visual'); // tabs: 'visual', 'ai', 'integration', 'system'
 
   initialPalette = 'green';
@@ -138,6 +141,12 @@ export class AdminSettingsComponent implements OnInit, OnDestroy {
             case 'default_bot_name':
               this.defaultBotName.set(setting.value || 'Assistente Virtual');
               break;
+            case 'chat_welcome_message':
+              this.chatWelcomeMessage.set(setting.value || 'Envie uma mensagem para iniciar a conversa.');
+              break;
+            case 'chat_input_placeholder':
+              this.chatInputPlaceholder.set(setting.value || 'Digite uma mensagem...');
+              break;
             case 'system_color_palette':
               const pal = setting.value || 'green';
               this.systemPalette.set(pal);
@@ -148,6 +157,9 @@ export class AdminSettingsComponent implements OnInit, OnDestroy {
               break;
             case 'app_logo':
               this.appLogo.set(setting.value || null);
+              break;
+            case 'app_logo_dark':
+              this.appLogoDark.set(setting.value || null);
               break;
           }
         });
@@ -275,7 +287,7 @@ export class AdminSettingsComponent implements OnInit, OnDestroy {
     return `${environment.apiBaseUrl}/api/webhook/create-client`;
   }
 
-  onLogoSelected(event: Event): void {
+  onLogoSelected(event: Event, target: WritableSignal<string | null>): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file) return;
@@ -292,13 +304,13 @@ export class AdminSettingsComponent implements OnInit, OnDestroy {
 
     const reader = new FileReader();
     reader.onload = () => {
-      this.appLogo.set(reader.result as string);
+      target.set(reader.result as string);
     };
     reader.readAsDataURL(file);
   }
 
-  removeLogo(): void {
-    this.appLogo.set(null);
+  removeLogo(target: WritableSignal<string | null>): void {
+    target.set(null);
   }
 
   saveVisualSettings() {
@@ -320,7 +332,19 @@ export class AdminSettingsComponent implements OnInit, OnDestroy {
       }),
       this.settingsService.updateSetting('app_logo', {
         value: this.appLogo() || '',
-        description: 'Logo da aplicação (base64)'
+        description: 'Logo da aplicação para o tema claro (base64)'
+      }),
+      this.settingsService.updateSetting('app_logo_dark', {
+        value: this.appLogoDark() || '',
+        description: 'Logo da aplicação para o tema escuro (base64)'
+      }),
+      this.settingsService.updateSetting('chat_welcome_message', {
+        value: this.chatWelcomeMessage() || 'Envie uma mensagem para iniciar a conversa.',
+        description: 'Mensagem inicial exibida antes da primeira mensagem do chat'
+      }),
+      this.settingsService.updateSetting('chat_input_placeholder', {
+        value: this.chatInputPlaceholder() || 'Digite uma mensagem...',
+        description: 'Texto de placeholder da caixa de mensagem'
       })
     ]).subscribe({
       next: () => {
