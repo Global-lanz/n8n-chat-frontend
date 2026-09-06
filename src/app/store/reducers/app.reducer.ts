@@ -18,6 +18,10 @@ export interface AuthState {
 export interface MessagesState {
   messages: Message[];
   loading: boolean;
+  /** True from the moment the user's message is sent until the bot's reply
+   * arrives over the websocket (or the wait times out) — drives the
+   * "digitando..." indicator. */
+  awaitingBotReply: boolean;
   error: string | null;
 }
 
@@ -43,6 +47,7 @@ const initialAuthState: AuthState = {
 const initialMessagesState: MessagesState = {
   messages: [],
   loading: false,
+  awaitingBotReply: false,
   error: null
 };
 
@@ -99,13 +104,19 @@ export const messagesReducer = createReducer(
     loading: false,
     error
   })),
-  on(AppActions.addMessage, AppActions.receiveMessage, (state, { message }) => ({
+  on(AppActions.addMessage, (state, { message }) => ({
     ...state,
     messages: [...state.messages, message]
   })),
+  on(AppActions.receiveMessage, (state, { message }) => ({
+    ...state,
+    messages: [...state.messages, message],
+    awaitingBotReply: message.sender === 'bot' ? false : state.awaitingBotReply
+  })),
   on(AppActions.sendMessage, (state) => ({
     ...state,
-    loading: true
+    loading: true,
+    awaitingBotReply: true
   })),
   on(AppActions.sendMessageSuccess, (state) => ({
     ...state,
@@ -114,7 +125,12 @@ export const messagesReducer = createReducer(
   on(AppActions.sendMessageFailure, (state, { error }) => ({
     ...state,
     loading: false,
+    awaitingBotReply: false,
     error
+  })),
+  on(AppActions.botReplyTimeout, (state) => ({
+    ...state,
+    awaitingBotReply: false
   }))
 );
 
