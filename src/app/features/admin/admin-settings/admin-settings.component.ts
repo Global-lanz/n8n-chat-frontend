@@ -22,6 +22,8 @@ export class AdminSettingsComponent implements OnInit, OnDestroy {
   licenseDuration = signal<number>(365);
   webhookToken = signal<string>('');
   defaultBotName = signal<string>('Assistente Virtual');
+  chatWelcomeMessage = signal<string>('Envie uma mensagem para iniciar a conversa.');
+  chatInputPlaceholder = signal<string>('Digite uma mensagem...');
   systemPalette = signal<string>('green');
   systemPrompt = signal<string>('Você é um assistente virtual útil.');
   appLogo = signal<string | null>(null);
@@ -137,6 +139,12 @@ export class AdminSettingsComponent implements OnInit, OnDestroy {
               break;
             case 'default_bot_name':
               this.defaultBotName.set(setting.value || 'Assistente Virtual');
+              break;
+            case 'chat_welcome_message':
+              this.chatWelcomeMessage.set(setting.value || 'Envie uma mensagem para iniciar a conversa.');
+              break;
+            case 'chat_input_placeholder':
+              this.chatInputPlaceholder.set(setting.value || 'Digite uma mensagem...');
               break;
             case 'system_color_palette':
               const pal = setting.value || 'green';
@@ -321,6 +329,14 @@ export class AdminSettingsComponent implements OnInit, OnDestroy {
       this.settingsService.updateSetting('app_logo', {
         value: this.appLogo() || '',
         description: 'Logo da aplicação (base64)'
+      }),
+      this.settingsService.updateSetting('chat_welcome_message', {
+        value: this.chatWelcomeMessage() || 'Envie uma mensagem para iniciar a conversa.',
+        description: 'Mensagem inicial exibida antes da primeira mensagem do chat'
+      }),
+      this.settingsService.updateSetting('chat_input_placeholder', {
+        value: this.chatInputPlaceholder() || 'Digite uma mensagem...',
+        description: 'Texto de placeholder da caixa de mensagem'
       })
     ]).subscribe({
       next: () => {

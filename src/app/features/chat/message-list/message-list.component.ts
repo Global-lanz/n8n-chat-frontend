@@ -14,6 +14,7 @@ import { Message } from '@core/models';
 export class MessageListComponent implements AfterViewInit, OnChanges {
   @Input() messages: Message[] | null = [];
   @Input() botName: string | null = 'Bot';
+  @Input() welcomeMessage: string | null = 'Envie uma mensagem para iniciar a conversa.';
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
   private shouldScroll = false;
   private viewReady = false;
