@@ -529,18 +529,6 @@ body.light-mode .color-dot {
   border-color: rgba(0, 0, 0, 0.08);
 }
 
-.color-dot.green {
-  background: linear-gradient(135deg, #00a884 0%, #059669 100%);
-}
-
-.color-dot.blue {
-  background: linear-gradient(135deg, #4f9cf9 0%, #2563eb 100%);
-}
-
-.color-dot.purple {
-  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-}
-
 .color-dot.blueprint {
   background: linear-gradient(135deg, #00d4b8 0%, #009688 100%);
 }
@@ -549,24 +537,12 @@ body.light-mode .color-dot {
   background: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
 }
 
-.color-dot.orange {
-  background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
-}
-
-.color-dot.rose {
-  background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%);
-}
-
 .color-dot.gold {
   background: linear-gradient(135deg, #fbbf24 0%, #b45309 100%);
 }
 
-.color-dot.indigo {
-  background: linear-gradient(135deg, #818cf8 0%, #4f46e5 100%);
-}
-
-.color-dot.cyan {
-  background: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%);
+.color-dot.norteia {
+  background: linear-gradient(135deg, #f0c531 0%, #052e44 100%);
 }
 
 .palette-option.selected .color-dot::after {

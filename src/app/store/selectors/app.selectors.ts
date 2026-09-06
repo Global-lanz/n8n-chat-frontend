@@ -66,6 +66,16 @@ export const selectAppLogo = createSelector(
   (config) => config?.appLogo ?? null
 );
 
+export const selectWelcomeMessage = createSelector(
+  selectConfig,
+  (config) => config?.welcomeMessage ?? 'Envie uma mensagem para iniciar a conversa.'
+);
+
+export const selectInputPlaceholder = createSelector(
+  selectConfig,
+  (config) => config?.inputPlaceholder ?? 'Digite uma mensagem...'
+);
+
 export const selectAuthMode = createSelector(
   selectConfig,
   (config) => config?.authMode ?? 'internal'

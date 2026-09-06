@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./message-input.component.css']
 })
 export class MessageInputComponent {
+  @Input() placeholder: string | null = 'Digite uma mensagem...';
   @Output() sendMessage = new EventEmitter<string>();
   @ViewChild('messageInput') messageInput!: ElementRef<HTMLTextAreaElement>;
   
