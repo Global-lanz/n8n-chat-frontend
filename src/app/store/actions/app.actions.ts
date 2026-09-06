@@ -102,6 +102,10 @@ export const receiveMessage = createAction(
   props<{ message: Message }>()
 );
 
+// Dispatched when a bot reply hasn't shown up within the wait window — clears
+// the "digitando..." indicator so it doesn't hang forever if N8N never answers.
+export const botReplyTimeout = createAction('[Messages] Bot Reply Timeout');
+
 // Config Actions
 export const loadConfig = createAction('[Config] Load Config');
 
