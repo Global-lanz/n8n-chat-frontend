@@ -56,7 +56,18 @@ export class ChatContainerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.store.dispatch(AppActions.loadConfig());
     this.store.dispatch(AppActions.loadMessages());
-    
+
+    // The chat screen manages its own internal scrolling (message list) and
+    // expects the page itself to never scroll — but the global mobile
+    // stylesheet re-enables body scrolling under 768px width (for other
+    // screens, like long admin/settings forms). Below that width — real
+    // phones, and this app's own ~320px embed drawer on any device — that
+    // let a few stray pixels of layout slack turn into visible blank space
+    // under the sticky input once the page scrolled. Locking body scroll
+    // while this screen is mounted restores the same clipping desktop
+    // already gets from the base `overflow: hidden`.
+    document.body.classList.add('chat-locked');
+
     // Connect WebSocket and listen for messages
     this.webSocketService.connect();
     this.webSocketService.messages$
@@ -67,6 +78,7 @@ export class ChatContainerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    document.body.classList.remove('chat-locked');
     this.destroy$.next();
     this.destroy$.complete();
     this.webSocketService.disconnect();

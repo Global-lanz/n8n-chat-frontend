@@ -620,6 +620,11 @@ input.error, select.error, textarea.error {
   .users-list th, .users-list td { padding: 0.65rem 0.75rem; }
 }
 
+/* Chat screen manages its own internal scroll — never let the page itself
+   scroll while it's open, even under the 768px breakpoint above (real phones,
+   and this app's own narrow embed drawer on any device). */
+body.chat-locked { overflow: hidden; }
+
 @media (max-width: 480px) {
   .auth-container { padding: 1.75rem 1.25rem; }
 }
