@@ -24,7 +24,7 @@ export class SettingsMenuComponent implements OnInit {
   @Input() standalone: boolean = false; // If true, don't show close button
   @Output() close = new EventEmitter<void>();
   
-  selectedTheme: Theme = 'dark';
+  selectedTheme: Theme = 'light';
   username = '';
 
   // Password change

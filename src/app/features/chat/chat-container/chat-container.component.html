@@ -19,10 +19,12 @@
   <app-message-list
     [messages]="messages$ | async"
     [botName]="botName$ | async"
+    [welcomeMessage]="welcomeMessage$ | async"
   ></app-message-list>
 
   <!-- Input -->
   <app-message-input
+    [placeholder]="inputPlaceholder$ | async"
     (sendMessage)="onSendMessage($event)"
   ></app-message-input>
 </div>
