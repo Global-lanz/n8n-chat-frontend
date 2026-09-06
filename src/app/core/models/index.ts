@@ -69,6 +69,7 @@ export interface AppConfig {
   botName: string;
   systemPalette?: string;
   appLogo?: string | null;
+  appLogoDark?: string | null;
   welcomeMessage?: string;
   inputPlaceholder?: string;
   authMode?: 'internal' | 'external';

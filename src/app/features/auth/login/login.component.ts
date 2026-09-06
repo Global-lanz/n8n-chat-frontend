@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import * as AppActions from '@store/actions/app.actions';
 import * as AppSelectors from '@store/selectors/app.selectors';
 import { environment } from '@environments/environment';
+import { ThemeService } from '@core/services';
 import { BrandNameComponent } from '../../../shared/brand-name/brand-name.component';
 
 @Component({
@@ -34,7 +35,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private store: Store
+    private store: Store,
+    private themeService: ThemeService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -44,7 +46,10 @@ export class LoginComponent implements OnInit {
     this.loading$ = this.store.select(AppSelectors.selectAuthLoading);
     this.error$ = this.store.select(AppSelectors.selectAuthError);
     this.botName$ = this.store.select(AppSelectors.selectBotName);
-    this.appLogo$ = this.store.select(AppSelectors.selectAppLogo);
+    this.appLogo$ = this.themeService.activeLogo$(
+      this.store.select(AppSelectors.selectAppLogo),
+      this.store.select(AppSelectors.selectAppLogoDark)
+    );
   }
 
   ngOnInit(): void {

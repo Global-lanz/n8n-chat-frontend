@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export type Theme = 'light' | 'dark';
 
@@ -33,6 +34,17 @@ export class ThemeService {
 
   getCurrentTheme(): Theme {
     return this.themeSubject.value;
+  }
+
+  /**
+   * Picks the logo for the active theme (light/dark), falling back to
+   * whichever one is set when the admin has only uploaded one — so an
+   * existing single-logo setup keeps working after adding the dark variant.
+   */
+  activeLogo$(lightLogo$: Observable<string | null>, darkLogo$: Observable<string | null>): Observable<string | null> {
+    return combineLatest([this.theme$, lightLogo$, darkLogo$]).pipe(
+      map(([theme, light, dark]) => (theme === 'dark' ? dark || light : light || dark) ?? null)
+    );
   }
 
   private applyTheme(theme: Theme): void {

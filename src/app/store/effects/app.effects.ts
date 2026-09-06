@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, catchError, switchMap, tap } from 'rxjs/operators';
 import * as AppActions from '../actions/app.actions';
+import * as AppSelectors from '../selectors/app.selectors';
 import { ApiService, AuthService, WebSocketService, NotificationService, ThemeService } from '@core/services';
 import { environment } from '@environments/environment';
 
@@ -197,10 +199,23 @@ export class AppEffects {
           if (config.botName) {
             document.title = config.botName;
           }
-          const favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
-          if (favicon) {
-            favicon.href = config.appLogo || 'assets/chat-icon.svg';
-          }
+        }
+      })
+    ),
+    { dispatch: false }
+  );
+
+  // Runs on every config load AND every light/dark toggle, so the favicon always
+  // matches the logo the admin set for whichever theme is active right now.
+  updateFaviconOnThemeChange$ = createEffect(() =>
+    this.themeService.activeLogo$(
+      this.store.select(AppSelectors.selectAppLogo),
+      this.store.select(AppSelectors.selectAppLogoDark)
+    ).pipe(
+      tap(activeLogo => {
+        const favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+        if (favicon) {
+          favicon.href = activeLogo || 'assets/chat-icon.svg';
         }
       })
     ),
@@ -285,6 +300,7 @@ export class AppEffects {
 
   constructor(
     private actions$: Actions,
+    private store: Store,
     private apiService: ApiService,
     private authService: AuthService,
     private webSocketService: WebSocketService,

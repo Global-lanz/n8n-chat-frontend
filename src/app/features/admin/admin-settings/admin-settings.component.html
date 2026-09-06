@@ -37,40 +37,76 @@
             </div>
             <div class="card-body">
 
-              <!-- Logo Upload -->
+              <!-- Logo Upload (Tema Claro) -->
               <div class="visual-section">
                 <div class="section-label">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                  Logo da Aplicação
+                  Logo da Aplicação — Tema Claro
                 </div>
                 <div class="logo-upload-area">
                   @if (appLogo()) {
                     <div class="logo-preview-wrap">
-                      <img [src]="appLogo()!" alt="Logo" class="logo-preview">
-                      <button type="button" class="btn-remove-logo" (click)="removeLogo()" title="Remover logo">✕</button>
+                      <img [src]="appLogo()!" alt="Logo (tema claro)" class="logo-preview">
+                      <button type="button" class="btn-remove-logo" (click)="removeLogo(appLogo)" title="Remover logo">✕</button>
                     </div>
                     <p class="logo-hint">Logo atual — clique em "Salvar" para confirmar a remoção, ou escolha outra imagem.</p>
                   } @else {
-                    <label class="logo-dropzone" for="logoFileInput">
+                    <label class="logo-dropzone" for="logoFileInputLight">
                       <span class="logo-dropzone-icon">🖼️</span>
                       <span class="logo-dropzone-text">Clique para escolher uma imagem</span>
                       <span class="logo-dropzone-hint">PNG, JPG ou SVG — máx. 2 MB</span>
                     </label>
                   }
                   <input
-                    id="logoFileInput"
+                    id="logoFileInputLight"
                     type="file"
                     accept="image/*"
                     style="display:none"
-                    (change)="onLogoSelected($event)"
+                    (change)="onLogoSelected($event, appLogo)"
                   >
                   @if (appLogo()) {
-                    <label for="logoFileInput" class="btn-secondary btn-change-logo">
+                    <label for="logoFileInputLight" class="btn-secondary btn-change-logo">
                       🔄 Trocar imagem
                     </label>
                   }
                 </div>
-                <p class="logo-usage-hint">A logo é exibida em círculo no cabeçalho do chat e como ícone da aba do navegador.</p>
+                <p class="logo-usage-hint">Usada quando o usuário está no tema claro. Se não houver logo do tema escuro, esta é usada nos dois.</p>
+              </div>
+
+              <!-- Logo Upload (Tema Escuro) -->
+              <div class="visual-section">
+                <div class="section-label">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                  Logo da Aplicação — Tema Escuro
+                </div>
+                <div class="logo-upload-area">
+                  @if (appLogoDark()) {
+                    <div class="logo-preview-wrap">
+                      <img [src]="appLogoDark()!" alt="Logo (tema escuro)" class="logo-preview">
+                      <button type="button" class="btn-remove-logo" (click)="removeLogo(appLogoDark)" title="Remover logo">✕</button>
+                    </div>
+                    <p class="logo-hint">Logo atual — clique em "Salvar" para confirmar a remoção, ou escolha outra imagem.</p>
+                  } @else {
+                    <label class="logo-dropzone" for="logoFileInputDark">
+                      <span class="logo-dropzone-icon">🖼️</span>
+                      <span class="logo-dropzone-text">Clique para escolher uma imagem</span>
+                      <span class="logo-dropzone-hint">PNG, JPG ou SVG — máx. 2 MB</span>
+                    </label>
+                  }
+                  <input
+                    id="logoFileInputDark"
+                    type="file"
+                    accept="image/*"
+                    style="display:none"
+                    (change)="onLogoSelected($event, appLogoDark)"
+                  >
+                  @if (appLogoDark()) {
+                    <label for="logoFileInputDark" class="btn-secondary btn-change-logo">
+                      🔄 Trocar imagem
+                    </label>
+                  }
+                </div>
+                <p class="logo-usage-hint">Usada quando o usuário está no tema escuro. Opcional — sem ela, a logo do tema claro é usada nos dois.</p>
               </div>
 
               <!-- Bot Name -->
