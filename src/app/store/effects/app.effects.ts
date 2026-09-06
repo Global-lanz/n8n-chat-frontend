@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { of } from 'rxjs';
-import { map, catchError, switchMap, tap } from 'rxjs/operators';
+import { of, timer } from 'rxjs';
+import { map, catchError, switchMap, tap, filter, takeUntil } from 'rxjs/operators';
 import * as AppActions from '../actions/app.actions';
 import * as AppSelectors from '../selectors/app.selectors';
 import { ApiService, AuthService, WebSocketService, NotificationService, ThemeService } from '@core/services';
@@ -174,6 +174,36 @@ export class AppEffects {
         )
       )
     )
+  );
+
+  private static readonly BOT_REPLY_TIMEOUT_MS = 60_000;
+
+  // Clears the "digitando..." indicator if the bot never answers, so it doesn't
+  // sit there forever — restarts on every new message, cancels early the moment
+  // any bot reply comes in over the websocket.
+  botReplyTimeout$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AppActions.sendMessage),
+      switchMap(() =>
+        timer(AppEffects.BOT_REPLY_TIMEOUT_MS).pipe(
+          map(() => AppActions.botReplyTimeout()),
+          takeUntil(
+            this.actions$.pipe(
+              ofType(AppActions.receiveMessage),
+              filter(({ message }) => message.sender === 'bot')
+            )
+          )
+        )
+      )
+    )
+  );
+
+  botReplyTimeoutNotify$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AppActions.botReplyTimeout),
+      tap(() => this.notificationService.warning('A resposta está demorando mais que o normal.'))
+    ),
+    { dispatch: false }
   );
 
   loadConfig$ = createEffect(() =>

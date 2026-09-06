@@ -17,6 +17,7 @@ export class MessageListComponent implements AfterViewInit, OnChanges {
   @Input() botLogo: string | null = null;
   @Input() currentUserName: string | null = null;
   @Input() welcomeMessage: string | null = 'Envie uma mensagem para iniciar a conversa.';
+  @Input() awaitingReply: boolean | null = false;
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
   private shouldScroll = false;
   private viewReady = false;
@@ -24,7 +25,7 @@ export class MessageListComponent implements AfterViewInit, OnChanges {
   constructor(private sanitizer: DomSanitizer) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['messages']) {
+    if (changes['messages'] || changes['awaitingReply']) {
       this.shouldScroll = true;
       this.scheduleScroll();
     }

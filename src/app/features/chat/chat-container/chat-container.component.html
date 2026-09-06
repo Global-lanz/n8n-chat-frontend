@@ -22,6 +22,7 @@
     [botLogo]="appLogo$ | async"
     [currentUserName]="(currentUser$ | async)?.username ?? null"
     [welcomeMessage]="welcomeMessage$ | async"
+    [awaitingReply]="awaitingBotReply$ | async"
   ></app-message-list>
 
   <!-- Input -->
