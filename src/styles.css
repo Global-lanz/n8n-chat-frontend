@@ -154,6 +154,10 @@ body.palette-norteia {
   /* Estúdio DUA: Montserrat na interface, Lora nos balões/conteúdo. Só esta paleta paga o custo da fonte (ver theme.service.ts). */
   --font-ui: 'Montserrat', -apple-system, 'Segoe UI', sans-serif;
   --font-content: 'Lora', Georgia, serif;
+  /* Botões e cartões com raio 16px só nesta paleta — --radius-sm (ícones) e --radius-full (pílulas/avatares) ficam de fora de propósito. */
+  --radius-md: 16px;
+  --radius-lg: 16px;
+  --radius-xl: 16px;
 }
 body.light-mode.palette-norteia {
   --accent: #8a6a00;

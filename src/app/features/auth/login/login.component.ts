@@ -6,11 +6,12 @@ import { Observable } from 'rxjs';
 import * as AppActions from '@store/actions/app.actions';
 import * as AppSelectors from '@store/selectors/app.selectors';
 import { environment } from '@environments/environment';
+import { BrandNameComponent } from '../../../shared/brand-name/brand-name.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, BrandNameComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })

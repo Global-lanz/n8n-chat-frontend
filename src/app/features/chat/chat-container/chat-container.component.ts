@@ -10,6 +10,7 @@ import { Message, User } from '@core/models';
 import { WebSocketService } from '@core/services';
 import { MessageListComponent } from '../message-list/message-list.component';
 import { MessageInputComponent } from '../message-input/message-input.component';
+import { BrandNameComponent } from '../../../shared/brand-name/brand-name.component';
 
 @Component({
   selector: 'app-chat-container',
@@ -17,7 +18,8 @@ import { MessageInputComponent } from '../message-input/message-input.component'
   imports: [
     CommonModule,
     MessageListComponent,
-    MessageInputComponent
+    MessageInputComponent,
+    BrandNameComponent
   ],
   templateUrl: './chat-container.component.html',
   styleUrls: ['./chat-container.component.css']
